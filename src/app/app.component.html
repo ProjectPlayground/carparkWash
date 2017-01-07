@@ -1,3 +1,45 @@
-<h1>
-  {{title}}
-</h1>
+<md-sidenav-layout fullscreen class="sidenav-style">
+  <md-sidenav #menu>
+    <div class="menu-header">
+      <div class="center-input menu-username">
+        <!--<img class="margin-right style-avatar" *ngIf="currentUser"-->
+             <!--[src]="currentUser?.avatar">-->
+        <!--<h2>{{currentUser?.username}}</h2>-->
+        <h2>Car park with washing service</h2>
+      </div>
+      <!--<div class="center-text">Nuu-Bits: {{currentUser?.nuuBits}}</div>-->
+    </div>
+    <nav>
+      <md-list>
+        <button md-button class="mask-btn"></button>
+          <!--routerLinkActive="active"-->
+        <md-list-item>
+          <button md-button md-line routerLink="/profile" (click)="menu.close()">Profile</button>
+        </md-list-item>
+        <md-list-item>
+          <button md-button md-line routerLink="/setting" (click)="menu.close()">Setting</button>
+        </md-list-item>
+        <md-list-item>
+          <button md-button md-line routerLink="/shop" (click)="menu.close()">NUU-BITS SHOP</button>
+        </md-list-item>
+        <md-list-item>
+          <button md-button md-line routerLink="/login/disconnect" (click)="menu.close()">Disconnect</button>
+        </md-list-item>
+      </md-list>
+    </nav>
+  </md-sidenav>
+
+  <md-toolbar color="primary" *ngIf="showToolbar">
+    <button md-icon-button (click)="menu.open()">
+      <md-icon><i class="material-icons">menu</i></md-icon>
+    </button>
+    <span class="full-width center-text">{{toolbarTitle}}</span>
+  </md-toolbar>
+
+  <router-outlet></router-outlet>
+
+  <md-progress-circle mode="indeterminate" color="primary" class="loading-position"
+                      *ngIf="isLoading"></md-progress-circle>
+
+</md-sidenav-layout>
+

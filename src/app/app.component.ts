@@ -1,4 +1,10 @@
 import { Component } from '@angular/core';
+import { UserModel } from './shared/user/user.model';
+import { FirebaseService } from './shared/firebase-service';
+import { UserService } from './shared/user/user-service';
+import { ToolbarService } from './shared/toolbar.service';
+import { UserReady } from './shared/user/user-notifier';
+import { LoadingService } from './shared/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +12,27 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
+
+  currentUser: UserModel;
+  showToolbar = true;
+  isLoading = false;
+  toolbarTitle = 'Carpark';
+
+  constructor(public firebaseService: FirebaseService, public userService: UserService,
+              public userReady: UserReady, public toolbarService: ToolbarService,
+              public loadingService: LoadingService) {
+
+  }
+
+  ngOnInit(): void {
+    this.toolbarService.showSource$.subscribe(show => this.showToolbar = show);
+    this.toolbarService.titleSource$.subscribe(title => this.toolbarTitle = title);
+    this.loadingService.showSource$.subscribe(show => this.isLoading = show);
+    this.userReady.notifySource$.subscribe(ready => {
+      if (ready) {
+        this.userService.getCurrent()
+          .then(currentUser => this.currentUser = currentUser)
+      }
+    });
+  }
 }

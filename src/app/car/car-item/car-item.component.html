@@ -1,0 +1,20 @@
+<md-card (click)="select($event)">
+  <md-card-title>{{car?.brandModel}}</md-card-title>
+  <md-card-content>
+    <md-list>
+      <md-list-item>{{car?.licencePlateNumber}}</md-list-item>
+      <md-list-item>{{car?.colour}}</md-list-item>
+      <md-list-item>{{car?.type}}</md-list-item>
+    </md-list>
+  </md-card-content>
+  <md-card-actions *ngIf="currentUser?.profile === profileTypesEnum.manager">
+    <button md-button (click)="edit()">Edit</button>
+    <button md-button (click)="remove()">Remove</button>
+  </md-card-actions>
+  <md-card-actions *ngIf="currentUser?.profile === profileTypesEnum.client">
+    <button md-button (click)="selectToSubscribe()">Select to subscribe on car park</button>
+  </md-card-actions>
+  <md-card-actions *ngIf="currentUser?.profile === profileTypesEnum.cleaner">
+    <button md-button (click)="selectAsWashed()">Select as Washed</button>
+  </md-card-actions>
+</md-card>

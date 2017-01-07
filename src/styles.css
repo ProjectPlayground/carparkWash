@@ -1,1 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import 'assets/material-icons.css';
+@import '~@angular/material/core/theming/prebuilt/indigo-pink.css';
+
+.center-text {
+  text-align: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.alert {
+  white-space: pre-line;
+  margin-bottom: 20px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+}
+
+.alert .md-list-item {
+  height: inherit;
+}
+
+.alert-danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
+.hide-element {
+  display: none;
+}
+
+.btns-dialog {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+
+md-dialog-container {
+  border-radius: 20px !important;
+}

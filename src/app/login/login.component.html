@@ -1,0 +1,248 @@
+<md-list class="list-style">
+
+  <h2 class="center-text">Welcome to <span class="title">Car park with a washing system</span></h2>
+  <h3 class="center-text">Be clever and save your time</h3>
+
+  <p class="center-text">Log in or Sign up for free now.</p>
+
+  <form [formGroup]="loginForm" *ngIf="isOnLogin">
+    <md-list-item class="center-input">
+      <md-input type="email" required
+                [dividerColor]="loginFormErrors.email?'accent':'primary'"
+                placeholder="Email"
+                formControlName="email"
+                [(ngModel)]="userModel.email"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="loginFormErrors.email">
+      {{ loginFormErrors.email }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="password" required
+                [dividerColor]="loginFormErrors.password?'accent':'primary'"
+                placeholder="Password"
+                formControlName="password"
+                [(ngModel)]="password"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="loginFormErrors.password">
+      {{ loginFormErrors.password }}
+    </md-list-item>
+  </form>
+
+  <form [formGroup]="signUpForm" *ngIf="!isOnLogin">
+    <md-list-item class="center-input">
+      <md-input type="email" required
+                [dividerColor]="signUpFormErrors.email?'accent':'primary'"
+                placeholder="Email"
+                formControlName="email"
+                [(ngModel)]="userModel.email"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.email">
+      {{ signUpFormErrors.email }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="password" required
+                [dividerColor]="signUpFormErrors.password?'accent':'primary'"
+                placeholder="Password"
+                formControlName="password"
+                [(ngModel)]="password"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.password">
+      {{ signUpFormErrors.password }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="password" required
+                [dividerColor]="signUpFormErrors.confirmPassword?'accent':'primary'"
+                placeholder="Confirm Password"
+                formControlName="confirmPassword"
+                [(ngModel)]="confirmPassword"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.confirmPassword">
+      {{ signUpFormErrors.confirmPassword }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="signUpFormErrors.name?'accent':'primary'"
+                placeholder="Name"
+                formControlName="name"
+                [(ngModel)]="userModel.name"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.name">
+      {{ signUpFormErrors.name }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="signUpFormErrors.address?'accent':'primary'"
+                placeholder="Address"
+                formControlName="address"
+                [(ngModel)]="userModel.address"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.address">
+      {{ signUpFormErrors.address }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="signUpFormErrors.phoneNumber?'accent':'primary'"
+                placeholder="Phone Number"
+                formControlName="phoneNumber"
+                [(ngModel)]="userModel.phoneNumber"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.phoneNumber">
+      {{ signUpFormErrors.phoneNumber }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <!--[dividerColor]="signUpFormErrors.profile?'accent':'primary'"-->
+      <md-select placeholder="Profile" required
+                 formControlName="profile"
+                 [(ngModel)]="userModel.profile">
+        <md-option value={{profileTypesEnum.client}}>Client</md-option>
+        <md-option value={{profileTypesEnum.manager}}>Car park Manager</md-option>
+        <md-option value={{profileTypesEnum.cleaner}}>Cleaner</md-option>
+      </md-select>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.profile">
+      {{ signUpFormErrors.profile }}
+    </md-list-item>
+  </form>
+
+  <form [formGroup]="carForm" *ngIf="!isOnLogin && userModel.profile === profileTypesEnum.client">
+    <h2 class="center-text">Add your first car</h2>
+    <P class="center-text">Please, no Lorries, Vans or Larger vehicles </P>
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="carFormErrors.licencePlateNumber?'accent':'primary'"
+                placeholder="Licence Plate Number"
+                formControlName="licencePlateNumber"
+                [(ngModel)]="carModel.licencePlateNumber"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="carFormErrors.licencePlateNumber">
+      {{ carFormErrors.licencePlateNumber }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-select placeholder="Type"
+                 [ngModelOptions]="{standalone: true}"
+                 [(ngModel)]="carModel.type">
+        <md-option value="regular">Regular</md-option>
+        <md-option value="suv">SUV</md-option>
+      </md-select>
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="text"
+                [dividerColor]="carFormErrors.brandModel?'accent':'primary'"
+                placeholder="Brand & Model"
+                formControlName="brandModel"
+                [(ngModel)]="carModel.brandModel"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="carFormErrors.brandModel">
+      {{ carFormErrors.brandModel }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="text"
+                [dividerColor]="carFormErrors.colour?'accent':'primary'"
+                placeholder="Colour"
+                formControlName="colour"
+                [(ngModel)]="carModel.colour"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="carFormErrors.colour">
+      {{ carFormErrors.colour }}
+    </md-list-item>
+  </form>
+
+  <form [formGroup]="carParkForm" *ngIf="!isOnLogin && userModel.profile === profileTypesEnum.manager">
+    <h2 class="center-text">Add your first car park</h2>
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="carParkFormErrors.name?'accent':'primary'"
+                placeholder="Car park Name"
+                formControlName="carParkName"
+                [(ngModel)]="carParkModel.name"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.name">
+      {{ carParkFormErrors.name }}
+    </md-list-item>
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="carParkFormErrors.address?'accent':'primary'"
+                placeholder="Car park Address"
+                formControlName="address"
+                [(ngModel)]="carParkModel.address"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.address">
+      {{ carParkFormErrors.address }}
+    </md-list-item>
+    <md-list-item class="center-input">
+      <md-input type="number" required
+                [dividerColor]="carParkFormErrors.nbPlaces?'accent':'primary'"
+                placeholder="Number of parks"
+                formControlName="nbPlaces"
+                [(ngModel)]="carParkModel.nbPlaces"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.nbPlaces">
+      {{ carParkFormErrors.nbPlaces }}
+    </md-list-item>
+  </form>
+
+  <form [formGroup]="cleanerForm" *ngIf="!isOnLogin && userModel.profile === profileTypesEnum.cleaner">
+    <!--<h2 class="center-text">Add your selectedCar park</h2>-->
+    <!--<md-list-item class="center-input">-->
+    <!--<md-input type="text" required-->
+    <!--[dividerColor]="carParkFormErrors.address?'accent':'primary'"-->
+    <!--placeholder="Car park Address"-->
+    <!--formControlName="address"-->
+    <!--[(ngModel)]="carParkModel.address"></md-input>-->
+    <!--</md-list-item>-->
+    <!--<md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.address">-->
+    <!--{{ carParkFormErrors.address }}-->
+    <!--</md-list-item>-->
+  </form>
+
+  <md-list-item class="center-input" *ngIf="isOnLogin">
+    <button md-raised-button color="primary"
+            [disabled]="loginForm.invalid"
+            (click)="loginForm.valid && login()">Login
+    </button>
+  </md-list-item>
+
+  <md-list-item class="center-input" *ngIf="isOnLogin">
+    <button md-raised-button color="primary"
+            (click)="loginFacebook()">Login with Facebook
+    </button>
+  </md-list-item>
+
+  <md-list-item class="center-input" *ngIf="isOnLogin">
+    <button md-raised-button color="warn" clear (click)="resetPassword()">Forgot password</button>
+  </md-list-item>
+
+  <md-list-item class="center-input" *ngIf="!isOnLogin">
+    <button md-raised-button color="primary"
+            [disabled]="signUpForm.invalid
+                || (userModel.profile === profileTypesEnum.client && carForm.invalid)
+                || (userModel.profile === profileTypesEnum.cleaner && cleanerForm.invalid)
+                || (userModel.profile === profileTypesEnum.manager && carParkForm.invalid)"
+            (click)="signUpForm.valid
+                && ((userModel.profile === profileTypesEnum.client && carForm.valid)
+                  || (userModel.profile === profileTypesEnum.cleaner && cleanerForm.valid)
+                  || (userModel.profile === profileTypesEnum.manager && carParkForm.valid))
+                && signUp()">Sign up {{userModel.profile}}
+    </button>
+  </md-list-item>
+
+  <md-list-item class="center-input" *ngIf="isOnLogin">
+    <button md-button color="primary" (click)="signUp()">Sign up</button>
+  </md-list-item>
+
+  <md-list-item class="center-input" *ngIf="!isOnLogin">
+    <button md-button color="primary" color="warn" (click)="login()">Back to Login</button>
+  </md-list-item>
+
+</md-list>
+

@@ -1,0 +1,10 @@
+<h2>{{title}}</h2>
+
+<button md-button class="mask-btn"></button>
+<p>{{content}}</p>
+
+<md-list-item no-lines class="btns-dialog">
+  <button md-button color="primary" (click)="dialogRef.close(false)">Cancel</button>
+  <button md-button color="primary" (click)="dialogRef.close(true)">OK</button>
+</md-list-item>
+

@@ -1,0 +1,9 @@
+
+:host {
+  display: flex;
+  justify-content: center;
+}
+
+md-card {
+  /*max-width: 500px;*/
+}

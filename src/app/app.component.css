@@ -1,0 +1,19 @@
+.menu-username {
+  display: flex;
+}
+
+.menu-header {
+  padding: 20px;
+  border-radius: 10px;
+  border-bottom: 1px solid #b0b0b0;
+}
+
+.sidenav-style >>> .md-sidenav-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mask-btn {
+  display: flex;
+}

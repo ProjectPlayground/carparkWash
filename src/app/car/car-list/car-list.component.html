@@ -1,0 +1,15 @@
+<md-list>
+  <app-car-park-item [carPark]="selectedCarPark"></app-car-park-item>
+
+  <swiper [config]="configCarousel">
+    <div class="swiper-wrapper">
+      <app-car-item class="swiper-slide" *ngFor="let subscription of subscriptions" [subscription]="subscription"></app-car-item>
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+    <!-- Add Arrows -->
+    <div class="swiper-button-next" *ngIf="carParks?.length > 4"></div>
+    <div class="swiper-button-prev" *ngIf="carParks?.length > 4"></div>
+  </swiper>
+
+</md-list>

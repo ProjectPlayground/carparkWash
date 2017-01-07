@@ -1,0 +1,29 @@
+
+:host {
+  overflow: auto;
+}
+
+.center-input {
+  display: flex;
+  justify-content: center;
+}
+
+.style-avatar {
+  height: 48px;
+  border-radius: 1.8rem;
+}
+
+.loading-size {
+  width: 28px;
+}
+
+.margin20 {
+  margin: 20px;
+}
+
+.corner-bottom-right {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+}

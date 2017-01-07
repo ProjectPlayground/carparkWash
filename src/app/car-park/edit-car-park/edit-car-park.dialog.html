@@ -1,0 +1,52 @@
+<h2>Add another car to your collection</h2>
+<P class="center-text">Please, no Lorries, Vans or Larger vehicles </P>
+
+<form [formGroup]="carForm">
+  <md-list>
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="formErrors.licencePlateNumber?'accent':'primary'"
+                placeholder="Licence Plate Number"
+                formControlName="licencePlateNumber"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.licencePlateNumber">
+      {{ formErrors.licencePlateNumber }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-select placeholder="Type" formControlName="carType">
+        <md-option value="regular">Regular</md-option>
+        <md-option value="suv">SUV</md-option>
+      </md-select>
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="text"
+                [dividerColor]="formErrors.brandModel?'accent':'primary'"
+                placeholder="Brand & Model"
+                formControlName="brandModel"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.brandModel">
+      {{ formErrors.brandModel }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="text"
+                [dividerColor]="formErrors.colour?'accent':'primary'"
+                placeholder="Colour"
+                formControlName="colour"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.colour">
+      {{ formErrors.colour }}
+    </md-list-item>
+
+  </md-list>
+</form>
+
+<md-list-item no-lines class="btns-dialog">
+  <button md-button color="primary" (click)="cancel()">Cancel</button>
+  <button md-button color="primary" [disabled]="carForm.invalid"
+          (click)="carForm.valid && save()">Save
+  </button>
+</md-list-item>
+

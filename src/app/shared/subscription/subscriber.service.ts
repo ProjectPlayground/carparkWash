@@ -32,14 +32,39 @@ export class SubscriberService extends ServiceUtils {
     let subCarParkPath = 'carParks/' + carPark.id + '/subscriptions/' + car.id;
     updates['users/' + carPark.userUid + '/' + subCarParkPath] = subscriptionModel;
     updates[subCarParkPath] = subscriptionModel;
-    //updates['subscriptions/' + carPark.id + '/' + subscriptionModel.id] = subscriptionModel;
+
+    return this.refDatabase.update(updates);
+  }
+
+  unlock(carPark: CarParkModel) {
+    carPark.locked = false;
+    let updates = {};
+    let carParkPath = 'carParks/' + carPark.id;
+    updates['users/' + carPark.userUid + '/' + carParkPath] = carPark;
+    updates[carParkPath] = carPark;
+
+    return this.refDatabase.update(updates);
+  }
+
+  selectToBeWashed(subscription: SubscriptionModel) {
+    let dayIndex = Math.round((new Date().getTime() - subscription.dateSubscription) / (1000*60*60*24));
+    let dayCleanerModel = subscription.days[dayIndex];
+    dayCleanerModel.washStatus = WashStateEnum.toWash;
+    let updates = {};
+    let subCarPath = 'cars/' + subscription.car.id + '/subscription/days/' + dayIndex;
+    updates['users/' + subscription.userUid + '/' + subCarPath] = dayCleanerModel;
+    updates[subCarPath] = dayCleanerModel;
+
+    let subCarParkPath = 'carParks/' + subscription.carParkId + '/subscriptions/' + subscription.car.id + '/days/' + dayIndex;
+    updates['users/' + subscription.userUid + '/' + subCarParkPath] = dayCleanerModel;
+    updates[subCarParkPath] = dayCleanerModel;
 
     return this.refDatabase.update(updates);
   }
 
   setToWashed(subscription: SubscriptionModel, cleaner: UserModel) {
     let dayIndex = Math.round((new Date().getTime() - subscription.dateSubscription) / (1000*60*60*24));
-    let dayCleanerModel = new DayCleanerModel(dayIndex);
+    let dayCleanerModel = subscription.days[dayIndex];
     dayCleanerModel.washDate = new Date().getTime();
     dayCleanerModel.washStatus = WashStateEnum.washed;
     dayCleanerModel.cleanerUid = cleaner.uid;

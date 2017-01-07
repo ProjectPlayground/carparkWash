@@ -37,6 +37,7 @@ export class SubscriberService extends ServiceUtils {
   }
 
   unlock(carPark: CarParkModel) {
+    //TODO manager unlock car par each day => move this attribute on subscribe days
     carPark.locked = false;
     let updates = {};
     let carParkPath = 'carParks/' + carPark.id;

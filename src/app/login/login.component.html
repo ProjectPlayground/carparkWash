@@ -213,13 +213,13 @@
   </md-list-item>
 
   <md-list-item class="center-input" *ngIf="isOnLogin">
-    <button md-raised-button color="primary"
-            (click)="loginFacebook()">Login with Facebook
-    </button>
+    <button md-button color="warn" clear (click)="resetPassword()">Forgotten password</button>
   </md-list-item>
 
   <md-list-item class="center-input" *ngIf="isOnLogin">
-    <button md-raised-button color="warn" clear (click)="resetPassword()">Forgot password</button>
+    <button md-raised-button color="primary"
+            (click)="loginFacebook()">Login with Facebook
+    </button>
   </md-list-item>
 
   <md-list-item class="center-input" *ngIf="!isOnLogin">

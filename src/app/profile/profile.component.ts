@@ -43,8 +43,8 @@ export class ProfileComponent implements OnInit {
     //grabCursor: true,
     centeredSlides: false,
     //loop: true,
-    autoplay: 5000,
-    autoplayDisableOnInteraction: false,
+    // autoplay: 5000,
+    // autoplayDisableOnInteraction false,
     paginationClickable: true,
     pagination: '.swiper-pagination',
     nextButton: '.swiper-button-next',
@@ -63,7 +63,7 @@ export class ProfileComponent implements OnInit {
     this.snackBarConfig.duration = 2000;
     this.snackBarConfig.politeness = 'polite';
 
-    this.buildProfileForm();
+    this.buildProfileForm(false);
     this.carParkService.getAll()
       .then(allCarParks => this.allCarParks = allCarParks)
       .catch(err => {
@@ -90,9 +90,7 @@ export class ProfileComponent implements OnInit {
 
   toggleEditMode(editMode: boolean) {
     this.editMode = editMode;
-    if (!editMode) {
-      this.buildProfileForm();
-    }
+    this.buildProfileForm(!editMode);
   }
 
   add() {
@@ -156,21 +154,21 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  private buildProfileForm() {
+  private buildProfileForm(isDisabled: boolean) {
     this.profileForm = this.formBuilder.group({
-      email: [{value: this.user.email, disabled: true},
+      email: [{value: this.user.email, disabled: isDisabled},
         Validators.compose([Validators.required,
           GlobalValidator.mailFormat,
           Validators.maxLength(this.messageService.maxLengthEmail)])],
-      name: [{value: this.user.name, disabled: true},
+      name: [{value: this.user.name, disabled: isDisabled},
         Validators.compose([Validators.required,
           Validators.minLength(this.messageService.minLengthName),
           Validators.maxLength(this.messageService.maxLengthName)])],
-      address: [{value: this.user.address, disabled: true},
+      address: [{value: this.user.address, disabled: isDisabled},
         Validators.compose([Validators.required,
           Validators.minLength(this.messageService.minLengthAddress),
           Validators.maxLength(this.messageService.maxLengthAddress)])],
-      phoneNumber: [{value: this.user.phoneNumber, disabled: true},
+      phoneNumber: [{value: this.user.phoneNumber, disabled: isDisabled},
         Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)
       ],
     });

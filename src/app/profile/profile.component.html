@@ -1,80 +1,82 @@
 <md-list>
-  <br>
+  <form [formGroup]="profileForm" class="center-form-items">
+    <div class="form-style">
+      <md-list-item class="center-input margin20">
+        <button md-raised-button *ngIf="!editMode" (click)="toggleEditMode(true)">
+          <md-icon><i class="material-icons">mode_edit</i></md-icon>
+          Edit Profile
+        </button>
 
-  <form [formGroup]="profileForm">
-    <md-list-item class="center-input margin20">
-      <button md-button *ngIf="!editMode" (click)="toggleEditMode(true)">
-        <md-icon><i class="material-icons">mode_edit</i></md-icon>
-        Edit Profile
-      </button>
+        <button md-raised-button class="margin20"
+                *ngIf="editMode" (click)="toggleEditMode(false)">
+          Cancel changes
+        </button>
 
-      <button md-raised-button color="primary" class="margin20"
-              *ngIf="editMode" (click)="toggleEditMode(false)">
-        Cancel changes
-      </button>
+        <button md-raised-button class="margin20"
+                [disabled]="!profileForm.valid" *ngIf="editMode"
+                (click)="profileForm.valid && save()">
+          Save changes
+        </button>
+      </md-list-item>
 
-      <button md-raised-button color="primary" class="margin20"
-              [disabled]="!formErrors.valid" *ngIf="editMode"
-              (click)="formErrors.valid && save()">
-        Save changes
-      </button>
-    </md-list-item>
+      <md-list-item class="center-input">
+        <md-input type="text" required
+                  [disabled]="!editMode"
+                  [dividerColor]="formErrors.name?'accent':'primary'"
+                  placeholder="Name"
+                  formControlName="name"
+                  value="{{user.name}}"></md-input>
+      </md-list-item>
+      <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.name">
+        {{ formErrors.name }}
+      </md-list-item>
 
-    <md-list-item class="center-input">
-      <md-input type="text" required
-                [disabled]="!editMode"
-                [dividerColor]="formErrors.name?'accent':'primary'"
-                placeholder="Name"
-                formControlName="name"
-                value="{{user.name}}"></md-input>
-    </md-list-item>
-    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.name">
-      {{ formErrors.name }}
-    </md-list-item>
+      <md-list-item class="center-input">
+        <md-input type="email" required
+                  [disabled]="!editMode"
+                  [dividerColor]="formErrors.email?'accent':'primary'"
+                  placeholder="Email"
+                  formControlName="email"
+                  value="{{user.email}}"></md-input>
+      </md-list-item>
+      <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.email">
+        {{ formErrors.email }}
+      </md-list-item>
 
-    <md-list-item class="center-input">
-      <md-input type="email" required
-                [disabled]="!editMode"
-                [dividerColor]="formErrors.email?'accent':'primary'"
-                placeholder="Email"
-                formControlName="email"
-                value="{{user.email}}"></md-input>
-    </md-list-item>
-    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.email">
-      {{ formErrors.email }}
-    </md-list-item>
+      <md-list-item class="center-input">
+        <md-input type="password" disabled="true" value="******" placeholder="Password"
+                  (click)="editMode && changePassword()">
+          <!--<span md-prefix class="margin-right">Password :</span>-->
+        </md-input>
+      </md-list-item>
 
-    <md-list-item class="center-input">
-      <md-input type="password" disabled="true" value="******" placeholder="Password"
-                (click)="editMode && changePassword()">
-        <!--<span md-prefix class="margin-right">Password :</span>-->
-      </md-input>
-    </md-list-item>
+      <md-list-item class="center-input">
+        <md-input type="text" required
+                  [disabled]="!editMode"
+                  [dividerColor]="formErrors.address?'accent':'primary'"
+                  placeholder="Address"
+                  formControlName="address"
+                  value="{{user.address}}"></md-input>
+      </md-list-item>
+      <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.address">
+        {{ formErrors.address }}
+      </md-list-item>
 
-    <md-list-item class="center-input">
-      <md-input type="text" required
-                [disabled]="!editMode"
-                [dividerColor]="formErrors.address?'accent':'primary'"
-                placeholder="Address"
-                formControlName="address"
-                value="{{user.address}}"></md-input>
-    </md-list-item>
-    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.address">
-      {{ formErrors.address }}
-    </md-list-item>
-
-    <md-list-item class="center-input">
-      <md-input type="number" required
-                [disabled]="!editMode"
-                [dividerColor]="formErrors.phoneNumber?'accent':'primary'"
-                placeholder="Phone Number"
-                formControlName="phoneNumber"
-                value="{{user.phoneNumber}}"></md-input>
-    </md-list-item>
-    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.phoneNumber">
-      {{ formErrors.phoneNumber }}
-    </md-list-item>
+      <md-list-item class="center-input">
+        <md-input type="number" required
+                  [disabled]="!editMode"
+                  [dividerColor]="formErrors.phoneNumber?'accent':'primary'"
+                  placeholder="Phone Number"
+                  formControlName="phoneNumber"
+                  value="{{user.phoneNumber}}"></md-input>
+      </md-list-item>
+      <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.phoneNumber">
+        {{ formErrors.phoneNumber }}
+      </md-list-item>
+    </div>
   </form>
+
+  <br>
 
   <swiper [config]="configCarousel" *ngIf="user.profile === profileTypesEnum.client">
     <div class="swiper-wrapper">

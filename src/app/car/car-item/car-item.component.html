@@ -1,20 +1,32 @@
-<md-card (click)="select($event)">
-  <md-card-title>{{car?.brandModel}}</md-card-title>
+<md-card>
+  <md-card-title>{{car?.brandModel}}
+    <button md-button color="primary" class="btn-action" (click)="selectToSubscribe()"
+            *ngIf="currentUser?.profile === profileTypesEnum.client && !car?.subscription">
+      Subscribe for 30 days
+    </button>
+    <button md-button color="primary" class="btn-action" (click)="selectToWash()"
+            *ngIf="currentUser?.profile === profileTypesEnum.client && car?.subscription && isUnlocked()">
+      Book to wash
+    </button>
+    <button md-button color="primary" class="btn-action" (click)="selectAsWashed()"
+            *ngIf="currentUser?.profile === profileTypesEnum.cleaner">
+      Select as Washed
+    </button>
+  </md-card-title>
   <md-card-content>
     <md-list>
-      <md-list-item>{{car?.licencePlateNumber}}</md-list-item>
-      <md-list-item>{{car?.colour}}</md-list-item>
-      <md-list-item>{{car?.type}}</md-list-item>
+      <md-list-item>Licence plate number: {{car?.licencePlateNumber}}</md-list-item>
+      <md-list-item>Colour: {{car?.colour}}</md-list-item>
+      <md-list-item>Type: {{car?.type}}</md-list-item>
+      <md-list-item *ngIf="car?.subscription">
+        Current subscription date: {{car?.subscription.dateSubscription | date}}
+      </md-list-item>
+      <md-list-item *ngIf="!car?.subscription">
+      </md-list-item>
     </md-list>
   </md-card-content>
-  <md-card-actions *ngIf="currentUser?.profile === profileTypesEnum.manager">
+  <md-card-actions *ngIf="currentUser?.profile === profileTypesEnum.client">
     <button md-button (click)="edit()">Edit</button>
     <button md-button (click)="remove()">Remove</button>
-  </md-card-actions>
-  <md-card-actions *ngIf="currentUser?.profile === profileTypesEnum.client">
-    <button md-button (click)="selectToSubscribe()">Select to subscribe on car park</button>
-  </md-card-actions>
-  <md-card-actions *ngIf="currentUser?.profile === profileTypesEnum.cleaner">
-    <button md-button (click)="selectAsWashed()">Select as Washed</button>
   </md-card-actions>
 </md-card>

@@ -12,8 +12,9 @@ export class CarParkModel {
 
   name: string;
   address: string;
-  // if unlocked: client can subscribe his selectedCar for a wash
-  locked: boolean;
+  // if unlocked: client can book his selectedCar for a wash
+  // unlocked contains the date of unlock
+  unlocked: number;
   parkPlaces: Array<ParkPlaceModel>;
   nbPlaces: number;
   nbFreePlaces: number;
@@ -21,7 +22,7 @@ export class CarParkModel {
   constructor() {
     this.address = '';
     // if unlocked: client can subscribe his selectedCar for a wash
-    this.locked = true;
+    this.unlocked = 0;
     this.parkPlaces = new Array<ParkPlaceModel>();
     this.subscriptions = new Array<SubscriptionModel>();
     this.nbPlaces = 0;

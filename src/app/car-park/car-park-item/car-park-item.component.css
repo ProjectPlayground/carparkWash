@@ -1,0 +1,21 @@
+
+:host {
+  display: flex;
+  justify-content: center;
+  height: 99%;
+}
+
+.btn-action {
+  float: right;
+  margin-left: 30px;
+}
+
+md-card {
+  width: 100%;
+  /*max-width: 500px;*/
+}
+
+md-list-item {
+  /*height: 32px;*/
+}
+

@@ -1,21 +1,35 @@
 <md-card>
-  <md-card-title>{{carPark.name}}</md-card-title>
+  <md-card-title>{{carPark.name}}
+    <button md-button color="primary" class="btn-action" (click)="select()"
+            *ngIf="currentUser.profile === profileTypesEnum.cleaner">
+      Cars in
+    </button>
+    <button md-button color="primary" class="btn-action" (click)="subscribeWashService()"
+            *ngIf="currentUser.profile === profileTypesEnum.client">
+      Subscribe to 30 weekdays washing system
+    </button>
+    <button md-button color="primary" class="btn-action" (click)="unlock()"
+            *ngIf="currentUser.profile === profileTypesEnum.manager && !isUnlocked()">
+      Unlock
+    </button>
+  </md-card-title>
   <md-card-content>
     <md-list>
-      <md-card-title>address: {{carPark.address}}</md-card-title>
-      <md-list-item>number places: {{carPark.nbPlaces}}</md-list-item>
-      <md-list-item>is locked: {{carPark.locked}}</md-list-item>
-      <md-list-item>number free places: {{carPark.nbFreePlaces}}</md-list-item>
+      <md-list-item>Address: {{carPark.address}}</md-list-item>
+      <md-list-item *ngIf="carPark.unlocked !== 0">Last unlocked date: {{carPark.unlocked | date}}</md-list-item>
+      <md-list-item *ngIf="carPark.unlocked === 0">Never unlocked</md-list-item>
+      <md-list-item *ngIf="currentUser.profile === profileTypesEnum.manager && isUnlocked()">
+        Already Unlocked for today
+      </md-list-item>
+      <md-list-item *ngIf="currentUser.profile === profileTypesEnum.manager && !isUnlocked()">
+      </md-list-item>
+      <!--<md-list-item>number places: {{carPark.nbPlaces}}</md-list-item>-->
+      <!--<md-list-item>number free places: {{carPark.nbFreePlaces}}</md-list-item>-->
     </md-list>
   </md-card-content>
   <md-card-actions *ngIf="currentUser.profile === profileTypesEnum.manager">
     <button md-button (click)="edit()">Edit</button>
     <button md-button (click)="remove()">Remove</button>
   </md-card-actions>
-  <md-card-actions *ngIf="currentUser.profile === profileTypesEnum.client">
-    <button md-button (click)="subscribeWashService()">Subscribe to 30 weekdays washing system</button>
-  </md-card-actions>
-  <md-card-actions *ngIf="currentUser.profile === profileTypesEnum.cleaner">
-    <button md-button (click)="select()">Cars in this car park</button>
-  </md-card-actions>
+
 </md-card>

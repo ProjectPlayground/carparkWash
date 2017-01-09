@@ -38,7 +38,10 @@ export class SubscriberService extends ServiceUtils {
 
   unlock(carPark: CarParkModel) {
     //TODO manager unlock car par each day => move this attribute on subscribe days
-    carPark.locked = false;
+    let tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    carPark.unlocked = tomorrow.getTime();
     let updates = {};
     let carParkPath = 'carParks/' + carPark.id;
     updates['users/' + carPark.userUid + '/' + carParkPath] = carPark;

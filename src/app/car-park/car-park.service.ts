@@ -45,6 +45,10 @@ export class CarParkService extends ServiceUtils {
       .then(snapshot => this.arrayFromObject(snapshot.val()));
   }
 
+  getById(carParkId: string): firebase.Promise<CarParkModel>{
+    return this.refDatabase.child('carParks').orderByKey().equalTo(carParkId).once('value')
+      .then(snapshot => snapshot.val()[carParkId]);
+  }
 
   get selectedCarPark(): CarParkModel {
     return this._selectedCarPark;

@@ -1,8 +1,8 @@
+import { SubscriptionModel } from '../shared/subscription/subscription.model';
 export class CarModel {
 
   id: string;
-  subscriptionId: string;
-  isSubscribed: boolean;
+  subscription: SubscriptionModel;
   licencePlateNumber: string;
   // regular, suv
   type: string;
@@ -10,7 +10,4 @@ export class CarModel {
   colour: string;
   userUid: string;
 
-  constructor() {
-    this.isSubscribed = false;
-  }
 }

@@ -26,12 +26,11 @@ export class CarService extends ServiceUtils {
 
   add(user: UserModel, newCar: CarModel) {
     user.cars.push(newCar);
-    let newCarId = this.refDatabase.child('cars').push().key;
-    newCar.id = newCarId;
+    newCar.id = this.refDatabase.child('cars').push().key;
 
     let updates = {};
     updates['users/' + newCar.userUid + '/cars/' + newCar.id] = newCar;
-    updates['cars/' + newCarId] = newCar;
+    updates['cars/' + newCar.id] = newCar;
     return this.refDatabase.update(updates);
   }
 

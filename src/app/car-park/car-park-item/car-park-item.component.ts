@@ -57,12 +57,34 @@ export class CarParkItemComponent implements OnInit {
   subscribeWashService() {
     if (this.carService.selectedCar) {
     this.subscriberService.subscribe(this.carPark, this.carService.selectedCar)
-      .then(() => this.snackBar.open(`the selected car is subscribed to the carpark ${this.carPark.name}`
-        , '', this.snackBarConfig))
-      .catch();
+      .then(() => {
+        this.router.navigate(['profile']);
+        this.snackBar.open(`the selected car is subscribed to the carpark ${this.carPark.name}`
+          , '', this.snackBarConfig)
+      })
+      .catch(err => {
+        console.error(err);
+        this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
+      });
     } else {
       this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
     }
+  }
+
+  isUnlocked() {
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    today.setDate(today.getDate() + 1);
+    return this.carPark.unlocked === today.getTime();
+  }
+
+  unlock() {
+    this.subscriberService.unlock(this.carPark)
+      .then(() => this.snackBar.open(`the car park ${this.carPark.name} is unlocked`, '', this.snackBarConfig))
+      .catch(err => {
+        console.error(err);
+        this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
+      });
   }
 
   edit() {
@@ -89,7 +111,7 @@ export class CarParkItemComponent implements OnInit {
   remove() {
     let dialogRef = this.dialog.open(ConfirmMessageDialog, <MdDialogConfig>{disableClose: false});
     dialogRef.componentInstance.title = 'Confirmation of deletion';
-    dialogRef.componentInstance.content = 'Are you sure to remove this selectedCar ?';
+    dialogRef.componentInstance.content = `Are you sure to remove this ${this.carPark.name} ?`;
     dialogRef.afterClosed().subscribe((isOk: boolean) => {
       if (isOk) {
         this.carParkService.remove(this.carPark)

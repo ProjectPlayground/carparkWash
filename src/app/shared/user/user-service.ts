@@ -131,7 +131,12 @@ export class UserService extends ServiceUtils {
    * @returns {firebase.Promise<any>}
    */
   updateUserInfo(user: UserModel) {
-    return this.refDatabase.child('users').child(user.uid).update(user)
+    let userInfo = new UserModel();
+    userInfo.email = user.email;
+    userInfo.name = user.name;
+    userInfo.phoneNumber = user.phoneNumber;
+    userInfo.address = user.address;
+    return this.refDatabase.child('users').child(user.uid).update(userInfo)
       .then(() => this.currentUser = user);
   }
 

@@ -29,7 +29,7 @@ export class CarItemComponent implements OnInit {
   washStateEnum = WashStateEnum;
   @Input() car: CarModel;
   @Input() subscription: SubscriptionModel;
-  @Input() isSelected: boolean
+  @Input() isSelected: boolean;
   @Output() removed = new EventEmitter<boolean>();
 
   private snackBarConfig: MdSnackBarConfig;

@@ -33,7 +33,7 @@ export class SubscriberService extends ServiceUtils {
       // You can access the token ID with `token.id`.
       // Get the token ID to your server-side code for use.
       console.log(token);
-      //TODO to be continued
+      //TODO test on real card
       console.log('test if transaction is ok');
       let subscriptionModel = new SubscriptionModel();
       subscriptionModel.clientUid = car.userUid;

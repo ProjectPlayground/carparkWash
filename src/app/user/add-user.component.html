@@ -55,31 +55,33 @@
     <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.name">
       {{ signUpFormErrors.name }}
     </md-list-item>
+  </form>
 
+  <form [formGroup]="userInfoForm">
     <md-list-item class="center-input" *ngIf="connectEmailNoFacebook !== undefined">
       <md-input type="text" required
-                [dividerColor]="signUpFormErrors.address?'accent':'primary'"
+                [dividerColor]="userInfoFormErrors.address?'accent':'primary'"
                 placeholder="Address"
                 formControlName="address"
                 [(ngModel)]="userModel.address"></md-input>
     </md-list-item>
-    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.address">
-      {{ signUpFormErrors.address }}
+    <md-list-item class="center-input alert alert-danger" *ngIf="userInfoFormErrors.address">
+      {{ userInfoFormErrors.address }}
     </md-list-item>
 
     <md-list-item class="center-input" *ngIf="connectEmailNoFacebook !== undefined">
       <md-input type="text" required
-                [dividerColor]="signUpFormErrors.phoneNumber?'accent':'primary'"
+                [dividerColor]="userInfoFormErrors.phoneNumber?'accent':'primary'"
                 placeholder="Phone Number"
                 formControlName="phoneNumber"
                 [(ngModel)]="userModel.phoneNumber"></md-input>
     </md-list-item>
-    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.phoneNumber">
-      {{ signUpFormErrors.phoneNumber }}
+    <md-list-item class="center-input alert alert-danger" *ngIf="userInfoFormErrors.phoneNumber">
+      {{ userInfoFormErrors.phoneNumber }}
     </md-list-item>
 
     <md-list-item class="center-input" *ngIf="connectEmailNoFacebook !== undefined">
-      <!--[dividerColor]="signUpFormErrors.profile?'accent':'primary'"-->
+      <!--[dividerColor]="userInfoFormErrors.profile?'accent':'primary'"-->
       <md-select placeholder="Profile" required
                  formControlName="profile"
                  [(ngModel)]="userModel.profile">
@@ -123,16 +125,6 @@
         <md-option value={{cardinalPartEnum.west}}>West</md-option>
       </md-select>
     </md-list-item>
-    <md-list-item class="center-input">
-      <md-input type="text" required
-                [dividerColor]="carParkFormErrors.cardinalPart?'accent':'primary'"
-                placeholder="Cardinal Part"
-                formControlName="cardinalPart"
-                [(ngModel)]="carParkModel.cardinalPart"></md-input>
-    </md-list-item>
-    <md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.cardinalPart">
-      {{ carParkFormErrors.cardinalPart }}
-    </md-list-item>
 
     <md-list-item class="center-input">
       <md-input type="text" required
@@ -156,14 +148,14 @@
       {{ carParkFormErrors.address }}
     </md-list-item>
     <!--<md-list-item class="center-input">-->
-      <!--<md-input type="number" required-->
-                <!--[dividerColor]="carParkFormErrors.nbPlaces?'accent':'primary'"-->
-                <!--placeholder="Number of parks"-->
-                <!--formControlName="nbPlaces"-->
-                <!--[(ngModel)]="carParkModel.nbPlaces"></md-input>-->
+    <!--<md-input type="number" required-->
+    <!--[dividerColor]="carParkFormErrors.nbPlaces?'accent':'primary'"-->
+    <!--placeholder="Number of parks"-->
+    <!--formControlName="nbPlaces"-->
+    <!--[(ngModel)]="carParkModel.nbPlaces"></md-input>-->
     <!--</md-list-item>-->
     <!--<md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.nbPlaces">-->
-      <!--{{ carParkFormErrors.nbPlaces }}-->
+    <!--{{ carParkFormErrors.nbPlaces }}-->
     <!--</md-list-item>-->
   </form>
 
@@ -188,10 +180,8 @@
     <!--|| (userModel.profile === profileTypeEnum.manager && carParkForm.valid))-->
     <!--&&-->
     <button md-raised-button color="primary"
-            [disabled]="signUpForm.invalid
-                && ((userModel.profile === profileTypeEnum.cleaner && cleanerForm.invalid)
-                  || (userModel.profile === profileTypeEnum.manager && carParkForm.invalid))"
-            (click)="createAccount()">Create {{userModel.profile}}
+            [disabled]="!areInputsValid()"
+            (click)="areInputsValid()&& createAccount()">Create {{userModel.profile}}
     </button>
   </md-list-item>
 

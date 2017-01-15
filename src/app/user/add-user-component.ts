@@ -29,13 +29,16 @@ export class AddUserComponent extends PickImageAbstract {
 
   private snackBarConfig: MdSnackBarConfig;
   profileTypeEnum = ProfileTypeEnum;
-  cardinalPartEnum= CardinalPartEnum;
+  cardinalPartEnum = CardinalPartEnum;
   signUpForm: FormGroup;
   signUpFormErrors = {
     email: '',
     name: '',
     password: '',
     confirmPassword: '',
+  };
+  userInfoForm: FormGroup;
+  userInfoFormErrors = {
     address: '',
     phoneNumber: '',
   };
@@ -43,7 +46,6 @@ export class AddUserComponent extends PickImageAbstract {
   carParkFormErrors = {
     name: '',
     address: '',
-    cardinalPart: '',
     area: '',
     //nbPlaces: ''
   };
@@ -72,7 +74,7 @@ export class AddUserComponent extends PickImageAbstract {
   }
 
   createAccount() {
-    if(this.connectEmailNoFacebook === 'true') {
+    if (this.connectEmailNoFacebook === 'true') {
       this.createWithEmail();
     } else {
       this.createWithFacebook();
@@ -89,6 +91,13 @@ export class AddUserComponent extends PickImageAbstract {
       this.isPictureLoading = false;
       this.snackBar.open('Fail to get background', '', this.snackBarConfig);
     });
+  }
+
+  areInputsValid() {
+    return this.userInfoForm.valid
+        && ((this.connectEmailNoFacebook && this.signUpForm.valid) || !this.connectEmailNoFacebook)
+      && ((this.userModel.profile === ProfileTypeEnum.cleaner && this.cleanerForm.valid)
+      || (this.userModel.profile === ProfileTypeEnum.manager && this.carParkForm.valid))
   }
 
   private createWithFacebook() {
@@ -138,6 +147,7 @@ export class AddUserComponent extends PickImageAbstract {
 
   private buildForms() {
     this.buildSignUpForm();
+    this.buildUserInfoForm();
     this.buildCarParkForm();
     this.buildCleanerForm();
   }
@@ -152,8 +162,8 @@ export class AddUserComponent extends PickImageAbstract {
         Validators.maxLength(this.messageService.maxLengthAddress)])],
       cardinalPart: ['', Validators.required],
       area: ['', Validators.compose([Validators.required,
-          Validators.minLength(this.messageService.minLengthName),
-          Validators.maxLength(this.messageService.maxLengthName)])],
+        Validators.minLength(this.messageService.minLengthName),
+        Validators.maxLength(this.messageService.maxLengthName)])],
       //nbPlaces: ['', Validators.pattern('^[0-9]+$')]
     });
     this.carParkForm.valueChanges.subscribe(data => {
@@ -174,17 +184,26 @@ export class AddUserComponent extends PickImageAbstract {
         Validators.minLength(this.messageService.minLengthPassword),
         Validators.maxLength(this.messageService.maxLengthPassword)])],
       confirmPassword: ['', Validators.required],
-      address: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthAddress),
-        Validators.maxLength(this.messageService.maxLengthAddress)])],
-      phoneNumber: ['', Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)],
-      profile: ['', Validators.required]
     });
     this.signUpForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.signUpForm, this.signUpFormErrors);
     });
     this.messageService.onValueChanged(this.signUpForm, this.signUpFormErrors);
     setTimeout(GlobalValidator.samePassword(this.signUpForm, 'signUp'), 2000);
+  }
+
+  private buildUserInfoForm() {
+    this.userInfoForm = this.formBuilder.group({
+      address: ['', Validators.compose([Validators.required,
+        Validators.minLength(this.messageService.minLengthAddress),
+        Validators.maxLength(this.messageService.maxLengthAddress)])],
+      phoneNumber: ['', Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)],
+      profile: ['', Validators.required]
+    });
+    this.userInfoForm.valueChanges.subscribe(data => {
+      this.messageService.onValueChanged(this.userInfoForm, this.userInfoFormErrors);
+    });
+    this.messageService.onValueChanged(this.userInfoForm, this.userInfoFormErrors);
   }
 
   private buildCleanerForm() {
@@ -197,4 +216,5 @@ export class AddUserComponent extends PickImageAbstract {
     });
     this.messageService.onValueChanged(this.cleanerForm, this.cleanerFormErrors);
   }
+
 }

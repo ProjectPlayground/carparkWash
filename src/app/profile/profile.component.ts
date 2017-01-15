@@ -168,6 +168,7 @@ export class ProfileComponent implements OnInit {
        itemsLength = this.user.carParks.length
     }
     //FIXME to be continued, problem when 1 item then user add another
+    // solution, always swiper or 1, 2, 3 and 4 manually, 5 swiper
     //this.configCarousel.slidesPerView = itemsLength;
   }
 

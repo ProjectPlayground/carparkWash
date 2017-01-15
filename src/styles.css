@@ -41,3 +41,7 @@
 md-dialog-container {
   border-radius: 20px !important;
 }
+
+swiper >>> .swiper-wrapper {
+  height: 450px;
+}

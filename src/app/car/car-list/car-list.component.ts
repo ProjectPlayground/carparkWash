@@ -19,13 +19,13 @@ export class CarListComponent implements OnInit {
   subscriptions: Array<SubscriptionModel>;
   configCarousel = {
     slidesPerView: 4,
-    slidesPerColumn: 3,
+    //slidesPerColumn: 3,
     spaceBetween: 30,
     //grabCursor: true,
     centeredSlides: false,
     //loop: true,
-    autoplay: 5000,
-    autoplayDisableOnInteraction: false,
+    //autoplay: 5000,
+    //autoplayDisableOnInteraction: false,
     paginationClickable: true,
     pagination: '.swiper-pagination',
     nextButton: '.swiper-button-next',
@@ -42,19 +42,20 @@ export class CarListComponent implements OnInit {
     this.snackBarConfig.politeness = 'polite';
 
     this.selectedCarPark = this.carParkService.selectedCarPark;
-
-    if (!this.selectedCarPark) {
-      this.router.navigate(['']);
-    }
   }
 
   ngOnInit() {
-    this.carService.getByCarPark(this.carParkService.selectedCarPark)
-      .then((subscriptions: Array<SubscriptionModel>) => this.subscriptions = subscriptions)
-      .catch(err => {
-        console.log(err);
-        this.snackBar.open('Error getting all selectedCar parks, please contact admin', '', this.snackBarConfig);
-      });
+
+    if (!this.selectedCarPark) {
+      this.router.navigate(['']);
+    } else {
+      this.carService.getByCarPark(this.carParkService.selectedCarPark)
+        .then((subscriptions: Array<SubscriptionModel>) => this.subscriptions = subscriptions)
+        .catch(err => {
+          console.log(err);
+          this.snackBar.open('Error getting all selectedCar parks, please contact admin', '', this.snackBarConfig);
+        });
+    }
   }
 
 }

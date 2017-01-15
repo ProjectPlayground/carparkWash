@@ -6,21 +6,21 @@ import { ConfirmMessageDialog } from '../../confirm-message/confirm-message.dial
 import { CarParkService } from '../car-park.service';
 import { EditCarParkDialog } from '../edit-car-park/edit-car-park.dialog';
 import { Router } from '@angular/router';
-import { UserService } from '../../shared/user/user-service';
-import { UserModel } from '../../shared/user/user.model';
+import { UserService } from '../../user/user-service';
+import { UserModel } from '../../user/user.model';
 import { SubscriberService } from '../../shared/subscription/subscriber.service';
 import { CarService } from '../../car/car.service';
-import { ProfileTypesEnum } from '../../shared/profile-types.enum';
+import { ProfileTypeEnum } from '../../shared/profile-type.enum';
 
 @Component({
   selector: 'app-car-park-item',
-  templateUrl: './car-park-item.component.html',
-  styleUrls: ['./car-park-item.component.css']
+  templateUrl: './car-park-item.html',
+  styleUrls: ['./car-park-item.css']
 })
 export class CarParkItemComponent implements OnInit {
 
   currentUser: UserModel;
-  profileTypesEnum = ProfileTypesEnum;
+  profileTypeEnum = ProfileTypeEnum;
   @Input() carPark: CarParkModel;
   @Output() removed = new EventEmitter<boolean>();
 

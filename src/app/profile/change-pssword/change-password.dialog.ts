@@ -1,5 +1,3 @@
-//<reference path="../../shared
-// /global.validator.ts"/>
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { GlobalValidator } from '../../shared/validator/global.validator';

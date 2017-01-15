@@ -1,9 +1,17 @@
 <md-list>
-  <app-car-park-item [carPark]="selectedCarPark"></app-car-park-item>
+  <div class="center-element">
+    <app-car-park-item [carPark]="selectedCarPark" isSelected="true"></app-car-park-item>
+  </div>
+
+  <md-list-item class="no-car-park-yet" *ngIf="!subscriptions || subscriptions.length === 0">
+    <h2>No car has subscribed yet</h2>
+  </md-list-item>
 
   <swiper [config]="configCarousel">
     <div class="swiper-wrapper">
-      <app-car-item class="swiper-slide" *ngFor="let subscription of subscriptions" [subscription]="subscription"></app-car-item>
+      <!--TODO each car has it's subscription, passing cars here is possible-->
+      <app-car-item class="swiper-slide"
+                    *ngFor="let subscription of subscriptions" [subscription]="subscription"></app-car-item>
     </div>
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>

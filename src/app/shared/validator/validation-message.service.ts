@@ -43,7 +43,16 @@ export class ValidationMessageService {
       'minlength': this.minLength('Address', this.minLengthAddress),
       'maxlength': this.maxLength('Address', this.maxLengthAddress)
     },
+    'cardinalPart': {
+      'required': this.required('Cardinal Part'),
+    },
+    'area': {
+      'required': this.required('Area'),
+      'minlength': this.minLength('Area', this.minLengthCarParkName),
+      'maxlength': this.maxLength('Area', this.maxLengthCarParkName)
+    },
     'phoneNumber': {
+      'required': this.required('Phone Number'),
       'pattern': this.required('Phone Number') + '\nOr\n' + this.incorrectFormat('Phone Number')
     },
     'profile': {

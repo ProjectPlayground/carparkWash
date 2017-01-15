@@ -5,6 +5,8 @@ import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 import { CarService } from '../../car/car.service';
 import { CarModel } from '../../car/car.model';
 import { Router } from '@angular/router';
+import { CardinalPart } from '../car-park-filter/cardinal-part-enum';
+import { CarParkFilterModel } from '../car-park-filter/car-park-filter.model';
 
 @Component({
   selector: 'app-car-park-list',
@@ -17,13 +19,13 @@ export class CarParkListComponent implements OnInit {
   carParks: Array<CarParkModel>;
   configCarousel = {
     slidesPerView: 4,
-    slidesPerColumn: 3,
+    //slidesPerColumn: 3,
     spaceBetween: 30,
     //grabCursor: true,
     centeredSlides: false,
     //loop: true,
-    autoplay: 5000,
-    autoplayDisableOnInteraction: false,
+    //autoplay: 5000,
+    //autoplayDisableOnInteraction: false,
     paginationClickable: true,
     pagination: '.swiper-pagination',
     nextButton: '.swiper-button-next',
@@ -40,13 +42,23 @@ export class CarParkListComponent implements OnInit {
     this.snackBarConfig.politeness = 'polite';
 
     this.selectedCar = this.carService.selectedCar;
-    if (!this.selectedCar) {
-      this.router.navigate(['']);
-    }
   }
 
   ngOnInit() {
-    this.carParkService.getAll()
+    if (!this.selectedCar) {
+      this.router.navigate(['']);
+    } else {
+      this.carParkService.getAll()
+        .then(carParks => this.carParks = carParks)
+        .catch(err => {
+          console.log(err);
+          this.snackBar.open('Error getting all selectedCar parks, please contact admin', '', this.snackBarConfig);
+        });
+    }
+  }
+
+  getCarParksFilter(carParkFilterModel: CarParkFilterModel) {
+    this.carParkService.getByAreas(carParkFilterModel)
       .then(carParks => this.carParks = carParks)
       .catch(err => {
         console.log(err);

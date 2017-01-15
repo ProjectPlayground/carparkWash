@@ -3,15 +3,15 @@ import { Router } from '@angular/router';
 import * as firebase from 'firebase';
 import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { UserModel } from '../shared/user/user.model';
-import { UserService } from '../shared/user/user-service';
+import { UserModel } from '../user/user.model';
+import { UserService } from '../user/user-service';
 import { ToolbarService } from '../shared/toolbar.service';
 import { LoadingService } from '../shared/loading.service';
 import { GlobalValidator } from '../shared/validator/global.validator';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
 import { CarModel } from '../car/car.model';
 import { CarParkModel } from '../car-park/car-park.model';
-import { ProfileTypesEnum } from '../shared/profile-types.enum';
+import { ProfileTypeEnum } from '../shared/profile-type.enum';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   isOnLogin = true;
 
   private snackBarConfig: MdSnackBarConfig;
-  profileTypesEnum = ProfileTypesEnum;
+  profileTypeEnum = ProfileTypeEnum;
   loginForm: FormGroup;
   loginFormErrors = {
     email: '',
@@ -54,7 +54,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   carParkFormErrors = {
     name: '',
     address: '',
-    nbPlaces: ''
+    cardinalPart: '',
+    area: '',
+    //nbPlaces: ''
   };
   cleanerForm: FormGroup;
   cleanerFormErrors = {};
@@ -64,6 +66,7 @@ export class LoginComponent implements OnInit, OnDestroy {
               public router: Router, public snackBar: MdSnackBar, public formBuilder: FormBuilder) {
 
     this.userModel = new UserModel();
+    this.userModel.profile = ProfileTypeEnum.client;
     this.buildForms();
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 2000;
@@ -94,26 +97,24 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
     if (this.isOnLogin) {
       this.loadingService.show(true);
-      this.userService.login(this.userModel, this.password)
-        .then(() => {
-          this.loadingService.show(false);
-          this.router.navigate(['profile']);
-          this.toolbarService.show(true);
-          this.snackBar.open('Log in Success', '', this.snackBarConfig);
-        })
-        .catch((err: firebase.FirebaseError) => {
-          this.loadingService.show(false);
-          console.error(err);
-          let errMsg = 'Log in Fail';
-          switch (err.code) {
-            case 'auth/invalid-email':
-            case 'auth/user-not-found':
-            case 'auth/wrong-password':
-              errMsg = 'Incorrect email or password';
-              break;
-          }
-          this.snackBar.open(errMsg, '', this.snackBarConfig);
-        });
+      this.userService.login(this.userModel, this.password).then(() => {
+        this.loadingService.show(false);
+        this.router.navigate(['profile']);
+        this.toolbarService.show(true);
+        this.snackBar.open('Log in Success', '', this.snackBarConfig);
+      }).catch((err: firebase.FirebaseError) => {
+        this.loadingService.show(false);
+        console.error(err);
+        let errMsg = 'Log in Fail';
+        switch (err.code) {
+          case 'auth/invalid-email':
+          case 'auth/user-not-found':
+          case 'auth/wrong-password':
+            errMsg = 'Incorrect email or password';
+            break;
+        }
+        this.snackBar.open(errMsg, '', this.snackBarConfig);
+      });
     } else {
       this.isOnLogin = true;
     }
@@ -126,9 +127,18 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.router.navigate(['profile']);
       this.toolbarService.show(true);
       this.snackBar.open('Log in Success', '', this.snackBarConfig);
-    }, (err) => {
-      alert('error login facebook');
-      console.log(err);
+    }).catch((err: firebase.FirebaseError) => {
+      this.loadingService.show(false);
+      console.error(err);
+      let errMsg = 'Log in Fail';
+      switch (err.code) {
+        case 'auth/invalid-email':
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+          errMsg = 'Incorrect email or password';
+          break;
+      }
+      this.snackBar.open(errMsg, '', this.snackBarConfig);
     });
   }
 
@@ -137,7 +147,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.isOnLogin = false;
     } else {
       this.loadingService.show(true);
-      this.userService.create(this.userModel, this.password, this.carModel, this.carParkModel)
+      this.userService.create(this.userModel, this.password, this.carParkModel, this.carModel)
         .then(() => {
           this.loadingService.show(false);
           this.router.navigate(['profile']);
@@ -174,35 +184,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.buildLoginForm();
     this.buildSignUpForm();
     this.buildCarForm();
-    this.buildCarParkForm();
-    this.buildCleanerForm();
-  }
-
-  private buildCleanerForm() {
-    this.cleanerForm = this.formBuilder.group({
-      //email: ['', Validators.required],
-      //password: ['', Validators.required]
-    });
-    this.cleanerForm.valueChanges.subscribe(data => {
-      this.messageService.onValueChanged(this.cleanerForm, this.cleanerFormErrors);
-    });
-    this.messageService.onValueChanged(this.cleanerForm, this.cleanerFormErrors);
-  }
-
-  private buildCarParkForm() {
-    this.carParkForm = this.formBuilder.group({
-      carParkName: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthCarParkName),
-        Validators.maxLength(this.messageService.maxLengthCarParkName)])],
-      address: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthAddress),
-        Validators.maxLength(this.messageService.maxLengthAddress)])],
-      nbPlaces: ['', Validators.pattern('^[0-9]+$')]
-    });
-    this.carParkForm.valueChanges.subscribe(data => {
-      this.messageService.onValueChanged(this.carParkForm, this.carParkFormErrors);
-    });
-    this.messageService.onValueChanged(this.carParkForm, this.carParkFormErrors);
   }
 
   private buildCarForm() {
@@ -234,8 +215,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       address: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthAddress),
         Validators.maxLength(this.messageService.maxLengthAddress)])],
-      phoneNumber: ['', Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)],
-      profile: ['', Validators.required]
+      phoneNumber: ['', Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)]
     });
     this.signUpForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.signUpForm, this.signUpFormErrors);

@@ -21,7 +21,9 @@
         "styles.css",
         "assets/swiper.min.css"
       ],
-      "scripts": ["../vendor/swiper.js"],
+      "scripts": [
+        "../vendor/swiper.js"
+      ],
       "environments": {
         "source": "environments/environment.ts",
         "dev": "environments/environment.ts",

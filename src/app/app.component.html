@@ -19,8 +19,8 @@
         <md-list-item>
           <button md-button md-line routerLink="/setting" (click)="menu.close()">Setting</button>
         </md-list-item>
-        <md-list-item>
-          <button md-button md-line routerLink="/shop" (click)="menu.close()">NUU-BITS SHOP</button>
+        <md-list-item *ngIf="currentUser?.profile === profileTypeEnum.admin">
+          <button md-button md-line routerLink="/add/user" (click)="menu.close()">Add Manager/Cleaner</button>
         </md-list-item>
         <md-list-item>
           <button md-button md-line routerLink="/login/disconnect" (click)="menu.close()">Disconnect</button>

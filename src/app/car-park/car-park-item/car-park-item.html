@@ -1,0 +1,44 @@
+<md-card>
+  <md-card-title>{{carPark?.name}} - {{carPark?.name}}
+    <img class="override-picture-preview" *ngIf="carPark.picture" [src]="carPark.picture">
+  </md-card-title>
+
+  <md-card-content>
+    <md-list>
+      <md-list-item>Address: {{carPark.address}}</md-list-item>
+      <md-list-item>Cardinal Part: {{carPark.cardinalPart}}</md-list-item>
+      <md-list-item>Area: {{carPark.area}}</md-list-item>
+      <md-list-item *ngIf="carPark.unlocked !== 0">Last unlocked date: {{carPark.unlocked | date}}</md-list-item>
+      <md-list-item *ngIf="carPark.unlocked === 0">Never unlocked</md-list-item>
+      <md-list-item *ngIf="currentUser.profile === profileTypeEnum.manager && isUnlocked()">
+        Already Unlocked for today
+      </md-list-item>
+      <md-list-item *ngIf="currentUser.profile === profileTypeEnum.manager && !isUnlocked()">
+      </md-list-item>
+      <!--<md-list-item>number places: {{carPark.nbPlaces}}</md-list-item>-->
+      <!--<md-list-item>number free places: {{carPark.nbFreePlaces}}</md-list-item>-->
+    </md-list>
+  </md-card-content>
+
+  <md-card-actions *ngIf="!isSelected">
+    <button md-button color="primary" class="btn-action" (click)="select()"
+            *ngIf="currentUser.profile === profileTypeEnum.cleaner">
+      Cars in
+    </button>
+    <!-- Client should see car park only if he clicked on subscribe of his car -->
+    <button md-button color="primary" class="btn-action" (click)="subscribeWashService()"
+            *ngIf="currentUser.profile === profileTypeEnum.client">
+      Subscribe
+    </button>
+    <!--to 30 weekdays washing system-->
+    <button md-button color="primary" class="btn-action" (click)="unlock()"
+            *ngIf="currentUser.profile === profileTypeEnum.manager && !isUnlocked()">
+      Unlock
+    </button>
+  </md-card-actions>
+  <md-card-actions *ngIf="!isSelected && currentUser.profile === profileTypeEnum.manager">
+    <button md-button (click)="edit()">Edit</button>
+    <button md-button (click)="remove()">Remove</button>
+  </md-card-actions>
+
+</md-card>

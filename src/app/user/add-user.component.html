@@ -1,0 +1,199 @@
+<md-list class="list-style">
+
+  <h3 class="center-text">Add Manager or cleaner account</h3>
+
+  <form [formGroup]="signUpForm">
+    <md-list-item class="center-input">
+      <md-select placeholder="Connect with" required
+                 [ngModelOptions]="{standalone: true}"
+                 [(ngModel)]="connectEmailNoFacebook">
+        <md-option value="true">Email & Password</md-option>
+        <md-option value="false">Facebook</md-option>
+      </md-select>
+    </md-list-item>
+
+    <md-list-item class="center-input" *ngIf="connectEmailNoFacebook === 'true'">
+      <md-input type="email" required
+                [dividerColor]="signUpFormErrors.email?'accent':'primary'"
+                placeholder="Email"
+                formControlName="email"
+                [(ngModel)]="userModel.email"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.email">
+      {{ signUpFormErrors.email }}
+    </md-list-item>
+
+    <md-list-item class="center-input" *ngIf="connectEmailNoFacebook === 'true'">
+      <md-input type="password" required
+                [dividerColor]="signUpFormErrors.password?'accent':'primary'"
+                placeholder="Password"
+                formControlName="password"
+                [(ngModel)]="password"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.password">
+      {{ signUpFormErrors.password }}
+    </md-list-item>
+
+    <md-list-item class="center-input" *ngIf="connectEmailNoFacebook === 'true'">
+      <md-input type="password" required
+                [dividerColor]="signUpFormErrors.confirmPassword?'accent':'primary'"
+                placeholder="Confirm Password"
+                formControlName="confirmPassword"
+                [(ngModel)]="confirmPassword"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.confirmPassword">
+      {{ signUpFormErrors.confirmPassword }}
+    </md-list-item>
+
+    <md-list-item class="center-input" *ngIf="connectEmailNoFacebook === 'true'">
+      <md-input type="text" required
+                [dividerColor]="signUpFormErrors.name?'accent':'primary'"
+                placeholder="Name"
+                formControlName="name"
+                [(ngModel)]="userModel.name"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.name">
+      {{ signUpFormErrors.name }}
+    </md-list-item>
+
+    <md-list-item class="center-input" *ngIf="connectEmailNoFacebook !== undefined">
+      <md-input type="text" required
+                [dividerColor]="signUpFormErrors.address?'accent':'primary'"
+                placeholder="Address"
+                formControlName="address"
+                [(ngModel)]="userModel.address"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.address">
+      {{ signUpFormErrors.address }}
+    </md-list-item>
+
+    <md-list-item class="center-input" *ngIf="connectEmailNoFacebook !== undefined">
+      <md-input type="text" required
+                [dividerColor]="signUpFormErrors.phoneNumber?'accent':'primary'"
+                placeholder="Phone Number"
+                formControlName="phoneNumber"
+                [(ngModel)]="userModel.phoneNumber"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.phoneNumber">
+      {{ signUpFormErrors.phoneNumber }}
+    </md-list-item>
+
+    <md-list-item class="center-input" *ngIf="connectEmailNoFacebook !== undefined">
+      <!--[dividerColor]="signUpFormErrors.profile?'accent':'primary'"-->
+      <md-select placeholder="Profile" required
+                 formControlName="profile"
+                 [(ngModel)]="userModel.profile">
+        <!--<md-option value={{profileTypeEnum.client}}>Client</md-option>-->
+        <md-option value={{profileTypeEnum.manager}}>Car park Manager</md-option>
+        <md-option value={{profileTypeEnum.cleaner}}>Cleaner</md-option>
+      </md-select>
+    </md-list-item>
+  </form>
+
+  <form [formGroup]="carParkForm" *ngIf="userModel.profile === profileTypeEnum.manager">
+    <h2 class="center-text">Add the first car park</h2>
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="carParkFormErrors.name?'accent':'primary'"
+                placeholder="Car park Name"
+                formControlName="carParkName"
+                [(ngModel)]="carParkModel.name"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.name">
+      {{ carParkFormErrors.name }}
+    </md-list-item>
+
+    <md-list-item class="center-input" (click)="inputBackground.click()">
+      <md-progress-circle mode="indeterminate" color="primary" class="loading-picture"
+                          *ngIf="isPictureLoading"></md-progress-circle>
+      <label [ngClass]="{'lbl-indent': isPictureLoading, 'lbl-pick-picture': carParkModel?.picture}">
+        Click to pick a Picture<span class="mandatory">*</span>
+      </label>
+      <img class="override-picture-preview picture-position" *ngIf="carParkModel?.picture" [src]="carParkModel.picture">
+      <input type="file" class="hide-element" #inputBackground (change)="pickCarParkPicture($event)">
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-select required placeholder="Cardinal Part"
+                 formControlName="cardinalPart"
+                 [(ngModel)]="carParkModel.cardinalPart">
+        <md-option value={{cardinalPartEnum.north}}>North</md-option>
+        <md-option value={{cardinalPartEnum.south}}>South</md-option>
+        <md-option value={{cardinalPartEnum.east}}>East</md-option>
+        <md-option value={{cardinalPartEnum.west}}>West</md-option>
+      </md-select>
+    </md-list-item>
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="carParkFormErrors.cardinalPart?'accent':'primary'"
+                placeholder="Cardinal Part"
+                formControlName="cardinalPart"
+                [(ngModel)]="carParkModel.cardinalPart"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.cardinalPart">
+      {{ carParkFormErrors.cardinalPart }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="carParkFormErrors.area?'accent':'primary'"
+                placeholder="Area"
+                formControlName="area"
+                [(ngModel)]="carParkModel.area"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.area">
+      {{ carParkFormErrors.area }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="carParkFormErrors.address?'accent':'primary'"
+                placeholder="Car park Address"
+                formControlName="address"
+                [(ngModel)]="carParkModel.address"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.address">
+      {{ carParkFormErrors.address }}
+    </md-list-item>
+    <!--<md-list-item class="center-input">-->
+      <!--<md-input type="number" required-->
+                <!--[dividerColor]="carParkFormErrors.nbPlaces?'accent':'primary'"-->
+                <!--placeholder="Number of parks"-->
+                <!--formControlName="nbPlaces"-->
+                <!--[(ngModel)]="carParkModel.nbPlaces"></md-input>-->
+    <!--</md-list-item>-->
+    <!--<md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.nbPlaces">-->
+      <!--{{ carParkFormErrors.nbPlaces }}-->
+    <!--</md-list-item>-->
+  </form>
+
+  <form [formGroup]="cleanerForm" *ngIf="userModel.profile === profileTypeEnum.cleaner">
+    <!--<h2 class="center-text">Add your selectedCar park</h2>-->
+    <!--<md-list-item class="center-input">-->
+    <!--<md-input type="text" required-->
+    <!--[dividerColor]="carParkFormErrors.address?'accent':'primary'"-->
+    <!--placeholder="Car park Address"-->
+    <!--formControlName="address"-->
+    <!--[(ngModel)]="carParkModel.address"></md-input>-->
+    <!--</md-list-item>-->
+    <!--<md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.address">-->
+    <!--{{ carParkFormErrors.address }}-->
+    <!--</md-list-item>-->
+  </form>
+
+  <md-list-item class="center-input">
+    <!--TODO make a validation function to test on connectEmailNoFacebook maybe-->
+    <!--signUpForm.valid-->
+    <!--&& ((userModel.profile === profileTypeEnum.cleaner && cleanerForm.valid)-->
+    <!--|| (userModel.profile === profileTypeEnum.manager && carParkForm.valid))-->
+    <!--&&-->
+    <button md-raised-button color="primary"
+            [disabled]="signUpForm.invalid
+                && ((userModel.profile === profileTypeEnum.cleaner && cleanerForm.invalid)
+                  || (userModel.profile === profileTypeEnum.manager && carParkForm.invalid))"
+            (click)="createAccount()">Create {{userModel.profile}}
+    </button>
+  </md-list-item>
+
+</md-list>
+

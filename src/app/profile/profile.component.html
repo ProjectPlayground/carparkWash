@@ -1,7 +1,7 @@
 <md-list>
   <form [formGroup]="profileForm" class="center-form-items">
     <div class="form-style">
-      <md-list-item class="center-input margin20">
+      <md-list-item class="center-element margin20">
         <button md-raised-button *ngIf="!editMode" (click)="toggleEditMode(true)">
           <md-icon><i class="material-icons">mode_edit</i></md-icon>
           Edit Profile
@@ -19,104 +19,130 @@
         </button>
       </md-list-item>
 
-      <md-list-item class="center-input">
-        <md-input type="text" required
-                  [disabled]="!editMode"
-                  [dividerColor]="formErrors.name?'accent':'primary'"
-                  placeholder="Name"
-                  formControlName="name"
-                  value="{{user.name}}"></md-input>
-      </md-list-item>
-      <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.name">
-        {{ formErrors.name }}
-      </md-list-item>
+      <div style="display: flex; flex-direction: row">
+        <md-list-item>
+          <md-input type="text" required
+                    [disabled]="!editMode"
+                    [dividerColor]="formErrors.name?'accent':'primary'"
+                    placeholder="Name"
+                    formControlName="name"
+                    value="{{user.name}}"></md-input>
+        </md-list-item>
+        <md-list-item class="alert alert-danger" *ngIf="formErrors.name">
+          {{ formErrors.name }}
+        </md-list-item>
 
-      <md-list-item class="center-input">
-        <md-input type="email" required
-                  [disabled]="!editMode"
-                  [dividerColor]="formErrors.email?'accent':'primary'"
-                  placeholder="Email"
-                  formControlName="email"
-                  value="{{user.email}}"></md-input>
-      </md-list-item>
-      <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.email">
-        {{ formErrors.email }}
-      </md-list-item>
+        <md-list-item>
+          <md-input type="email" required
+                    [disabled]="!editMode"
+                    [dividerColor]="formErrors.email?'accent':'primary'"
+                    placeholder="Email"
+                    formControlName="email"
+                    value="{{user.email}}"></md-input>
+        </md-list-item>
+        <md-list-item class="alert alert-danger" *ngIf="formErrors.email">
+          {{ formErrors.email }}
+        </md-list-item>
+      </div>
 
-      <md-list-item class="center-input">
-        <md-input type="password" disabled="true" value="******" placeholder="Password"
-                  (click)="editMode && changePassword()">
-          <!--<span md-prefix class="margin-right">Password :</span>-->
-        </md-input>
-      </md-list-item>
+      <div style="display: flex; flex-direction: row">
+        <md-list-item>
+          <md-input type="text" required
+                    [disabled]="!editMode"
+                    [dividerColor]="formErrors.address?'accent':'primary'"
+                    placeholder="Address"
+                    formControlName="address"
+                    value="{{user.address}}"></md-input>
+        </md-list-item>
+        <md-list-item class="alert alert-danger" *ngIf="formErrors.address">
+          {{ formErrors.address }}
+        </md-list-item>
 
-      <md-list-item class="center-input">
-        <md-input type="text" required
-                  [disabled]="!editMode"
-                  [dividerColor]="formErrors.address?'accent':'primary'"
-                  placeholder="Address"
-                  formControlName="address"
-                  value="{{user.address}}"></md-input>
-      </md-list-item>
-      <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.address">
-        {{ formErrors.address }}
-      </md-list-item>
+        <md-list-item>
+          <md-input type="number" required
+                    [disabled]="!editMode"
+                    [dividerColor]="formErrors.phoneNumber?'accent':'primary'"
+                    placeholder="Phone Number"
+                    formControlName="phoneNumber"
+                    value="{{user.phoneNumber}}"></md-input>
+        </md-list-item>
+        <md-list-item class="alert alert-danger" *ngIf="formErrors.phoneNumber">
+          {{ formErrors.phoneNumber }}
+        </md-list-item>
+      </div>
 
-      <md-list-item class="center-input">
-        <md-input type="number" required
-                  [disabled]="!editMode"
-                  [dividerColor]="formErrors.phoneNumber?'accent':'primary'"
-                  placeholder="Phone Number"
-                  formControlName="phoneNumber"
-                  value="{{user.phoneNumber}}"></md-input>
-      </md-list-item>
-      <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.phoneNumber">
-        {{ formErrors.phoneNumber }}
-      </md-list-item>
+      <!--TODO move this to setting-->
+      <!--<md-list-item *ngIf="user.provider === 'email'">-->
+      <!--<md-input type="password" disabled="true" value="******" placeholder="Password"-->
+      <!--(click)="editMode && changePassword()">-->
+      <!--</md-input>-->
+      <!--</md-list-item>-->
     </div>
   </form>
 
   <br>
 
-  <swiper [config]="configCarousel" *ngIf="user.profile === profileTypesEnum.client">
-    <div class="swiper-wrapper">
-      <app-car-item class="swiper-slide" *ngFor="let car of user.cars"
-                    [car]="car" (removed)="updateUserFromDatabase()"></app-car-item>
+  <!------------ Client's cars list ------------>
+  <div *ngIf="user.profile === profileTypeEnum.client">
+    <swiper [config]="configCarousel" *ngIf="user.cars.length > 1">
+      <div class="swiper-wrapper">
+        <app-car-item class="swiper-slide" *ngFor="let car of user.cars"
+                      [car]="car" (removed)="updateUserFromDatabase()"></app-car-item>
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination"></div>
+      <!-- Add Arrows -->
+      <div class="swiper-button-next" *ngIf="user.cars.length > 4"></div>
+      <div class="swiper-button-prev" *ngIf="user.cars.length > 4"></div>
+    </swiper>
+    <div class="center-element" *ngIf="user.cars.length === 1">
+      <app-car-item class="swiper-slide"
+                    [car]="user.cars[0]" (removed)="updateUserFromDatabase()"></app-car-item>
     </div>
-    <!-- Add Pagination -->
-    <div class="swiper-pagination"></div>
-    <!-- Add Arrows -->
-    <div class="swiper-button-next" *ngIf="user.cars.length > 4"></div>
-    <div class="swiper-button-prev" *ngIf="user.cars.length > 4"></div>
-  </swiper>
+  </div>
 
-  <swiper [config]="configCarousel" *ngIf="user.profile === profileTypesEnum.manager">
-    <div class="swiper-wrapper">
-      <app-car-park-item class="swiper-slide" *ngFor="let carPark of user.carParks"
-                         [carPark]="carPark" (removed)="updateUserFromDatabase()"></app-car-park-item>
+  <!------------ Manager's car parks list ------------>
+  <div *ngIf="user.profile === profileTypeEnum.manager">
+    <swiper [config]="configCarousel" *ngIf="user.carParks.length > 1">
+      <div class="swiper-wrapper">
+        <app-car-park-item class="swiper-slide" *ngFor="let carPark of user.carParks"
+                           [carPark]="carPark" (removed)="updateUserFromDatabase()"></app-car-park-item>
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination"></div>
+      <!-- Add Arrows -->
+      <div class="swiper-button-next" *ngIf="user.carParks?.length > 4"></div>
+      <div class="swiper-button-prev" *ngIf="user.carParks?.length > 4"></div>
+    </swiper>
+    <div class="center-element" *ngIf="user.carParks.length === 1">
+      <app-car-park-item class="swiper-slide"
+                         [carPark]="user.carParks[0]" (removed)="updateUserFromDatabase()"></app-car-park-item>
     </div>
-    <!-- Add Pagination -->
-    <div class="swiper-pagination"></div>
-    <!-- Add Arrows -->
-    <div class="swiper-button-next" *ngIf="user.carParks?.length > 4"></div>
-    <div class="swiper-button-prev" *ngIf="user.carParks?.length > 4"></div>
-  </swiper>
+  </div>
 
-  <swiper [config]="configCarousel" *ngIf="user.profile === profileTypesEnum.cleaner">
-    <div class="swiper-wrapper">
-      <app-car-park-item class="swiper-slide" *ngFor="let carPark of allCarParks"
-                         [carPark]="carPark"></app-car-park-item>
+  <!------------ Cleaner car parks to select then select a car to wahs ------------>
+  <div *ngIf="user.profile === profileTypeEnum.cleaner">
+    <swiper [config]="configCarousel" *ngIf="allCarParks?.length > 1">
+      <div class="swiper-wrapper">
+        <app-car-park-item class="swiper-slide" *ngFor="let carPark of allCarParks"
+                           [carPark]="carPark"></app-car-park-item>
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination"></div>
+      <!-- Add Arrows -->
+      <div class="swiper-button-next" *ngIf="allCarParks?.length > 4"></div>
+      <div class="swiper-button-prev" *ngIf="allCarParks?.length > 4"></div>
+    </swiper>
+    <div class="center-element" *ngIf="allCarParks?.length === 1">
+      <app-car-park-item class="swiper-slide"
+                         [carPark]="allCarParks[0]"></app-car-park-item>
     </div>
-    <!-- Add Pagination -->
-    <div class="swiper-pagination"></div>
-    <!-- Add Arrows -->
-    <div class="swiper-button-next" *ngIf="allCarParks?.length > 4"></div>
-    <div class="swiper-button-prev" *ngIf="allCarParks?.length > 4"></div>
-  </swiper>
+  </div>
 
 </md-list>
 
-<div class="corner-bottom-right" *ngIf="user.profile !== profileTypesEnum.cleaner">
+<div class="corner-bottom-right"
+     *ngIf="user.profile === profileTypeEnum.client || user.profile === profileTypeEnum.manager">
   <button md-fab color="primary" (click)="add()">
     <md-icon>add</md-icon>
   </button>

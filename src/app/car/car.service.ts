@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { CarModel } from './car.model';
-import { UserModel } from '../shared/user/user.model';
+import { UserModel } from '../user/user.model';
 import { CarParkModel } from '../car-park/car-park.model';
 import { ServiceUtils } from '../shared/service.utils';
+import { UserService } from '../user/user-service';
 
 @Injectable()
 export class CarService extends ServiceUtils {
@@ -12,7 +13,7 @@ export class CarService extends ServiceUtils {
 
   private refDatabase: firebase.database.Reference;
 
-  constructor() {
+  constructor(public userService: UserService) {
     super();
     this.refDatabase = firebase.database().ref();
   }
@@ -31,7 +32,8 @@ export class CarService extends ServiceUtils {
     let updates = {};
     updates['users/' + newCar.userUid + '/cars/' + newCar.id] = newCar;
     updates['cars/' + newCar.id] = newCar;
-    return this.refDatabase.update(updates);
+    return this.refDatabase.update(updates)
+      .then(() => this.userService.getCurrent(true));
   }
 
   update(updatingCar: CarModel) {

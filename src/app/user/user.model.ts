@@ -1,6 +1,6 @@
-import { CarModel } from '../../car/car.model';
-import { ProfileTypes } from '../profile-types.enum';
-import { CarParkModel } from '../../car-park/car-park.model';
+import { CarModel } from '../car/car.model';
+import { ProfileType } from '../shared/profile-type.enum';
+import { CarParkModel } from '../car-park/car-park.model';
 
 export class UserModel {
 
@@ -9,7 +9,8 @@ export class UserModel {
   name: string;
   address: string;
   phoneNumber: string;
-  profile: ProfileTypes;
+  provider: string;
+  profile: ProfileType;
   cars: Array<CarModel>;
   carParks: Array<CarParkModel>;
 
@@ -19,7 +20,7 @@ export class UserModel {
     this.email = '';
     this.address = '';
     this.phoneNumber = '';
-    //this.profile = ProfileTypesEnum.client;
+    //this.profile = ProfileTypeEnum.client;
     this.cars = new Array<CarModel>();
     this.carParks = new Array<CarParkModel>();
   }

@@ -1,4 +1,3 @@
-
 export class ServiceUtils {
 
   /**
@@ -8,7 +7,6 @@ export class ServiceUtils {
    * @returns {any[]}
    */
   protected arrayFromObject(objects) {
-    return Object.keys(objects ? objects : [])
-      .map(key => objects[key]);
+    return Object.keys(objects ? objects : []).map(key => objects[key]);
   }
 }

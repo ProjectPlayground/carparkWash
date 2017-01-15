@@ -6,26 +6,30 @@ import { LoadingService } from '../../shared/loading.service';
 import { EditCarDialog } from '../edit-car/edit-car.dialog';
 import { ConfirmMessageDialog } from '../../confirm-message/confirm-message.dialog';
 import { Router } from '@angular/router';
-import { UserService } from '../../shared/user/user-service';
-import { UserModel } from '../../shared/user/user.model';
-import { ProfileTypesEnum } from '../../shared/profile-types.enum';
+import { UserService } from '../../user/user-service';
+import { UserModel } from '../../user/user.model';
+import { ProfileTypeEnum } from '../../shared/profile-type.enum';
 import { SubscriberService } from '../../shared/subscription/subscriber.service';
 import { SubscriptionModel } from '../../shared/subscription/subscription.model';
 import { CarParkModel } from '../../car-park/car-park.model';
 import { CarParkService } from '../../car-park/car-park.service';
+import { WashStateEnum } from '../../shared/subscription/wash-state.enum';
 
 @Component({
-  selector   : 'app-car-item',
+  selector: 'app-car-item',
   templateUrl: './car-item.component.html',
-  styleUrls  : ['./car-item.component.css']
+  styleUrls: ['./car-item.component.css']
 })
 export class CarItemComponent implements OnInit {
 
   currentUser: UserModel;
   carParkSubscribed: CarParkModel;
-  profileTypesEnum = ProfileTypesEnum;
+  dayIndex: number;
+  profileTypeEnum = ProfileTypeEnum;
+  washStateEnum = WashStateEnum;
   @Input() car: CarModel;
   @Input() subscription: SubscriptionModel;
+  @Input() isSelected: boolean
   @Output() removed = new EventEmitter<boolean>();
 
   private snackBarConfig: MdSnackBarConfig;
@@ -49,15 +53,19 @@ export class CarItemComponent implements OnInit {
   ngOnInit() {
     if (!this.car && !this.subscription) {
       this.router.navigate(['']);
-    }
-
-    if (this.subscription) {
-      this.car = this.subscription.car;
-      this.carParkService.getById(this.subscription.carParkId)
-        .then(carPark => this.carParkSubscribed = carPark);
-    } else if (this.car.subscription) {
-      this.carParkService.getById(this.car.subscription.carParkId)
-        .then(carPark => this.carParkSubscribed = carPark);
+    } else {
+      if (this.subscription) {
+        this.car = this.subscription.car;
+        this.carParkService.getBySubscription(this.subscription)
+          .then(carPark => this.carParkSubscribed = carPark);
+      } else if (this.car.subscription) {
+        this.subscription = this.car.subscription;
+        this.carParkService.getBySubscription(this.car.subscription)
+          .then(carPark => this.carParkSubscribed = carPark);
+      }
+      if (this.subscription) {
+        this.dayIndex = Math.round((new Date().getTime() - this.subscription.dateSubscription) / (1000 * 60 * 60 * 24));
+      }
     }
   }
 

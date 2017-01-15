@@ -6,6 +6,7 @@ export class DayCleanerModel {
   id: number;
   washDate: number;
   cleanerUid: string;
+  cleanerName: string;
   washStatus: WashState;
 
   constructor(id: number) {
@@ -19,8 +20,11 @@ export class SubscriptionModel {
 
   carId: string;
   car:CarModel;
-  userUid: string;
+  clientUid: string;
+  managerUid: string;
   carParkId: string;
+  carParkCardinalPart: string;
+  carParkArea: string;
   dateSubscription: number;
   // days contains 30 days
   days: Array<DayCleanerModel>;

@@ -1,52 +1,73 @@
-<h2>Add another car to your collection</h2>
-<P class="center-text">Please, no Lorries, Vans or Larger vehicles </P>
-
-<form [formGroup]="carForm">
+<h2>Add another car par</h2>
+<form [formGroup]="carParkForm">
   <md-list>
     <md-list-item class="center-input">
       <md-input type="text" required
-                [dividerColor]="formErrors.licencePlateNumber?'accent':'primary'"
-                placeholder="Licence Plate Number"
-                formControlName="licencePlateNumber"></md-input>
+                [dividerColor]="formErrors.name?'accent':'primary'"
+                placeholder="Car Park Name"
+                formControlName="name"></md-input>
     </md-list-item>
-    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.licencePlateNumber">
-      {{ formErrors.licencePlateNumber }}
+    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.name">
+      {{ formErrors.name }}
     </md-list-item>
 
-    <md-list-item class="center-input">
-      <md-select placeholder="Type" formControlName="carType">
-        <md-option value="regular">Regular</md-option>
-        <md-option value="suv">SUV</md-option>
+    <md-list-item (click)="inputBackground.click()">
+      <md-progress-circle mode="indeterminate" color="primary" class="loading-picture"
+                          *ngIf="isPictureLoading"></md-progress-circle>
+      <label class="lbl-pick-picture" [ngClass]="{'lbl-indent': isPictureLoading}">
+        Click to pick a Picture<span class="mandatory">*</span>
+      </label>
+      <img class="override-picture-preview" *ngIf="carParkToEdit?.picture" [src]="carParkToEdit.picture">
+      <input type="file" class="hide-element" #inputBackground (change)="pickCarParkPicture($event)">
+    </md-list-item>
+
+    <md-list-item class="center-input" *ngIf="carParkToEdit.cardinalPart === undefined">
+      <md-select required placeholder="Cardinal Part"
+                 formControlName="cardinalPart">
+        <md-option value={{cardinalPartEnum.north}}>North</md-option>
+        <md-option value={{cardinalPartEnum.south}}>South</md-option>
+        <md-option value={{cardinalPartEnum.east}}>East</md-option>
+        <md-option value={{cardinalPartEnum.west}}>West</md-option>
       </md-select>
     </md-list-item>
 
-    <md-list-item class="center-input">
-      <md-input type="text"
-                [dividerColor]="formErrors.brandModel?'accent':'primary'"
-                placeholder="Brand & Model"
-                formControlName="brandModel"></md-input>
+    <md-list-item class="center-input" *ngIf="carParkToEdit.area === undefined">
+      <md-input type="text" required
+                [dividerColor]="formErrors.area?'accent':'primary'"
+                placeholder="Area"
+                formControlName="area"></md-input>
     </md-list-item>
-    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.brandModel">
-      {{ formErrors.brandModel }}
+    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.area">
+      {{ formErrors.area }}
     </md-list-item>
 
     <md-list-item class="center-input">
-      <md-input type="text"
-                [dividerColor]="formErrors.colour?'accent':'primary'"
-                placeholder="Colour"
-                formControlName="colour"></md-input>
+      <md-input type="text" required
+                [dividerColor]="formErrors.address?'accent':'primary'"
+                placeholder="Address"
+                formControlName="address"></md-input>
     </md-list-item>
-    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.colour">
-      {{ formErrors.colour }}
+    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.address">
+      {{ formErrors.address }}
     </md-list-item>
+
+    <!--<md-list-item class="center-input">-->
+      <!--<md-input type="text"-->
+                <!--[dividerColor]="formErrors.nbPlaces?'accent':'primary'"-->
+                <!--placeholder="Number of parks"-->
+                <!--formControlName="nbPlaces"></md-input>-->
+    <!--</md-list-item>-->
+    <!--<md-list-item class="center-input alert alert-danger" *ngIf="formErrors.nbPlaces">-->
+      <!--{{ formErrors.nbPlaces }}-->
+    <!--</md-list-item>-->
 
   </md-list>
 </form>
 
 <md-list-item no-lines class="btns-dialog">
   <button md-button color="primary" (click)="cancel()">Cancel</button>
-  <button md-button color="primary" [disabled]="carForm.invalid"
-          (click)="carForm.valid && save()">Save
+  <button md-button color="primary" [disabled]="carParkForm.invalid"
+          (click)="carParkForm.valid && save()">Save
   </button>
 </md-list-item>
 

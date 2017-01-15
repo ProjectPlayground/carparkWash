@@ -1,5 +1,14 @@
 <md-list>
-  <app-car-item [car]="selectedCar"></app-car-item>
+  <div style="display: flex; flex-direction: row; justify-content: space-around;margin: 20px;">
+    <app-car-park-filter (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>
+  <!--</div>-->
+  <!--<div class="center-element">-->
+    <app-car-item [car]="selectedCar" isSelected="true"></app-car-item>
+  </div>
+
+  <md-list-item class="no-car-park-yet" *ngIf="carParks?.length === 0">
+    <h2>Select a filter for car parks</h2>
+  </md-list-item>
 
   <swiper [config]="configCarousel">
     <div class="swiper-wrapper">

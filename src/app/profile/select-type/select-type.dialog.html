@@ -1,0 +1,26 @@
+<h2>Select account type</h2>
+
+<md-list>
+  <form [formGroup]="selectTypeForm">
+
+    <md-list-item class="center-input">
+      <md-select placeholder="Profile" required
+                 formControlName="profile"
+                 [(ngModel)]="profile">
+        <md-option value="{{profileTypeEnum.client}}">Client</md-option>
+        <md-option value={{profileTypeEnum.manager}}>Car park Manager</md-option>
+        <md-option value={{profileTypeEnum.cleaner}}>Cleaner</md-option>
+      </md-select>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.profile">
+      {{ formErrors.profile }}
+    </md-list-item>
+  </form>
+</md-list>
+
+<md-list-item no-lines class="btns-dialog">
+  <!--<button md-button color="primary" (click)="cancel()">Cancel</button>-->
+  <button md-button color="primary" [disabled]="!selectTypeForm.valid"
+          (click)="selectTypeForm.valid && save()">Select
+  </button>
+</md-list-item>

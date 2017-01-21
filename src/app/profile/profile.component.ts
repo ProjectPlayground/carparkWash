@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MdSnackBar, MdSnackBarConfig, MdDialog, MdDialogConfig } from '@angular/material';
+//import * as Swiper from 'swiper';
 import { LoadingService } from '../shared/loading.service';
 import { ToolbarService } from '../shared/toolbar.service';
 import { UserService } from '../user/user-service';
@@ -68,7 +69,7 @@ export class ProfileComponent implements OnInit {
       .then(allCarParks => this.allCarParks = allCarParks)
       .catch(err => {
         console.error(err);
-        this.snackBar.open('Fail to update your profile', '', this.snackBarConfig);
+        this.snackBar.open('Fail to load car parks', '', this.snackBarConfig);
       });
   }
 
@@ -165,7 +166,7 @@ export class ProfileComponent implements OnInit {
     if (this.user.profile === ProfileTypeEnum.client && this.user.cars.length <= 4) {
       itemsLength = this.user.cars.length
     } else if (this.user.profile === ProfileTypeEnum.manager && this.user.carParks.length <= 4) {
-       itemsLength = this.user.carParks.length
+      itemsLength = this.user.carParks.length
     }
     //FIXME to be continued, problem when 1 item then user add another
     // solution, always swiper or 1, 2, 3 and 4 manually, 5 swiper
@@ -201,17 +202,15 @@ export class ProfileComponent implements OnInit {
       if (newCar) {
         newCar.userUid = this.user.uid;
         this.loadingService.show(true);
-        this.carService.add(this.user, newCar)
-          .then(() => {
-            this.updateCarsSliderConfig();
-            this.loadingService.show(false);
-            this.snackBar.open('Add selectedCar success', '', this.snackBarConfig);
-          })
-          .catch(err => {
-            this.loadingService.show(false);
-            console.error(err);
-            this.snackBar.open('Fail to add selectedCar', '', this.snackBarConfig);
-          });
+        this.carService.add(this.user, newCar).then(() => {
+          this.updateCarsSliderConfig();
+          this.loadingService.show(false);
+          this.snackBar.open('Add selected Car success', '', this.snackBarConfig);
+        }).catch(err => {
+          this.loadingService.show(false);
+          console.error(err);
+          this.snackBar.open('Fail to add selectedCar', '', this.snackBarConfig);
+        });
       }
     });
   }

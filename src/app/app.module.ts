@@ -28,7 +28,7 @@ import { SubscriberService } from './shared/subscription/subscriber.service';
 import { CarListComponent } from './car/car-list/car-list.component';
 import { SelectTypeDialog } from './profile/select-type/select-type.dialog';
 import { CarParkFilterComponent } from './car-park/car-park-filter/car-park-filter';
-import { AddUserComponent } from './user/add-user-component';
+import { AddUserComponent } from './user/add-user.component';
 import { CamelCasePipe } from './shared/camel-case.pipe';
 import { CarParkItemComponent } from './car-park/car-park-item/car-park-item';
 
@@ -50,18 +50,19 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     LoginComponent,
-    AddUserComponent,
     ProfileComponent,
-    ChangePasswordDialog,
+    AddUserComponent,
     CarItemComponent,
     CarParkItemComponent,
     CarParkListComponent,
+    CarParkFilterComponent,
     CarListComponent,
+
+    ChangePasswordDialog,
     ConfirmMessageDialog,
     EditCarDialog,
     EditCarParkDialog,
     SelectTypeDialog,
-    CarParkFilterComponent,
 
     CamelCasePipe
   ],
@@ -91,6 +92,7 @@ const appRoutes: Routes = [
     LoadingService,
     FirebaseService,
     ValidationMessageService,
+
     CanActivateViaAuthGuard,
     IsAdminViaAuthGuard
   ],

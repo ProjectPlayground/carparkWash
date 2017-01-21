@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserModel } from './user.model';
 import { MdSnackBarConfig, MdSnackBar } from '@angular/material';
 import { ProfileTypeEnum } from '../shared/profile-type.enum';
@@ -18,7 +18,7 @@ import { PickImageAbstract } from '../shared/PickImageAbstract';
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.css']
 })
-export class AddUserComponent extends PickImageAbstract {
+export class AddUserComponent extends PickImageAbstract implements OnInit, OnDestroy {
 
   connectEmailNoFacebook: 'true' | 'false';
   userModel = new UserModel();

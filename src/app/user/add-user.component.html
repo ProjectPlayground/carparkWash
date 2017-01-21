@@ -174,11 +174,6 @@
   </form>
 
   <md-list-item class="center-input">
-    <!--TODO make a validation function to test on connectEmailNoFacebook maybe-->
-    <!--signUpForm.valid-->
-    <!--&& ((userModel.profile === profileTypeEnum.cleaner && cleanerForm.valid)-->
-    <!--|| (userModel.profile === profileTypeEnum.manager && carParkForm.valid))-->
-    <!--&&-->
     <button md-raised-button color="primary"
             [disabled]="!areInputsValid()"
             (click)="areInputsValid()&& createAccount()">Create {{userModel.profile}}

@@ -52,7 +52,7 @@ export class CarParkListComponent implements OnInit {
         .then(carParks => this.carParks = carParks)
         .catch(err => {
           console.log(err);
-          this.snackBar.open('Error getting all selectedCar parks, please contact admin', '', this.snackBarConfig);
+          this.snackBar.open('Error getting Car parks, please contact admin', '', this.snackBarConfig);
         });
     }
   }
@@ -62,7 +62,7 @@ export class CarParkListComponent implements OnInit {
       .then(carParks => this.carParks = carParks)
       .catch(err => {
         console.log(err);
-        this.snackBar.open('Error getting all selectedCar parks, please contact admin', '', this.snackBarConfig);
+        this.snackBar.open('Error getting Car parks, please contact admin', '', this.snackBarConfig);
       });
   }
 

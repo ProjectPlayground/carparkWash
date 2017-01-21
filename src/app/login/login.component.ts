@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase';
-import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
+import { MdSnackBar, MdSnackBarConfig, MdDialogConfig, MdDialog } from '@angular/material';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { UserModel } from '../user/user.model';
 import { UserService } from '../user/user-service';
@@ -12,6 +12,7 @@ import { ValidationMessageService } from '../shared/validator/validation-message
 import { CarModel } from '../car/car.model';
 import { CarParkModel } from '../car-park/car-park.model';
 import { ProfileTypeEnum } from '../shared/profile-type.enum';
+import { ConfirmMessageDialog } from '../confirm-message/confirm-message.dialog';
 
 @Component({
   selector: 'app-login',
@@ -63,7 +64,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(public userService: UserService, public toolbarService: ToolbarService,
               public loadingService: LoadingService, public messageService: ValidationMessageService,
-              public router: Router, public snackBar: MdSnackBar, public formBuilder: FormBuilder) {
+              public router: Router, public snackBar: MdSnackBar, public formBuilder: FormBuilder,
+              public dialog: MdDialog) {
 
     this.userModel = new UserModel();
     this.userModel.profile = ProfileTypeEnum.client;
@@ -102,18 +104,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.router.navigate(['profile']);
         this.toolbarService.show(true);
         this.snackBar.open('Log in Success', '', this.snackBarConfig);
-      }).catch((err: firebase.FirebaseError) => {
+      }).catch(err => {
         this.loadingService.show(false);
-        console.error(err);
-        let errMsg = 'Log in Fail';
-        switch (err.code) {
-          case 'auth/invalid-email':
-          case 'auth/user-not-found':
-          case 'auth/wrong-password':
-            errMsg = 'Incorrect email or password';
-            break;
-        }
-        this.snackBar.open(errMsg, '', this.snackBarConfig);
+        this.snackBar.open(err.message, '', this.snackBarConfig);
       });
     } else {
       this.isOnLogin = true;
@@ -158,7 +151,27 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.loadingService.show(false);
           console.error(err);
           let errMsg = 'Sign Up Fail';
+
           switch (err.code) {
+            case 'auth/email-already-in-use-but-not-verified':
+              let dialogRef = this.dialog.open(ConfirmMessageDialog, <MdDialogConfig>{disableClose: false});
+              dialogRef.componentInstance.title = err.message[0];
+              dialogRef.componentInstance.content = err.message[1];
+              dialogRef.afterClosed().subscribe((isOk: boolean) => {
+                if (isOk) {
+                  this.loadingService.show(true);
+                  this.userService.sentEmailVerification().then(() => {
+                    this.loadingService.show(false);
+                    this.snackBar.open('Verification email sent', '', this.snackBarConfig);
+                    this.isOnLogin = true;
+                  }).catch(err => {
+                    this.loadingService.show(false);
+                    console.log(err);
+                    this.snackBar.open('Error Sending Verification email, please contact admin', '', this.snackBarConfig);
+                  });
+                }
+              });
+              break;
             case 'auth/email-already-in-use':
               errMsg = err.message;
               break;
@@ -166,6 +179,7 @@ export class LoginComponent implements OnInit, OnDestroy {
               errMsg = 'No internet connection';
               break;
           }
+
           this.snackBar.open(errMsg, '', this.snackBarConfig);
         });
     }

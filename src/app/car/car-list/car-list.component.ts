@@ -45,7 +45,6 @@ export class CarListComponent implements OnInit {
   }
 
   ngOnInit() {
-
     if (!this.selectedCarPark) {
       this.router.navigate(['']);
     } else {
@@ -53,7 +52,7 @@ export class CarListComponent implements OnInit {
         .then((subscriptions: Array<SubscriptionModel>) => this.subscriptions = subscriptions)
         .catch(err => {
           console.log(err);
-          this.snackBar.open('Error getting all selectedCar parks, please contact admin', '', this.snackBarConfig);
+          this.snackBar.open('Error getting Cars, please contact admin', '', this.snackBarConfig);
         });
     }
   }

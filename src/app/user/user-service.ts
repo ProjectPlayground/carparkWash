@@ -43,15 +43,30 @@ export class UserService extends ServiceUtils {
           }
         }).catch(error => {
           console.log(error);
-          return error;
+          throw error;
         });
       });
     }
   }
 
   login(userModel: UserModel, password: string) {
-    return firebase.auth().signInWithEmailAndPassword(userModel.email, password)
-      .then(() => this.getCurrent());
+    return firebase.auth().signInWithEmailAndPassword(userModel.email, password).then(userAuth => {
+      return this.getCurrent()
+    }).catch((err: firebase.FirebaseError) => {
+      console.error(err);
+      let errMsg: string = 'Log in Fail';
+      switch (err.code) {
+        case 'auth/invalid-email':
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+          errMsg = 'Incorrect email or password';
+          break;
+        case 'auth/unverified-email':
+          errMsg = 'Email not verified';
+          break;
+      }
+      throw {code: err.code, message: errMsg};
+    });
   }
 
   /**
@@ -94,7 +109,7 @@ export class UserService extends ServiceUtils {
       let email = error.email;
       // The firebase.auth.AuthCredential type that was used.
       let credential = error.credential;
-      return error;
+      throw error;
     });
   }
 
@@ -102,7 +117,24 @@ export class UserService extends ServiceUtils {
     return firebase.auth().createUserWithEmailAndPassword(user.email, password).then(() => {
       user.uid = firebase.auth().currentUser.uid;
       user.provider = 'email';
-      this.createUserModel(user, carPark, car)
+      return this.createUserModel(user, carPark, car)
+        .then(() => this.sentEmailVerification())
+        .catch((err: any) => {
+          if (err.code === 'auth/email-already-in-use' && firebase.auth().currentUser && !firebase.auth().currentUser.emailVerified) {
+            return Promise.reject({
+              code: 'auth/email-already-in-use-but-not-verified',
+              message: ['email already in use but not yet verified,', 'Re-sent verification email ?']
+            });
+          }
+          return Promise.reject(err);
+        });
+    });
+  }
+
+  sentEmailVerification() {
+    let userAuth = firebase.auth().currentUser;
+    return userAuth.sendEmailVerification().then(() => {
+      console.log("sendEmailVerification success");
     });
   }
 
@@ -141,16 +173,15 @@ export class UserService extends ServiceUtils {
 
   isAuth(): Promise<boolean> {
     return this.currentUser ? Promise.resolve(true) : new Promise((resolve, reject) =>
-      firebase.auth().onAuthStateChanged(resolve, reject))
-      .then((user: firebase.User) => {
-        this.userReady.notify(Boolean(user));
-        return Boolean(user);
-      });
+      firebase.auth().onAuthStateChanged(resolve, reject)).then((user: firebase.User) => {
+      this.userReady.notify(Boolean(user));
+      return Boolean(user);
+    });
   }
 
   logOut() {
     this.currentUser = undefined;
-    firebase.auth().signOut();
+    return firebase.auth().signOut();
   }
 
   updatePassword(newPassword: string) {
@@ -164,7 +195,7 @@ export class UserService extends ServiceUtils {
    * @returns {firebase.Promise<any>}
    */
   updateUserInfo(user: UserModel) {
-    let userInfo = new UserModel();
+    let userInfo = {};
     for (let att in user) {
       if (user.hasOwnProperty(att) && user[att] !== Object(user[att])) {
         userInfo[att] = user[att];

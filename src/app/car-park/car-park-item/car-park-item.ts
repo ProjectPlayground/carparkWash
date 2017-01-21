@@ -56,17 +56,18 @@ export class CarParkItemComponent implements OnInit {
 
   subscribeWashService() {
     if (this.carService.selectedCar) {
-    this.subscriberService.subscribe(this.carPark, this.carService.selectedCar)
-      .then(() => {
-        this.router.navigate(['profile']);
-        this.snackBar.open(`the selected car is subscribed to the carpark ${this.carPark.name}`
-          , '', this.snackBarConfig)
-      })
-      .catch(err => {
-        console.error(err);
-        this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
-      });
+      this.subscriberService.subscribe(this.carPark, this.carService.selectedCar)
+        .then(() => {
+          this.router.navigate(['profile']);
+          this.snackBar.open(`the selected car is subscribed to the carpark ${this.carPark.name}`
+            , '', this.snackBarConfig)
+        })
+        .catch(err => {
+          console.error(err);
+          this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
+        });
     } else {
+      console.error('can\'t subscribe to an undefined car');
       this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
     }
   }
@@ -93,17 +94,15 @@ export class CarParkItemComponent implements OnInit {
     dialogRef.afterClosed().subscribe((updatedCarPark: CarParkModel) => {
       if (updatedCarPark) {
         this.loadingService.show(true);
-        this.carParkService.update(updatedCarPark)
-          .then(() => {
-            this.carPark = updatedCarPark;
-            this.loadingService.show(false);
-            this.snackBar.open('Updating selectedCar success', '', this.snackBarConfig);
-          })
-          .catch(err => {
-            this.loadingService.show(false);
-            console.error(err);
-            this.snackBar.open('Fail to update selectedCar', '', this.snackBarConfig);
-          });
+        this.carParkService.update(updatedCarPark).then(() => {
+          this.carPark = updatedCarPark;
+          this.loadingService.show(false);
+          this.snackBar.open('Updating selected Car success', '', this.snackBarConfig);
+        }).catch(err => {
+          this.loadingService.show(false);
+          console.error(err);
+          this.snackBar.open('Fail to update selected Car', '', this.snackBarConfig);
+        });
       }
     });
   }
@@ -114,16 +113,14 @@ export class CarParkItemComponent implements OnInit {
     dialogRef.componentInstance.content = `Are you sure to remove this ${this.carPark.name} ?`;
     dialogRef.afterClosed().subscribe((isOk: boolean) => {
       if (isOk) {
-        this.carParkService.remove(this.carPark)
-          .then(data => {
-            this.removed.emit(true);
-            console.log(data);
-            this.snackBar.open('Your selectedCar was removed successfully', '', this.snackBarConfig);
-          })
-          .catch(err => {
-            console.log(err);
-            this.snackBar.open('Could not remove your selectedCar, please contact admin', '', this.snackBarConfig);
-          });
+        this.carParkService.remove(this.carPark).then(data => {
+          this.removed.emit(true);
+          console.log(data);
+          this.snackBar.open(`The Carpark ${this.carPark.name} was removed successfully`, '', this.snackBarConfig);
+        }).catch(err => {
+          console.log(err);
+          this.snackBar.open(`Could not remove the carpark ${this.carPark.name}, please contact admin`, '', this.snackBarConfig);
+        });
       }
     });
   }

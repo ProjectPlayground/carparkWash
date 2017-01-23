@@ -32,7 +32,7 @@
     <button md-button color="primary" class="btn-action" (click)="selectToWash()"
             *ngIf="currentUser?.profile === profileTypeEnum.client
               && car?.subscription
-              && isUnlocked()
+              && carParkSubscribedIsUnlocked
               && subscription?.days[dayIndex].washStatus === washStateEnum.washNotRequested">
       Book to wash
     </button>

@@ -24,6 +24,7 @@ export class CarItemComponent implements OnInit {
 
   currentUser: UserModel;
   carParkSubscribed: CarParkModel;
+  carParkSubscribedIsUnlocked: boolean;
   dayIndex: number;
   profileTypeEnum = ProfileTypeEnum;
   washStateEnum = WashStateEnum;
@@ -56,12 +57,16 @@ export class CarItemComponent implements OnInit {
     } else {
       if (this.subscription) {
         this.car = this.subscription.car;
-        this.carParkService.getBySubscription(this.subscription)
-          .then(carPark => this.carParkSubscribed = carPark);
+        this.carParkService.getBySubscription(this.subscription).then(carPark => {
+            this.carParkSubscribed = carPark;
+            this.setIsSubscribedCarParkUnlocked();
+          });
       } else if (this.car.subscription) {
         this.subscription = this.car.subscription;
-        this.carParkService.getBySubscription(this.car.subscription)
-          .then(carPark => this.carParkSubscribed = carPark);
+        this.carParkService.getBySubscription(this.car.subscription).then(carPark => {
+            this.carParkSubscribed = carPark;
+            this.setIsSubscribedCarParkUnlocked();
+          });
       }
       if (this.subscription) {
         this.dayIndex = Math.round((new Date().getTime() - this.subscription.dateSubscription) / (1000 * 60 * 60 * 24));
@@ -141,4 +146,10 @@ export class CarItemComponent implements OnInit {
     });
   }
 
+  private setIsSubscribedCarParkUnlocked() {
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    today.setDate(today.getDate() + 1);
+    this.carParkSubscribedIsUnlocked = this.carParkSubscribed && this.carParkSubscribed.unlocked === today.getTime();
+  }
 }

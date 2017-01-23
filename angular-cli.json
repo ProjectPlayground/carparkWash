@@ -19,9 +19,11 @@
       "mobile": false,
       "styles": [
         "styles.css",
-        "assets/swiper.min.css"
+        "../node_modules/swiper/dist/css/swiper.min.css"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/swiper/dist/js/swiper.min.js"
+      ],
       "environments": {
         "source": "environments/environment.ts",
         "dev": "environments/environment.ts",

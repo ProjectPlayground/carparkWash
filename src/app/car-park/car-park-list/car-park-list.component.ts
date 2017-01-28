@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CarParkService } from '../car-park.service';
-import { CarParkModel } from '../car-park.model';
+import { CarParkService } from '../shared/car-park.service';
+import { CarParkModel } from '../shared/car-park.model';
 import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
-import { CarService } from '../../car/car.service';
-import { CarModel } from '../../car/car.model';
+import { CarService } from '../../car/shared/car.service';
+import { CarModel } from '../../car/shared/car.model';
 import { Router } from '@angular/router';
-import { CardinalPart } from '../car-park-filter/cardinal-part-enum';
+import { Region } from '../car-park-filter/region.enum';
 import { CarParkFilterModel } from '../car-park-filter/car-park-filter.model';
+import { LoadingService } from '../../shared/loading.service';
 
 @Component({
   selector: 'app-car-park-list',
@@ -35,7 +36,7 @@ export class CarParkListComponent implements OnInit {
   private snackBarConfig: MdSnackBarConfig;
 
   constructor(public carParkService: CarParkService, public carService: CarService,
-              public snackBar: MdSnackBar, public router: Router) {
+              public loadingService: LoadingService, public snackBar: MdSnackBar, public router: Router) {
 
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 2000;
@@ -48,20 +49,25 @@ export class CarParkListComponent implements OnInit {
     if (!this.selectedCar) {
       this.router.navigate(['']);
     } else {
-      this.carParkService.getAll()
-        .then(carParks => this.carParks = carParks)
-        .catch(err => {
-          console.log(err);
-          this.snackBar.open('Error getting Car parks, please contact admin', '', this.snackBarConfig);
-        });
+      //this.carParkService.getAll()
+      //  .then(carParks => this.carParks = carParks)
+      //  .catch(err => {
+      //    console.log(err);
+      //    this.snackBar.open('Error getting Car parks, please contact admin', '', this.snackBarConfig);
+      //  });
     }
   }
 
   getCarParksFilter(carParkFilterModel: CarParkFilterModel) {
-    this.carParkService.getByAreas(carParkFilterModel)
-      .then(carParks => this.carParks = carParks)
+    this.loadingService.show(true);
+    this.carParkService.getFiltered(carParkFilterModel)
+      .then(carParks => {
+        this.carParks = carParks;
+        this.loadingService.show(false);
+      })
       .catch(err => {
         console.log(err);
+        this.loadingService.show(false);
         this.snackBar.open('Error getting Car parks, please contact admin', '', this.snackBarConfig);
       });
   }

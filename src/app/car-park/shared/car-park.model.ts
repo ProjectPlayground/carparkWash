@@ -1,5 +1,5 @@
-import { SubscriptionModel } from '../shared/subscription/subscription.model';
-import { CardinalPart } from './car-park-filter/cardinal-part-enum';
+import { SubscriptionModel } from '../../shared/subscription/subscription.model';
+import { Region } from '../car-park-filter/region.enum';
 
 export class ParkPlaceModel {
   idCarSubscribed: string;
@@ -12,9 +12,10 @@ export class CarParkModel {
   subscriptions: Array<SubscriptionModel>;
 
   name: string;
+  code: string;
   picture: string;
   address: string;
-  cardinalPart: CardinalPart;
+  region: Region;
   area: string;
   // if unlocked: client can book his selectedCar for a wash
   // unlocked contains the date of unlock
@@ -26,10 +27,11 @@ export class CarParkModel {
 
   constructor() {
     this.name = '';
+    this.code = '';
     this.picture = '';
     this.address = '';
     this.area = '';
-    //this.cardinalPart = undefined;
+    //this.region = undefined;
     // if unlocked: client can subscribe his selectedCar for a wash
     this.unlocked = 0;
     //this.parkPlaces = new Array<ParkPlaceModel>();

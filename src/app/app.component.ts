@@ -5,7 +5,7 @@ import { UserService } from './user/user-service';
 import { ToolbarService } from './shared/toolbar.service';
 import { UserReady } from './user/user-notifier';
 import { LoadingService } from './shared/loading.service';
-import { ProfileTypeEnum } from './shared/profile-type.enum';
+import { ProfileEnum } from './user/profile.enum';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,7 @@ export class AppComponent {
   showToolbar = true;
   isLoading = false;
   toolbarTitle = 'Carpark';
-  profileTypeEnum = ProfileTypeEnum;
+  profileTypeEnum = ProfileEnum;
 
   constructor(public firebaseService: FirebaseService, public userService: UserService,
               public userReady: UserReady, public toolbarService: ToolbarService,
@@ -36,5 +36,9 @@ export class AppComponent {
           .then(currentUser => this.currentUser = currentUser)
       }
     });
+  }
+
+  openCarparkInfo() {
+    window.open('https://services2.hdb.gov.sg/webapp/BN22CpkVcncy/BN22CpkInfoSearch.jsp');
   }
 }

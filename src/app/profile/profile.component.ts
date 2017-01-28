@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { MdSnackBar, MdSnackBarConfig, MdDialog, MdDialogConfig } from '@angular/material';
-//import * as Swiper from 'swiper';
 import { LoadingService } from '../shared/loading.service';
 import { ToolbarService } from '../shared/toolbar.service';
 import { UserService } from '../user/user-service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { GlobalValidator } from '../shared/validator/global.validator';
 import { UserModel } from '../user/user.model';
-import { ChangePasswordDialog } from './change-pssword/change-password.dialog';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
-import { CarModel } from '../car/car.model';
-import { CarService } from '../car/car.service';
+import { CarModel } from '../car/shared/car.model';
+import { CarService } from '../car/shared/car.service';
 import { EditCarDialog } from '../car/edit-car/edit-car.dialog';
-import { ProfileTypeEnum } from '../shared/profile-type.enum';
+import { ProfileEnum } from '../user/profile.enum';
 import { EditCarParkDialog } from '../car-park/edit-car-park/edit-car-park.dialog';
-import { CarParkService } from '../car-park/car-park.service';
-import { CarParkModel } from '../car-park/car-park.model';
+import { CarParkService } from '../car-park/shared/car-park.service';
+import { CarParkModel } from '../car-park/shared/car-park.model';
 import { SelectTypeDialog } from './select-type/select-type.dialog';
+import { CarParkFilterModel } from '../car-park/car-park-filter/car-park-filter.model';
+import { Region } from "../car-park/car-park-filter/region.enum";
 
 @Component({
   selector: 'app-profile',
@@ -27,10 +27,10 @@ export class ProfileComponent implements OnInit {
 
   user: UserModel;
   editMode = false;
-  allCarParks: Array<CarParkModel>;
+  carParks: Array<CarParkModel>;
 
   private snackBarConfig: MdSnackBarConfig;
-  profileTypeEnum = ProfileTypeEnum;
+  profileTypeEnum = ProfileEnum;
   profileForm: FormGroup;
   formErrors = {
     email: '',
@@ -66,7 +66,7 @@ export class ProfileComponent implements OnInit {
 
     this.buildProfileForm(false);
     this.carParkService.getAll()
-      .then(allCarParks => this.allCarParks = allCarParks)
+      .then(allCarParks => this.carParks = allCarParks)
       .catch(err => {
         console.error(err);
         this.snackBar.open('Fail to load car parks', '', this.snackBarConfig);
@@ -79,31 +79,26 @@ export class ProfileComponent implements OnInit {
     this.loadingService.show(true);
     this.userService.getCurrent(true).then(user => {
       this.user = user;
-      this.updateCarsSliderConfig();
       this.loadingService.show(false);
-      if (!this.user.profile) {
-        this.dialog.open(SelectTypeDialog, <MdDialogConfig>{
-          disableClose: true
-        }).afterClosed().subscribe(userProfile => {
-          if (userProfile) {
-            this.loadingService.show(true);
-            this.user.profile = userProfile;
-            this.userService.updateUserInfo(this.user).then(() => {
-              this.loadingService.show(false);
-              this.snackBar.open('Type account has been saved', '', this.snackBarConfig);
-            }).catch(err => {
-              this.loadingService.show(false);
-              console.error(err);
-              this.snackBar.open('Fail to update your password', '', this.snackBarConfig);
-            });
-          }
-        });
-      }
     }).catch(err => {
       this.loadingService.show(false);
       console.error(err);
       this.snackBar.open('Fail to get your profile data', '', this.snackBarConfig);
     });
+  }
+
+  getCarParksFilter(carParkFilterModel: CarParkFilterModel) {
+    this.loadingService.show(true);
+    this.carParkService.getFiltered(carParkFilterModel)
+      .then(carParks => {
+        this.carParks = carParks;
+        this.loadingService.show(false);
+      })
+      .catch(err => {
+        console.log(err);
+        this.loadingService.show(false);
+        this.snackBar.open('Error getting Car parks, please contact admin', '', this.snackBarConfig);
+      });
   }
 
   toggleEditMode(editMode: boolean) {
@@ -112,28 +107,11 @@ export class ProfileComponent implements OnInit {
   }
 
   add() {
-    if (this.user.profile === ProfileTypeEnum.client) {
+    if (this.user.profile === ProfileEnum.client) {
       this.addCar();
-    } else if (this.user.profile === ProfileTypeEnum.manager) {
+    } else if (this.user.profile === ProfileEnum.manager) {
       this.addCarPark();
     }
-  }
-
-  changePassword() {
-    this.dialog.open(ChangePasswordDialog, <MdDialogConfig>{
-      disableClose: true
-    }).afterClosed().subscribe(newPassword => {
-      if (newPassword) {
-        this.userService.updatePassword(newPassword)
-          .then(() => {
-            this.snackBar.open('Password has been successfully updated', '', this.snackBarConfig);
-          })
-          .catch(err => {
-            console.error(err);
-            this.snackBar.open('Fail to update your password', '', this.snackBarConfig);
-          });
-      }
-    });
   }
 
   save() {
@@ -155,22 +133,7 @@ export class ProfileComponent implements OnInit {
   }
 
   updateUserFromDatabase() {
-    this.userService.getCurrent(false).then(user => {
-      this.user = user;
-      this.updateCarsSliderConfig();
-    });
-  }
-
-  updateCarsSliderConfig() {
-    let itemsLength = 0;
-    if (this.user.profile === ProfileTypeEnum.client && this.user.cars.length <= 4) {
-      itemsLength = this.user.cars.length
-    } else if (this.user.profile === ProfileTypeEnum.manager && this.user.carParks.length <= 4) {
-      itemsLength = this.user.carParks.length
-    }
-    //FIXME to be continued, problem when 1 item then user add another
-    // solution, always swiper or 1, 2, 3 and 4 manually, 5 swiper
-    //this.configCarousel.slidesPerView = itemsLength;
+    this.userService.getCurrent(false).then(user => this.user = user);
   }
 
   private buildProfileForm(isDisabled: boolean) {
@@ -203,13 +166,12 @@ export class ProfileComponent implements OnInit {
         newCar.userUid = this.user.uid;
         this.loadingService.show(true);
         this.carService.add(this.user, newCar).then(() => {
-          this.updateCarsSliderConfig();
           this.loadingService.show(false);
-          this.snackBar.open('Add selected Car success', '', this.snackBarConfig);
+          this.snackBar.open(`The car ${newCar.licencePlateNumber} added successfully`, '', this.snackBarConfig);
         }).catch(err => {
           this.loadingService.show(false);
           console.error(err);
-          this.snackBar.open('Fail to add selectedCar', '', this.snackBarConfig);
+          this.snackBar.open(`Faild to add ${newCar.licencePlateNumber}`, '', this.snackBarConfig);
         });
       }
     });
@@ -217,18 +179,19 @@ export class ProfileComponent implements OnInit {
 
   private addCarPark() {
     this.dialog.open(EditCarParkDialog, <MdDialogConfig>{disableClose: true})
-      .afterClosed().subscribe((newCarPark: CarParkModel) => {
-      if (newCarPark) {
-        newCarPark.userUid = this.user.uid;
+      .afterClosed().subscribe((newCarPark: {carpark: CarParkModel, region: Region, area: string}) => {
+      if (newCarPark && newCarPark.carpark) {
+        newCarPark.carpark.userUid = this.user.uid;
+        newCarPark.carpark.region = newCarPark.region;
+        newCarPark.carpark.area = newCarPark.area;
         this.loadingService.show(true);
-        this.carParkService.add(this.user, newCarPark).then(() => {
-          this.updateCarsSliderConfig();
+        this.carParkService.add(this.user, newCarPark.carpark).then(() => {
           this.loadingService.show(false);
-          this.snackBar.open('Add selectedCar park success', '', this.snackBarConfig);
+          this.snackBar.open(`The car ${newCarPark.carpark.name} added successfully`, '', this.snackBarConfig);
         }).catch(err => {
           this.loadingService.show(false);
           console.error(err);
-          this.snackBar.open('Fail to add selectedCar park', '', this.snackBarConfig);
+          this.snackBar.open(`Faild to add ${newCarPark.carpark.name}`, '', this.snackBarConfig);
         });
       }
     });

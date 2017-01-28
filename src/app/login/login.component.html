@@ -127,11 +127,11 @@
     </md-list-item>
 
     <md-list-item class="center-input">
-      <md-select placeholder="Type"
+      <md-select placeholder="Silhouette Picture"
                  [ngModelOptions]="{standalone: true}"
-                 [(ngModel)]="carModel.type">
-        <md-option value="regular">Regular</md-option>
-        <md-option value="suv">SUV</md-option>
+                 [(ngModel)]="carModel.silhouettePicture">
+        <md-option value="{{silhouettePictureTypeEnum.SEDAN}}">{{silhouettePictureTypeEnum.SEDAN}}</md-option>
+        <md-option value="{{silhouettePictureTypeEnum.SUV}}">{{silhouettePictureTypeEnum.SUV}}</md-option>
       </md-select>
     </md-list-item>
 
@@ -224,6 +224,7 @@
   </md-list-item>
 
   <md-list-item class="center-input" *ngIf="!isOnLogin">
+    <button md-button color="primary" color="warn" (click)="login()">Back to Login</button>
     <button md-raised-button color="primary"
             [disabled]="signUpForm.invalid && carForm.invalid"
             (click)="signUpForm.valid && carForm.valid && signUp()">Sign up
@@ -232,10 +233,6 @@
 
   <md-list-item class="center-input" *ngIf="isOnLogin">
     <button md-button color="primary" (click)="signUp()">Sign up</button>
-  </md-list-item>
-
-  <md-list-item class="center-input" *ngIf="!isOnLogin">
-    <button md-button color="primary" color="warn" (click)="login()">Back to Login</button>
   </md-list-item>
 
 </md-list>

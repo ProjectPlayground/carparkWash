@@ -16,6 +16,11 @@ md-card {
   /*max-width: 500px;*/
 }
 
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
 .override-picture-preview {
   max-width: 300px;
   max-height: 200px;

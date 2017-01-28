@@ -1,16 +1,17 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { CarParkModel } from '../car-park.model';
+import { CarParkModel } from '../shared/car-park.model';
 import { MdSnackBarConfig, MdSnackBar, MdDialog, MdDialogConfig } from '@angular/material';
 import { LoadingService } from '../../shared/loading.service';
 import { ConfirmMessageDialog } from '../../confirm-message/confirm-message.dialog';
-import { CarParkService } from '../car-park.service';
+import { CarParkService } from '../shared/car-park.service';
 import { EditCarParkDialog } from '../edit-car-park/edit-car-park.dialog';
 import { Router } from '@angular/router';
 import { UserService } from '../../user/user-service';
 import { UserModel } from '../../user/user.model';
 import { SubscriberService } from '../../shared/subscription/subscriber.service';
-import { CarService } from '../../car/car.service';
-import { ProfileTypeEnum } from '../../shared/profile-type.enum';
+import { CarService } from '../../car/shared/car.service';
+import { ProfileEnum } from '../../user/profile.enum';
+import { Region } from "../car-park-filter/region.enum";
 
 @Component({
   selector: 'app-car-park-item',
@@ -20,7 +21,8 @@ import { ProfileTypeEnum } from '../../shared/profile-type.enum';
 export class CarParkItemComponent implements OnInit {
 
   currentUser: UserModel;
-  profileTypeEnum = ProfileTypeEnum;
+  isCarParkUnlocked: boolean;
+  profileTypeEnum = ProfileEnum;
   @Input() carPark: CarParkModel;
   @Output() removed = new EventEmitter<boolean>();
 
@@ -33,7 +35,7 @@ export class CarParkItemComponent implements OnInit {
 
     this.currentUser = new UserModel();
     this.snackBarConfig = new MdSnackBarConfig();
-    this.snackBarConfig.duration = 2000;
+    this.snackBarConfig.duration = 3000;
     this.snackBarConfig.politeness = 'polite';
     this.userService.getCurrent()
       .then(user => this.currentUser = user)
@@ -46,6 +48,11 @@ export class CarParkItemComponent implements OnInit {
   ngOnInit() {
     if (!this.carPark) {
       this.router.navigate(['']);
+    } else {
+      let today = new Date();
+      today.setHours(0, 0, 0, 0);
+      today.setDate(today.getDate() + 1);
+      this.isCarParkUnlocked = this.carPark.unlocked === today.getTime();
     }
   }
 
@@ -67,16 +74,9 @@ export class CarParkItemComponent implements OnInit {
           this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
         });
     } else {
-      console.error('can\'t subscribe to an undefined car');
+      console.error('Can\'t subscribe to an undefined car');
       this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
     }
-  }
-
-  isUnlocked() {
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-    today.setDate(today.getDate() + 1);
-    return this.carPark.unlocked === today.getTime();
   }
 
   unlock() {
@@ -91,17 +91,19 @@ export class CarParkItemComponent implements OnInit {
   edit() {
     let dialogRef = this.dialog.open(EditCarParkDialog, <MdDialogConfig>{disableClose: true});
     dialogRef.componentInstance.carParkToEdit = this.carPark;
-    dialogRef.afterClosed().subscribe((updatedCarPark: CarParkModel) => {
-      if (updatedCarPark) {
+    dialogRef.afterClosed().subscribe((carParkToUpdate: {carpark: CarParkModel, region: Region, area: string}) => {
+      if (carParkToUpdate && carParkToUpdate.carpark) {
         this.loadingService.show(true);
-        this.carParkService.update(updatedCarPark).then(() => {
-          this.carPark = updatedCarPark;
-          this.loadingService.show(false);
-          this.snackBar.open('Updating selected Car success', '', this.snackBarConfig);
-        }).catch(err => {
+        this.carParkService.update(carParkToUpdate.carpark, carParkToUpdate.region, carParkToUpdate.area)
+          .then(() => {
+            this.carPark = carParkToUpdate.carpark;
+            this.loadingService.show(false);
+            this.snackBar.open(`The car ${this.carPark.name} was updated successfully`, '', this.snackBarConfig);
+          })
+          .catch(err => {
           this.loadingService.show(false);
           console.error(err);
-          this.snackBar.open('Fail to update selected Car', '', this.snackBarConfig);
+          this.snackBar.open(`Fail to update ${this.carPark.name}`, '', this.snackBarConfig);
         });
       }
     });
@@ -109,14 +111,14 @@ export class CarParkItemComponent implements OnInit {
 
   remove() {
     let dialogRef = this.dialog.open(ConfirmMessageDialog, <MdDialogConfig>{disableClose: false});
-    dialogRef.componentInstance.title = 'Confirmation of deletion';
-    dialogRef.componentInstance.content = `Are you sure to remove this ${this.carPark.name} ?`;
+    dialogRef.componentInstance.title = 'CONFIRM DELETION';
+    dialogRef.componentInstance.content = `Are you sure you would like to delete ${this.carPark.name} ?`;
     dialogRef.afterClosed().subscribe((isOk: boolean) => {
       if (isOk) {
         this.carParkService.remove(this.carPark).then(data => {
           this.removed.emit(true);
           console.log(data);
-          this.snackBar.open(`The Carpark ${this.carPark.name} was removed successfully`, '', this.snackBarConfig);
+          this.snackBar.open(`The carpark ${this.carPark.name} was removed successfully`, '', this.snackBarConfig);
         }).catch(err => {
           console.log(err);
           this.snackBar.open(`Could not remove the carpark ${this.carPark.name}, please contact admin`, '', this.snackBarConfig);

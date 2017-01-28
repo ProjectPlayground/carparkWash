@@ -1,0 +1,13 @@
+
+.override-input-min-hight {
+  min-height: 50px;
+}
+
+.center-element {
+  justify-content: center;
+  display: flex;
+}
+
+.margin-top {
+  margin-top: 10px;
+}

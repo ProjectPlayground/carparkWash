@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MdDialogRef, MdSnackBarConfig } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidationMessageService } from '../../shared/validator/validation-message.service';
-import { CarModel } from '../car.model';
+import { CarModel, SilhouettePictureTypeEnum } from '../shared/car.model';
 
 @Component({
   selector: 'app-add-car',
@@ -13,6 +13,7 @@ export class EditCarDialog implements OnInit {
 
   carToEdit: CarModel;
 
+  silhouettePictureTypeEnum = SilhouettePictureTypeEnum;
   private snackBarConfig: MdSnackBarConfig;
   carForm: FormGroup;
   formErrors = {
@@ -43,7 +44,7 @@ export class EditCarDialog implements OnInit {
     this.carToEdit.licencePlateNumber = this.carForm.value.licencePlateNumber;
     this.carToEdit.brandModel = this.carForm.value.brandModel;
     this.carToEdit.colour = this.carForm.value.colour;
-    this.carToEdit.type = this.carForm.value.carType;
+    this.carToEdit.silhouettePicture = this.carForm.value.silhouettePicture;
     this.dialogRef.close(this.carToEdit);
   }
 
@@ -57,7 +58,7 @@ export class EditCarDialog implements OnInit {
         Validators.maxLength(this.messageService.maxLengthBrandModel)],
       colour: [this.carToEdit.colour,
         Validators.maxLength(this.messageService.maxLengthCarColour)],
-      carType: [this.carToEdit.type]
+      silhouettePicture: [this.carToEdit.silhouettePicture]
     });
     this.carForm.valueChanges
       .subscribe(data => this.messageService.onValueChanged(this.carForm, this.formErrors));

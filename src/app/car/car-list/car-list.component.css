@@ -1,4 +1,8 @@
 
+:host {
+  overflow: auto;
+}
+
 .no-car-yet >>> .md-list-item {
   justify-content: center;
   margin-top: 50px;

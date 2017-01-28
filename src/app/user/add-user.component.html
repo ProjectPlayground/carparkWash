@@ -85,14 +85,14 @@
       <md-select placeholder="Profile" required
                  formControlName="profile"
                  [(ngModel)]="userModel.profile">
-        <!--<md-option value={{profileTypeEnum.client}}>Client</md-option>-->
-        <md-option value={{profileTypeEnum.manager}}>Car park Manager</md-option>
-        <md-option value={{profileTypeEnum.cleaner}}>Cleaner</md-option>
+        <!--<md-option value={{profileEnum.client}}>Client</md-option>-->
+        <md-option value="{{profileEnum.manager}}">Car park Manager</md-option>
+        <md-option value={{profileEnum.cleaner}}>Cleaner</md-option>
       </md-select>
     </md-list-item>
   </form>
 
-  <form [formGroup]="carParkForm" *ngIf="userModel.profile === profileTypeEnum.manager">
+  <form [formGroup]="carParkForm" *ngIf="userModel.profile === profileEnum.manager">
     <h2 class="center-text">Add the first car park</h2>
     <md-list-item class="center-input">
       <md-input type="text" required
@@ -103,6 +103,17 @@
     </md-list-item>
     <md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.name">
       {{ carParkFormErrors.name }}
+    </md-list-item>
+
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="carParkFormErrors.code?'accent':'primary'"
+                placeholder="Car park Code"
+                formControlName="carParkCode"
+                [(ngModel)]="carParkModel.code"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.code">
+      {{ carParkFormErrors.code }}
     </md-list-item>
 
     <md-list-item class="center-input" (click)="inputBackground.click()">
@@ -116,13 +127,14 @@
     </md-list-item>
 
     <md-list-item class="center-input">
-      <md-select required placeholder="Cardinal Part"
-                 formControlName="cardinalPart"
-                 [(ngModel)]="carParkModel.cardinalPart">
-        <md-option value={{cardinalPartEnum.north}}>North</md-option>
-        <md-option value={{cardinalPartEnum.south}}>South</md-option>
-        <md-option value={{cardinalPartEnum.east}}>East</md-option>
-        <md-option value={{cardinalPartEnum.west}}>West</md-option>
+      <md-select required placeholder="Region"
+                 formControlName="region"
+                 [(ngModel)]="carParkModel.region">
+        <md-option value="{{regionEnum.central}}">{{regionEnum.central | camelCase}}</md-option>
+        <md-option value={{cardinalPartEnum.east}}>{{cardinalPartEnum.east | camelCase}}</md-option>
+        <md-option value={{cardinalPartEnum.north}}>{{cardinalPartEnum.north | camelCase}}</md-option>
+        <md-option value={{cardinalPartEnum.northEast}}>{{cardinalPartEnum.northEast | camelCase}}</md-option>
+        <md-option value={{cardinalPartEnum.west}}>{{cardinalPartEnum.west | camelCase}}</md-option>
       </md-select>
     </md-list-item>
 
@@ -159,7 +171,7 @@
     <!--</md-list-item>-->
   </form>
 
-  <form [formGroup]="cleanerForm" *ngIf="userModel.profile === profileTypeEnum.cleaner">
+  <form [formGroup]="cleanerForm" *ngIf="userModel.profile === profileEnum.cleaner">
     <!--<h2 class="center-text">Add your selectedCar park</h2>-->
     <!--<md-list-item class="center-input">-->
     <!--<md-input type="text" required-->

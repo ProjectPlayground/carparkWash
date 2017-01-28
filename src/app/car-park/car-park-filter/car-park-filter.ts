@@ -1,8 +1,11 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { CardinalPartEnum, CardinalPart } from './cardinal-part-enum';
-import { CarParkService } from '../car-park.service';
-import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
-import { CarParkFilterModel } from './car-park-filter.model';
+import { Component, EventEmitter, Output, ViewChild, ChangeDetectionStrategy, OnInit } from "@angular/core";
+import { RegionEnum } from "./region.enum";
+import { CarParkService } from "../shared/car-park.service";
+import { MdSnackBar, MdSnackBarConfig, MdTabGroup } from "@angular/material";
+import { CarParkFilterModel } from "./car-park-filter.model";
+import { LoadingService } from "../../shared/loading.service";
+import { FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { ValidationMessageService } from "../../shared/validator/validation-message.service";
 
 @Component({
   selector: 'app-car-park-filter',
@@ -11,43 +14,95 @@ import { CarParkFilterModel } from './car-park-filter.model';
 })
 export class CarParkFilterComponent implements OnInit {
 
-  selectedCarParkFilter: CarParkFilterModel;
-  areasPart: Array<string>
+  carParkFilter: CarParkFilterModel;
+  areasOfRegion: Array<string>;
+  isFilterBtnActive = false;
   //areaFilter: string;
   //filteredAreasPart: Array<AreaModel>
   //@ViewChild('selectOptionArea') selectOptionArea: MdSelect;
 
+  codeFielterForm: FormGroup;
+  codeFormErrors = {
+    carParkCode: ''
+  };
+
+  areaFielterForm: FormGroup;
+  areaFormErrors = {
+    carParkLotNumber: ''
+  };
+
+  @ViewChild(MdTabGroup) tabGroup: MdTabGroup;
+
   @Output() onFilterCarParks = new EventEmitter<CarParkFilterModel>();
 
-  cardinalPartEnum = CardinalPartEnum;
+  regionEnum = RegionEnum;
 
   private snackBarConfig: MdSnackBarConfig;
 
-  constructor(public carParkService: CarParkService, public snackBar: MdSnackBar) {
+  constructor(public carParkService: CarParkService, public loadingService: LoadingService,
+              public snackBar: MdSnackBar, private formBuilder: FormBuilder,
+              public messageService: ValidationMessageService) {
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 2000;
     this.snackBarConfig.politeness = 'polite';
-    this.selectedCarParkFilter = new CarParkFilterModel();
-    this.areasPart = [];
+    this.carParkFilter = new CarParkFilterModel();
+    this.areasOfRegion = [];
+    this.buildForm();
   }
 
   ngOnInit() {
+    this.buildForm();
+  }
+
+  changeFilterTab() {
+    if (this.tabGroup.selectedIndex === 0) {
+      this.isFilterBtnActive = this.codeFielterForm.valid;
+    } else {
+      this.isFilterBtnActive = this.areaFielterForm.valid;
+    }
   }
 
   getAreasByPart() {
-    this.selectedCarParkFilter.area = undefined;
-    if (this.selectedCarParkFilter.cardinalPart) {
-      this.carParkService.getAreasByCardinalPart(this.selectedCarParkFilter.cardinalPart)
-        .then(areasPart => this.areasPart = areasPart)
+    this.carParkFilter.area = undefined;
+    if (this.carParkFilter.region) {
+      this.loadingService.show(true);
+      this.carParkService.getAreasByCardinalPart(this.carParkFilter.region)
+        .then(areasPart => {
+          this.areasOfRegion = areasPart;
+          this.loadingService.show(false);
+        })
         .catch(err => {
           console.error(err);
+          this.loadingService.show(false);
           this.snackBar.open('Could not get areas, please contact admin', '', this.snackBarConfig);
         });
     }
   }
 
   filterCarParks() {
-    this.onFilterCarParks.emit(this.selectedCarParkFilter);
+      if (this.tabGroup.selectedIndex === 0) {
+        this.carParkFilter.region = undefined;
+        this.carParkFilter.area = '';
+      } else {
+        this.carParkFilter.code = '';
+      }
+    this.onFilterCarParks.emit(this.carParkFilter);
   }
 
+  private buildForm() {
+    this.codeFielterForm = this.formBuilder.group({
+      carParkCode: ['', Validators.required]
+    });
+    this.codeFielterForm.valueChanges
+      .subscribe(data => this.messageService.onValueChanged(this.codeFielterForm, this.codeFormErrors));
+    this.messageService.onValueChanged(this.codeFielterForm, this.codeFormErrors);
+
+    this.areaFielterForm = this.formBuilder.group({
+      carParkRegion: ['', Validators.required],
+      carParkArea: ['']
+    });
+    this.areaFielterForm.valueChanges
+      .subscribe(data => this.messageService.onValueChanged(this.areaFielterForm, this.areaFormErrors));
+    this.messageService.onValueChanged(this.areaFielterForm, this.areaFormErrors);
+  }
 }

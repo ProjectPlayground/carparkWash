@@ -12,10 +12,12 @@ import { ValidationMessageService } from '../../shared/validator/validation-mess
 export class ChangePasswordDialog implements OnInit, OnDestroy {
 
   passwordForm: FormGroup;
-  newPassword: string;
-  confirmNewPassword: string;
+  oldPassword: string = '';
+  newPassword: string = '';
+  confirmNewPassword: string = '';
   formErrors = {
-    'password': '',
+    'oldPassword': '',
+    'newPassword': '',
     'confirmPassword': ''
   };
 
@@ -23,7 +25,10 @@ export class ChangePasswordDialog implements OnInit, OnDestroy {
               public formBuilder: FormBuilder) {
 
     this.passwordForm = formBuilder.group({
-      password: ['', Validators.compose([Validators.required,
+      oldPassword: ['', Validators.compose([Validators.required,
+        Validators.minLength(this.messageService.minLengthPassword),
+        Validators.maxLength(this.messageService.maxLengthPassword)])],
+      newPassword: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthPassword),
         Validators.maxLength(this.messageService.maxLengthPassword)])],
       confirmPassword: ['', Validators.required]
@@ -34,7 +39,7 @@ export class ChangePasswordDialog implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    GlobalValidator.samePassword(this.passwordForm, 'changePassword');
+    GlobalValidator.samePassword(this.passwordForm, 'changePassword', 'newPassword', 'confirmPassword');
   }
 
   ngOnDestroy() {
@@ -46,7 +51,7 @@ export class ChangePasswordDialog implements OnInit, OnDestroy {
   }
 
   save() {
-    this.dialogRef.close(this.newPassword);
+    this.dialogRef.close({new: this.newPassword, old: this.oldPassword});
   }
 
 }

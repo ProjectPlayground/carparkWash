@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { UserService } from '../user/user-service';
-import { ProfileTypeEnum } from './profile-type.enum';
+import { ProfileEnum } from '../user/profile.enum';
 
 @Injectable()
 export class IsAdminViaAuthGuard implements CanActivate {
@@ -15,7 +15,7 @@ export class IsAdminViaAuthGuard implements CanActivate {
         if (isAuth) {
           return this.userService.getCurrent()
             .then(user => {
-              let isAdmin = user.profile === ProfileTypeEnum.admin;
+              let isAdmin = user.profile === ProfileEnum.admin;
               if (!isAdmin) {
                 this.router.navigate(['profile']);
               }

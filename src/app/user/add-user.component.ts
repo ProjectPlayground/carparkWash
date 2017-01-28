@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserModel } from './user.model';
 import { MdSnackBarConfig, MdSnackBar } from '@angular/material';
-import { ProfileTypeEnum } from '../shared/profile-type.enum';
+import { ProfileEnum } from './profile.enum';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from './user-service';
 import { ToolbarService } from '../shared/toolbar.service';
@@ -9,8 +9,8 @@ import { ValidationMessageService } from '../shared/validator/validation-message
 import { LoadingService } from '../shared/loading.service';
 import { Router } from '@angular/router';
 import { GlobalValidator } from '../shared/validator/global.validator';
-import { CarParkModel } from '../car-park/car-park.model';
-import { CardinalPartEnum } from '../car-park/car-park-filter/cardinal-part-enum';
+import { CarParkModel } from '../car-park/shared/car-park.model';
+import { RegionEnum } from '../car-park/car-park-filter/region.enum';
 import { PickImageAbstract } from '../shared/PickImageAbstract';
 
 @Component({
@@ -28,8 +28,8 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
   isPictureLoading = false;
 
   private snackBarConfig: MdSnackBarConfig;
-  profileTypeEnum = ProfileTypeEnum;
-  cardinalPartEnum = CardinalPartEnum;
+  profileEnum = ProfileEnum;
+  regionEnum = RegionEnum;
   signUpForm: FormGroup;
   signUpFormErrors = {
     email: '',
@@ -45,6 +45,7 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
   carParkForm: FormGroup;
   carParkFormErrors = {
     name: '',
+    code: '',
     address: '',
     area: '',
     //nbPlaces: ''
@@ -89,15 +90,15 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
     }).catch(err => {
       console.log(err);
       this.isPictureLoading = false;
-      this.snackBar.open('Fail to get background', '', this.snackBarConfig);
+      this.snackBar.open('Fail to get Picture', '', this.snackBarConfig);
     });
   }
 
   areInputsValid() {
     return this.userInfoForm.valid
-        && ((this.connectEmailNoFacebook && this.signUpForm.valid) || !this.connectEmailNoFacebook)
-      && ((this.userModel.profile === ProfileTypeEnum.cleaner && this.cleanerForm.valid)
-      || (this.userModel.profile === ProfileTypeEnum.manager && this.carParkForm.valid))
+      && ((this.connectEmailNoFacebook === 'true' && this.signUpForm.valid) || this.connectEmailNoFacebook === 'false')
+      && ((this.userModel.profile === ProfileEnum.cleaner && this.cleanerForm.valid)
+      || (this.userModel.profile === ProfileEnum.manager && this.carParkForm.valid))
   }
 
   private createWithFacebook() {
@@ -105,11 +106,11 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
     this.userService.facebookLogin(this.userModel, this.carParkModel).then((data) => {
       this.loadingService.show(false);
       this.buildForms();
-      this.snackBar.open(`Account ${this.userModel.profile} created`, '', this.snackBarConfig);
+      this.snackBar.open(`Account ${this.userModel.email} created`, '', this.snackBarConfig);
     }).catch((err: firebase.FirebaseError) => {
       this.loadingService.show(false);
       console.error(err);
-      let errMsg = 'Fail to create ${this.userModel.profile}  account';
+      let errMsg = `Fail to create ${this.userModel.email}  account`;
       switch (err.code) {
         case 'auth/invalid-email':
         case 'auth/user-not-found':
@@ -123,16 +124,16 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
 
   private createWithEmail() {
     this.loadingService.show(true);
-    this.userService.create(this.userModel, this.password, this.carParkModel)
+    this.userService.create(this.userModel, this.password, false, this.carParkModel)
       .then(() => {
         this.loadingService.show(false);
         this.buildForms();
-        this.snackBar.open(`Account ${this.userModel.profile} created`, '', this.snackBarConfig);
+        this.snackBar.open(`Account ${this.userModel.email} created`, '', this.snackBarConfig);
       })
       .catch((err: firebase.FirebaseError) => {
         this.loadingService.show(false);
         console.error(err);
-        let errMsg = 'Fail to create ${this.userModel.profile}  account';
+        let errMsg = `Fail to create ${this.userModel.email}  account`;
         switch (err.code) {
           case 'auth/email-already-in-use':
             errMsg = err.message;
@@ -157,6 +158,8 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
       carParkName: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthCarParkName),
         Validators.maxLength(this.messageService.maxLengthCarParkName)])],
+      carParkCode: ['', Validators.compose([Validators.required,
+        Validators.maxLength(this.messageService.maxLengthCarParkCode)])],
       address: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthAddress),
         Validators.maxLength(this.messageService.maxLengthAddress)])],
@@ -175,8 +178,8 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
   private buildSignUpForm() {
     this.signUpForm = this.formBuilder.group({
       email: ['', Validators.compose([Validators.required,
-        GlobalValidator.mailFormat,
-        Validators.maxLength(this.messageService.maxLengthEmail)])],
+        GlobalValidator.mailFormat, Validators.maxLength(
+          this.messageService.maxLengthEmail)])],
       name: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthName),
         Validators.maxLength(this.messageService.maxLengthName)])],
@@ -197,7 +200,8 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
       address: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthAddress),
         Validators.maxLength(this.messageService.maxLengthAddress)])],
-      phoneNumber: ['', Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)],
+      phoneNumber: ['', Validators.pattern(
+        /\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)],
       profile: ['', Validators.required]
     });
     this.userInfoForm.valueChanges.subscribe(data => {
@@ -207,10 +211,11 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
   }
 
   private buildCleanerForm() {
-    this.cleanerForm = this.formBuilder.group({
-      //email: ['', Validators.required],
-      //password: ['', Validators.required]
-    });
+    this.cleanerForm = this.formBuilder.group(
+      {
+        //email: ['', Validators.required],
+        //password: ['', Validators.required]
+      });
     this.cleanerForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.cleanerForm, this.cleanerFormErrors);
     });

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MdDialogRef } from '@angular/material';
 import { ValidationMessageService } from '../../shared/validator/validation-message.service';
-import { ProfileType, ProfileTypeEnum } from '../../shared/profile-type.enum';
+import { Profile, ProfileEnum } from '../../user/profile.enum';
 
 @Component({
   selector: 'app-select-type',
@@ -11,9 +11,9 @@ import { ProfileType, ProfileTypeEnum } from '../../shared/profile-type.enum';
 })
 export class SelectTypeDialog {
 
-  profile: ProfileType;
+  profile: Profile;
 
-  profileTypeEnum = ProfileTypeEnum;
+  profileTypeEnum = ProfileEnum;
   selectTypeForm: FormGroup;
   formErrors = {
     'profile': '',

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
-import { CarService } from '../../car/car.service';
-import { CarModel } from '../../car/car.model';
+import { CarService } from '../shared/car.service';
+import { CarModel } from '../shared/car.model';
 import { Router } from '@angular/router';
-import { CarParkModel } from '../../car-park/car-park.model';
-import { CarParkService } from '../../car-park/car-park.service';
+import { CarParkModel } from '../../car-park/shared/car-park.model';
+import { CarParkService } from '../../car-park/shared/car-park.service';
 import { SubscriptionModel } from '../../shared/subscription/subscription.model';
 
 @Component({

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
-import { CarParkModel } from '../../car-park/car-park.model';
+import { CarParkModel } from '../../car-park/shared/car-park.model';
 import { ServiceUtils } from '../service.utils';
 import { SubscriptionModel, DayCleanerModel } from './subscription.model';
-import { CarModel } from '../../car/car.model';
+import { CarModel } from '../../car/shared/car.model';
 import { WashStateEnum } from './wash-state.enum';
 import { UserModel } from '../../user/user.model';
 
@@ -39,15 +39,19 @@ export class SubscriberService extends ServiceUtils {
       subscriptionModel.clientUid = car.userUid;
       subscriptionModel.managerUid = carPark.userUid;
       subscriptionModel.carParkId = carPark.id;
-      subscriptionModel.carParkCardinalPart = carPark.cardinalPart;
+      subscriptionModel.carParkRegion = carPark.region;
       subscriptionModel.carParkArea = carPark.area;
-      subscriptionModel.carId = car.id;
+      subscriptionModel.carId = car.name;
       subscriptionModel.car = car;
 
       let updates = {};
-      let subCarParkPath = carPark.id + '/subscriptions/' + car.id;
-      updates['users/carParks/' + carPark.userUid + '/' + subCarParkPath] = subscriptionModel;
-      updates['carParks/' + carPark.cardinalPart + '/' + carPark.area + '/' + subCarParkPath] = subscriptionModel;
+      let subCarPath = 'cars/' + car.name + '/subscription';
+      updates['users/' + car.userUid + '/' + subCarPath] = subscriptionModel;
+      updates[subCarPath] = subscriptionModel;
+
+      let subCarParkPath = carPark.id + '/subscriptions/' + car.name;
+      updates['users/' + carPark.userUid + '/carParks/' + subCarParkPath] = subscriptionModel;
+      updates['carParks/' + carPark.region + '/' + carPark.area + '/' + subCarParkPath] = subscriptionModel;
 
       return this.refDatabase.update(updates)
         .then(() => {
@@ -69,22 +73,23 @@ export class SubscriberService extends ServiceUtils {
     carPark.unlocked = tomorrow.getTime();
     let updates = {};
     updates['users/' + carPark.userUid + '/carParks/' + carPark.id] = carPark;
-    updates['carParks/' + carPark.cardinalPart + '/' + carPark.area + '/' + carPark.id] = carPark;
+    updates['carParks/' + carPark.region + '/' + carPark.area + '/' + carPark.id] = carPark;
     return this.refDatabase.update(updates);
   }
 
-  selectToBeWashed(subscription: SubscriptionModel) {
+  selectToBeWashed(subscription: SubscriptionModel, carLotNumber: string) {
     let dayIndex = Math.round((new Date().getTime() - subscription.dateSubscription) / (1000 * 60 * 60 * 24));
     let dayCleanerModel = subscription.days[dayIndex];
     dayCleanerModel.washStatus = WashStateEnum.toWash;
+    dayCleanerModel.carparkLotNumber = carLotNumber;
     let updates = {};
-    let subCarPath = 'cars/' + subscription.car.id + '/subscription/days/' + dayIndex;
+    let subCarPath = 'cars/' + subscription.car.name + '/subscription/days/' + dayIndex;
     updates['users/' + subscription.clientUid + '/' + subCarPath] = dayCleanerModel;
     updates[subCarPath] = dayCleanerModel;
 
-    let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.id + '/days/' + dayIndex;
+    let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.name + '/days/' + dayIndex;
     updates['users/' + subscription.managerUid + '/carParks/' + '/' + subDayPath] = dayCleanerModel;
-    updates['carParks/' + subscription.carParkCardinalPart + '/' + subscription.carParkArea + '/' + subDayPath] = dayCleanerModel;
+    updates['carParks/' + subscription.carParkRegion + '/' + subscription.carParkArea + '/' + subDayPath] = dayCleanerModel;
     return this.refDatabase.update(updates);
   }
 
@@ -96,13 +101,13 @@ export class SubscriberService extends ServiceUtils {
     dayCleanerModel.cleanerUid = cleaner.uid;
     dayCleanerModel.cleanerName = cleaner.name;
     let updates = {};
-    let subCarPath = 'cars/' + subscription.car.id + '/subscription/days/' + dayIndex;
+    let subCarPath = 'cars/' + subscription.car.name + '/subscription/days/' + dayIndex;
     updates['users/' + subscription.clientUid + '/' + subCarPath] = dayCleanerModel;
     updates[subCarPath] = dayCleanerModel;
 
-    let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.id + '/days/' + dayIndex;
+    let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.name + '/days/' + dayIndex;
     updates['users/' + subscription.managerUid + '/carParks/' + subDayPath] = dayCleanerModel;
-    updates['carParks/' + subscription.carParkCardinalPart + '/' + subscription.carParkArea + '/' + subDayPath] = dayCleanerModel;
+    updates['carParks/' + subscription.carParkRegion + '/' + subscription.carParkArea + '/' + subDayPath] = dayCleanerModel;
     return this.refDatabase.update(updates);
   }
 }

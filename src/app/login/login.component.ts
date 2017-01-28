@@ -9,9 +9,9 @@ import { ToolbarService } from '../shared/toolbar.service';
 import { LoadingService } from '../shared/loading.service';
 import { GlobalValidator } from '../shared/validator/global.validator';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
-import { CarModel } from '../car/car.model';
-import { CarParkModel } from '../car-park/car-park.model';
-import { ProfileTypeEnum } from '../shared/profile-type.enum';
+import { CarModel, SilhouettePictureTypeEnum } from '../car/shared/car.model';
+import { CarParkModel } from '../car-park/shared/car-park.model';
+import { ProfileEnum } from '../user/profile.enum';
 import { ConfirmMessageDialog } from '../confirm-message/confirm-message.dialog';
 
 @Component({
@@ -27,9 +27,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   password: string;
   confirmPassword: string;
   isOnLogin = true;
+  silhouettePictureTypeEnum = SilhouettePictureTypeEnum;
 
   private snackBarConfig: MdSnackBarConfig;
-  profileTypeEnum = ProfileTypeEnum;
+  profileTypeEnum = ProfileEnum;
   loginForm: FormGroup;
   loginFormErrors = {
     email: '',
@@ -51,16 +52,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     brandModel: '',
     colour: ''
   };
-  carParkForm: FormGroup;
-  carParkFormErrors = {
-    name: '',
-    address: '',
-    cardinalPart: '',
-    area: '',
-    //nbPlaces: ''
-  };
-  cleanerForm: FormGroup;
-  cleanerFormErrors = {};
 
   constructor(public userService: UserService, public toolbarService: ToolbarService,
               public loadingService: LoadingService, public messageService: ValidationMessageService,
@@ -68,7 +59,7 @@ export class LoginComponent implements OnInit, OnDestroy {
               public dialog: MdDialog) {
 
     this.userModel = new UserModel();
-    this.userModel.profile = ProfileTypeEnum.client;
+    this.userModel.profile = ProfileEnum.client;
     this.buildForms();
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 2000;
@@ -140,7 +131,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.isOnLogin = false;
     } else {
       this.loadingService.show(true);
-      this.userService.create(this.userModel, this.password, this.carParkModel, this.carModel)
+      this.userService.create(this.userModel, this.password, true, this.carParkModel, this.carModel)
         .then(() => {
           this.loadingService.show(false);
           this.router.navigate(['profile']);

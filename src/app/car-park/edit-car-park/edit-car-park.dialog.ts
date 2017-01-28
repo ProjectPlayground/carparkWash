@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MdDialogRef, MdSnackBarConfig, MdSnackBar } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidationMessageService } from '../../shared/validator/validation-message.service';
-import { CarParkModel } from '../car-park.model';
-import { CardinalPartEnum } from '../car-park-filter/cardinal-part-enum';
+import { CarParkModel } from '../shared/car-park.model';
+import { RegionEnum } from '../car-park-filter/region.enum';
 import { PickImageAbstract } from '../../shared/PickImageAbstract';
 
 @Component({
@@ -17,11 +17,12 @@ export class EditCarParkDialog extends PickImageAbstract implements OnInit {
   carParkToEdit: CarParkModel;
   isPictureLoading = false;
 
-  cardinalPartEnum = CardinalPartEnum;
+  regionEnum = RegionEnum;
   carParkForm: FormGroup;
   formErrors = {
-    name: '',
-    cardinalPart: '',
+    carParkName: '',
+    carParkCode: '',
+    region: '',
     area: '',
     address: '',
     //nbPlaces: ''
@@ -41,9 +42,6 @@ export class EditCarParkDialog extends PickImageAbstract implements OnInit {
 
   ngOnInit() {
     this.buildForm();
-    this.carParkForm.valueChanges
-      .subscribe(data => this.messageService.onValueChanged(this.carParkForm, this.formErrors));
-    this.messageService.onValueChanged(this.carParkForm, this.formErrors);
   }
 
   pickCarParkPicture(event) {
@@ -63,31 +61,42 @@ export class EditCarParkDialog extends PickImageAbstract implements OnInit {
   }
 
   save() {
-    this.carParkToEdit.name = this.carParkForm.value.name;
+    this.carParkToEdit.name = this.carParkForm.value.carParkName;
+    this.carParkToEdit.code = this.carParkForm.value.carParkCode;
     this.carParkToEdit.address = this.carParkForm.value.address;
-    this.carParkToEdit.cardinalPart = this.carParkForm.value.cardinalPart;
-    this.carParkToEdit.area = this.carParkForm.value.area;
+    // this.carParkToEdit.region = this.carParkForm.value.region;
+    // this.carParkToEdit.area = this.carParkForm.value.area;
     //this.carParkToEdit.nbPlaces = this.carParkForm.value.nbPlaces;
-    this.dialogRef.close(this.carParkToEdit);
+    this.dialogRef.close({
+      carpark: this.carParkToEdit,
+      area: this.carParkForm.value.area,
+      region: this.carParkForm.value.region
+    });
   }
 
   private buildForm() {
     this.carParkForm = this.formBuilder.group({
-      name: [this.carParkToEdit.name,
+      carParkName: [this.carParkToEdit.name,
         Validators.compose([Validators.required,
-          Validators.minLength(this.messageService.minLengthName),
-          Validators.maxLength(this.messageService.maxLengthName)])],
-      cardinalPart: [this.carParkToEdit.cardinalPart, Validators.required],
+          Validators.minLength(this.messageService.minLengthCarParkName),
+          Validators.maxLength(this.messageService.maxLengthCarParkName)])],
+      carParkCode: [this.carParkToEdit.code,
+        Validators.compose([Validators.required,
+          Validators.maxLength(this.messageService.maxLengthCarParkCode)])],
+      region: [this.carParkToEdit.region, Validators.required],
       area: [this.carParkToEdit.area,
         Validators.compose([Validators.required,
-          Validators.minLength(this.messageService.minLengthName),
-          Validators.maxLength(this.messageService.maxLengthName)])],
+          Validators.minLength(this.messageService.minLengthArea),
+          Validators.maxLength(this.messageService.maxLengthArea)])],
       address: [this.carParkToEdit.address,
         Validators.compose([Validators.required,
           Validators.minLength(this.messageService.minLengthAddress),
           Validators.maxLength(this.messageService.maxLengthAddress)])],
       //nbPlaces: [this.carParkToEdit.nbPlaces],
     });
+    this.carParkForm.valueChanges
+      .subscribe(data => this.messageService.onValueChanged(this.carParkForm, this.formErrors));
+    this.messageService.onValueChanged(this.carParkForm, this.formErrors);
   }
 
 }

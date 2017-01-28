@@ -4,9 +4,12 @@
   <md-card-content>
     <md-list>
       <md-list-item>Colour: {{car?.colour}}</md-list-item>
-      <md-list-item>Type: {{car?.type}}</md-list-item>
+      <md-list-item>Silhouette Picture: {{car?.silhouettePicture}}</md-list-item>
       <md-list-item *ngIf="subscription">
         Current subscription date: {{subscription?.dateSubscription | date}}
+      </md-list-item>
+      <md-list-item *ngIf="subscription?.days[dayIndex].carparkLotNumber">
+        CarPark Lot Number: {{subscription?.days[dayIndex].carparkLotNumber}}
       </md-list-item>
       <md-list-item *ngIf="subscription?.days[dayIndex].washStatus === washStateEnum.toWash">
         Waiting for a cleaner to wash
@@ -15,34 +18,33 @@
         Washed and clean by {{subscription?.days[dayIndex].cleanerName}}
         on {{subscription?.days[dayIndex].washDate | date:'short'}}
       </md-list-item>
-
-      <md-list-item *ngIf="!subscription">
-        <p></p>
-      </md-list-item>
-      <md-list-item *ngIf="subscription?.days[dayIndex].washStatus === washStateEnum.washNotRequested">
-        <p></p>
-      </md-list-item>
     </md-list>
   </md-card-content>
-  <md-card-actions *ngIf="!isSelected">
+
+  <md-card-actions *ngIf="!isSelected
+              && ((currentUser?.profile === profileEnum.client && !car?.subscription)
+                || (currentUser?.profile === profileEnum.client
+                && car?.subscription
+                && carParkSubscribedIsUnlocked
+                && subscription?.days[dayIndex].washStatus === washStateEnum.washNotRequested))">
     <button md-button color="primary" class="btn-action" (click)="selectToSubscribe()"
-            *ngIf="currentUser?.profile === profileTypeEnum.client && !car?.subscription">
+            *ngIf="currentUser?.profile === profileEnum.client && !car?.subscription">
       Subscribe for 30 days
     </button>
     <button md-button color="primary" class="btn-action" (click)="selectToWash()"
-            *ngIf="currentUser?.profile === profileTypeEnum.client
+            *ngIf="currentUser?.profile === profileEnum.client
               && car?.subscription
               && carParkSubscribedIsUnlocked
               && subscription?.days[dayIndex].washStatus === washStateEnum.washNotRequested">
       Book to wash
     </button>
     <button md-button color="primary" class="btn-action" (click)="selectAsWashed()"
-            *ngIf="currentUser?.profile === profileTypeEnum.cleaner
+            *ngIf="currentUser?.profile === profileEnum.cleaner
                   && subscription?.days[dayIndex].washStatus === washStateEnum.toWash">
       Select as Washed
     </button>
   </md-card-actions>
-  <md-card-actions class="flex-row" *ngIf="!isSelected && currentUser?.profile === profileTypeEnum.client">
+  <md-card-actions class="flex-row" *ngIf="!isSelected && currentUser?.profile === profileEnum.client">
     <button md-button (click)="edit()">Edit</button>
     <button md-button (click)="remove()">Remove</button>
   </md-card-actions>

@@ -3,12 +3,21 @@
   <md-list>
     <md-list-item class="center-input">
       <md-input type="text" required
-                [dividerColor]="formErrors.name?'accent':'primary'"
+                [dividerColor]="formErrors.carParkName?'accent':'primary'"
                 placeholder="Car Park Name"
-                formControlName="name"></md-input>
+                formControlName="carParkName"></md-input>
     </md-list-item>
-    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.name">
-      {{ formErrors.name }}
+    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.carParkName">
+      {{ formErrors.carParkName }}
+    </md-list-item>
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="formErrors.carParkCode?'accent':'primary'"
+                placeholder="Car Park Code"
+                formControlName="carParkCode"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.carParkCode">
+      {{ formErrors.carParkCode }}
     </md-list-item>
 
     <md-list-item (click)="inputBackground.click()">
@@ -21,17 +30,18 @@
       <input type="file" class="hide-element" #inputBackground (change)="pickCarParkPicture($event)">
     </md-list-item>
 
-    <md-list-item class="center-input" *ngIf="carParkToEdit.cardinalPart === undefined">
-      <md-select required placeholder="Cardinal Part"
-                 formControlName="cardinalPart">
-        <md-option value={{cardinalPartEnum.north}}>North</md-option>
-        <md-option value={{cardinalPartEnum.south}}>South</md-option>
-        <md-option value={{cardinalPartEnum.east}}>East</md-option>
-        <md-option value={{cardinalPartEnum.west}}>West</md-option>
+    <md-list-item class="center-input">
+      <md-select required placeholder="Region"
+                 formControlName="region">
+        <md-option value="{{regionEnum.central}}">{{regionEnum.central | camelCase}}</md-option>
+        <md-option value={{regionEnum.east}}>{{regionEnum.east | camelCase}}</md-option>
+        <md-option value={{regionEnum.north}}>{{regionEnum.north | camelCase}}</md-option>
+        <md-option value={{regionEnum.northEast}}>{{regionEnum.northEast | camelCase}}</md-option>
+        <md-option value={{regionEnum.west}}>{{regionEnum.west | camelCase}}</md-option>
       </md-select>
     </md-list-item>
 
-    <md-list-item class="center-input" *ngIf="carParkToEdit.area === undefined">
+    <md-list-item class="center-input">
       <md-input type="text" required
                 [dividerColor]="formErrors.area?'accent':'primary'"
                 placeholder="Area"

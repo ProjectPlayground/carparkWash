@@ -1,19 +1,20 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { MdSnackBar, MdSnackBarConfig, MdDialog, MdDialogConfig } from '@angular/material';
-import { CarModel } from '../car.model';
-import { CarService } from '../car.service';
+import { CarModel } from '../shared/car.model';
+import { CarService } from '../shared/car.service';
 import { LoadingService } from '../../shared/loading.service';
 import { EditCarDialog } from '../edit-car/edit-car.dialog';
 import { ConfirmMessageDialog } from '../../confirm-message/confirm-message.dialog';
 import { Router } from '@angular/router';
 import { UserService } from '../../user/user-service';
 import { UserModel } from '../../user/user.model';
-import { ProfileTypeEnum } from '../../shared/profile-type.enum';
+import { ProfileEnum } from '../../user/profile.enum';
 import { SubscriberService } from '../../shared/subscription/subscriber.service';
 import { SubscriptionModel } from '../../shared/subscription/subscription.model';
-import { CarParkModel } from '../../car-park/car-park.model';
-import { CarParkService } from '../../car-park/car-park.service';
+import { CarParkModel } from '../../car-park/shared/car-park.model';
+import { CarParkService } from '../../car-park/shared/car-park.service';
 import { WashStateEnum } from '../../shared/subscription/wash-state.enum';
+import { CarLotNumberDialog } from "../car-lot-number/car-lot-number.dialog";
 
 @Component({
   selector: 'app-car-item',
@@ -26,7 +27,7 @@ export class CarItemComponent implements OnInit {
   carParkSubscribed: CarParkModel;
   carParkSubscribedIsUnlocked: boolean;
   dayIndex: number;
-  profileTypeEnum = ProfileTypeEnum;
+  profileEnum = ProfileEnum;
   washStateEnum = WashStateEnum;
   @Input() car: CarModel;
   @Input() subscription: SubscriptionModel;
@@ -74,26 +75,29 @@ export class CarItemComponent implements OnInit {
     }
   }
 
-  isUnlocked() {
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-    today.setDate(today.getDate() + 1);
-    return this.carParkSubscribed && this.carParkSubscribed.unlocked === today.getTime();
-  }
-
   selectToSubscribe() {
     this.carService.selectedCar = this.car;
     this.router.navigate(['carparks/tobook']);
   }
 
   selectToWash() {
-    this.subscriberService.selectToBeWashed(this.subscription)
-      .then(() => this.snackBar.open(`The car ${this.car.licencePlateNumber} is to be washed`, '', this.snackBarConfig))
-      .catch(err => {
-        console.error(err);
-        this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
-      });
-
+    let dialogRef = this.dialog.open(CarLotNumberDialog, <MdDialogConfig>{disableClose: false});
+    dialogRef.afterClosed().subscribe((carLotNumber: string) => {
+      if (carLotNumber) {
+        // car lot number is a number
+        if (carLotNumber.length > 0) {
+          this.subscriberService.selectToBeWashed(this.subscription, carLotNumber)
+            .then(() => this.snackBar.open(`The car ${this.car.licencePlateNumber} is to be washed`, '', this.snackBarConfig))
+            .catch(err => {
+              console.error(err);
+              this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
+            });
+        } else {
+          this.snackBar.open('Car Lot Number cannot be empty', '', this.snackBarConfig);
+          this.selectToWash();
+        }
+      }
+    });
   }
 
   selectAsWashed() {
@@ -115,7 +119,7 @@ export class CarItemComponent implements OnInit {
           .then(() => {
             this.car = updatedCar;
             this.loadingService.show(false);
-            this.snackBar.open(`Updating ${this.car.licencePlateNumber} success`, '', this.snackBarConfig);
+            this.snackBar.open(`The car ${this.car.licencePlateNumber} was updated successfully`, '', this.snackBarConfig);
           })
           .catch(err => {
             this.loadingService.show(false);
@@ -128,8 +132,8 @@ export class CarItemComponent implements OnInit {
 
   remove() {
     let dialogRef = this.dialog.open(ConfirmMessageDialog, <MdDialogConfig>{disableClose: false});
-    dialogRef.componentInstance.title = 'Confirmation of deletion';
-    dialogRef.componentInstance.content = `Are you sure to remove this ${this.car.licencePlateNumber} ?`;
+    dialogRef.componentInstance.title = 'CONFIRM DELETION';
+    dialogRef.componentInstance.content = `Are you sure you would like to delete ${this.car.licencePlateNumber} ?`;
     dialogRef.afterClosed().subscribe((isOk: boolean) => {
       if (isOk) {
         this.carService.remove(this.car)

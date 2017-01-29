@@ -1,0 +1,8 @@
+<md-list>
+  <br>
+  <md-list-item class="center-element" *ngIf="user?.provider === providerTypeEnum.email">
+    <md-input type="password" disabled="true" value="******" placeholder="Click to change Password"
+              (click)="changePassword()">
+    </md-input>
+  </md-list-item>
+</md-list>

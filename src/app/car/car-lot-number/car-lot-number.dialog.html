@@ -1,0 +1,22 @@
+<h2>Car Selected To be washed</h2>
+
+<p>Enter the Car Park LOT Number</p>
+
+<form [formGroup]="form">
+  <md-list>
+    <md-list-item class="center-input">
+      <md-input type="text" required
+                [dividerColor]="formErrors.carParkLotNumber?'accent':'primary'"
+                placeholder="Car Park LOT Number"
+                formControlName="carParkLotNumber"></md-input>
+    </md-list-item>
+    <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.carParkLotNumber">
+      {{ formErrors.carParkLotNumber }}
+    </md-list-item>
+
+    <md-list-item no-lines class="btns-dialog">
+      <button md-button color="primary" (click)="cancel()">Cancel</button>
+      <button md-button color="primary" (click)="select()">Select</button>
+    </md-list-item>
+  </md-list>
+</form>

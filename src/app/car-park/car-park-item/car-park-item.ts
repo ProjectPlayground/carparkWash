@@ -14,9 +14,9 @@ import { ProfileEnum } from '../../user/profile.enum';
 import { Region } from "../car-park-filter/region.enum";
 
 @Component({
-  selector: 'app-car-park-item',
+  selector : 'app-car-park-item',
   templateUrl: './car-park-item.html',
-  styleUrls: ['./car-park-item.css']
+  styleUrls : ['./car-park-item.css']
 })
 export class CarParkItemComponent implements OnInit {
 
@@ -24,6 +24,7 @@ export class CarParkItemComponent implements OnInit {
   isCarParkUnlocked: boolean;
   profileTypeEnum = ProfileEnum;
   @Input() carPark: CarParkModel;
+  @Input() isSelected: boolean;
   @Output() removed = new EventEmitter<boolean>();
 
   private snackBarConfig: MdSnackBarConfig;
@@ -49,10 +50,7 @@ export class CarParkItemComponent implements OnInit {
     if (!this.carPark) {
       this.router.navigate(['']);
     } else {
-      let today = new Date();
-      today.setHours(0, 0, 0, 0);
-      today.setDate(today.getDate() + 1);
-      this.isCarParkUnlocked = this.carPark.unlocked === today.getTime();
+      this.setIsCarParlUnlocked();
     }
   }
 
@@ -81,7 +79,10 @@ export class CarParkItemComponent implements OnInit {
 
   unlock() {
     this.subscriberService.unlock(this.carPark)
-      .then(() => this.snackBar.open(`the car park ${this.carPark.name} is unlocked`, '', this.snackBarConfig))
+      .then(() => {
+        this.setIsCarParlUnlocked();
+        this.snackBar.open(`the car park ${this.carPark.name} is unlocked`, '', this.snackBarConfig);
+      })
       .catch(err => {
         console.error(err);
         this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
@@ -101,10 +102,10 @@ export class CarParkItemComponent implements OnInit {
             this.snackBar.open(`The car ${this.carPark.name} was updated successfully`, '', this.snackBarConfig);
           })
           .catch(err => {
-          this.loadingService.show(false);
-          console.error(err);
-          this.snackBar.open(`Fail to update ${this.carPark.name}`, '', this.snackBarConfig);
-        });
+            this.loadingService.show(false);
+            console.error(err);
+            this.snackBar.open(`Fail to update ${this.carPark.name}`, '', this.snackBarConfig);
+          });
       }
     });
   }
@@ -125,6 +126,13 @@ export class CarParkItemComponent implements OnInit {
         });
       }
     });
+  }
+
+  private setIsCarParlUnlocked() {
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    today.setDate(today.getDate() + 1);
+    this.isCarParkUnlocked = this.carPark.unlocked === today.getTime();
   }
 
 }

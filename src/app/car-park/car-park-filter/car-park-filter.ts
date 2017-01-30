@@ -10,13 +10,13 @@ import { ValidationMessageService } from "../../shared/validator/validation-mess
 @Component({
   selector: 'app-car-park-filter',
   templateUrl: './car-park-filter.html',
-  styleUrls: ['./car-park-filter.css']
+  styleUrls: ['./car-park-filter.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CarParkFilterComponent implements OnInit {
 
   carParkFilter: CarParkFilterModel;
   areasOfRegion: Array<string>;
-  isFilterBtnActive = false;
   //areaFilter: string;
   //filteredAreasPart: Array<AreaModel>
   //@ViewChild('selectOptionArea') selectOptionArea: MdSelect;
@@ -54,19 +54,11 @@ export class CarParkFilterComponent implements OnInit {
     this.buildForm();
   }
 
-  changeFilterTab() {
-    if (this.tabGroup.selectedIndex === 0) {
-      this.isFilterBtnActive = this.codeFielterForm.valid;
-    } else {
-      this.isFilterBtnActive = this.areaFielterForm.valid;
-    }
-  }
-
   getAreasByPart() {
     this.carParkFilter.area = undefined;
     if (this.carParkFilter.region) {
       this.loadingService.show(true);
-      this.carParkService.getAreasByCardinalPart(this.carParkFilter.region)
+      this.carParkService.getAreasByRegion(this.carParkFilter.region)
         .then(areasPart => {
           this.areasOfRegion = areasPart;
           this.loadingService.show(false);

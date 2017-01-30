@@ -1,7 +1,7 @@
 <md-card>
   <md-card-title>Filter car parks</md-card-title>
   <md-card-content>
-    <md-tab-group (selectChange)="changeFilterTab()">
+    <md-tab-group #tabGroup (selectChange)="changeFilterTab()">
       <md-tab label="By Code">
         <form [formGroup]="codeFielterForm">
           <md-list>
@@ -47,8 +47,8 @@
 
   <md-card-actions class="center-element">
     <button md-button color="primary"
-            [disabled]="!isFilterBtnActive"
-            (click)="isFilterBtnActive && filterCarParks()">
+            [disabled]="tabGroup.selectedIndex === 0 ? codeFielterForm.invalid : areaFielterForm.invalid"
+            (click)="(tabGroup.selectedIndex === 0 ? codeFielterForm.valid : areaFielterForm.valid) && filterCarParks()">
       Filter Car Parks
     </button>
   </md-card-actions>

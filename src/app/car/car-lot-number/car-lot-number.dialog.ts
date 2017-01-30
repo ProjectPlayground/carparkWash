@@ -10,7 +10,6 @@ import { ValidationMessageService } from "../../shared/validator/validation-mess
 })
 export class CarLotNumberDialog implements OnInit {
 
-  carParkLotNumber: string;
   form: FormGroup;
   formErrors = {
     carParkLotNumber: ''
@@ -30,14 +29,14 @@ export class CarLotNumberDialog implements OnInit {
   }
 
   select() {
-    this.dialogRef.close(this.carParkLotNumber);
+    // objet nest pas la
+    this.dialogRef.close(this.form.value.carParkLotNumber);
   }
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      carParkLotNumber: [this.carParkLotNumber,
-        Validators.compose([Validators.required,
-          Validators.maxLength(this.messageService.maxLengthCarParkLotNumber)])],
+      carParkLotNumber: ['', Validators.compose([Validators.required,
+        Validators.maxLength(this.messageService.maxLengthCarParkLotNumber)])],
     });
     this.form.valueChanges
       .subscribe(data => this.messageService.onValueChanged(this.form, this.formErrors));

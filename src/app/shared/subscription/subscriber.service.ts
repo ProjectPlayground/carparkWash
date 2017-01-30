@@ -83,11 +83,11 @@ export class SubscriberService extends ServiceUtils {
     dayCleanerModel.washStatus = WashStateEnum.toWash;
     dayCleanerModel.carparkLotNumber = carLotNumber;
     let updates = {};
-    let subCarPath = 'cars/' + subscription.car.name + '/subscription/days/' + dayIndex;
+    let subCarPath = 'cars/' + subscription.carId + '/subscription/days/' + dayIndex;
     updates['users/' + subscription.clientUid + '/' + subCarPath] = dayCleanerModel;
     updates[subCarPath] = dayCleanerModel;
 
-    let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.name + '/days/' + dayIndex;
+    let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.carId + '/days/' + dayIndex;
     updates['users/' + subscription.managerUid + '/carParks/' + '/' + subDayPath] = dayCleanerModel;
     updates['carParks/' + subscription.carParkRegion + '/' + subscription.carParkArea + '/' + subDayPath] = dayCleanerModel;
     return this.refDatabase.update(updates);
@@ -101,11 +101,11 @@ export class SubscriberService extends ServiceUtils {
     dayCleanerModel.cleanerUid = cleaner.uid;
     dayCleanerModel.cleanerName = cleaner.name;
     let updates = {};
-    let subCarPath = 'cars/' + subscription.car.name + '/subscription/days/' + dayIndex;
+    let subCarPath = 'cars/' + subscription.carId + '/subscription/days/' + dayIndex;
     updates['users/' + subscription.clientUid + '/' + subCarPath] = dayCleanerModel;
     updates[subCarPath] = dayCleanerModel;
 
-    let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.name + '/days/' + dayIndex;
+    let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.carId + '/days/' + dayIndex;
     updates['users/' + subscription.managerUid + '/carParks/' + subDayPath] = dayCleanerModel;
     updates['carParks/' + subscription.carParkRegion + '/' + subscription.carParkArea + '/' + subDayPath] = dayCleanerModel;
     return this.refDatabase.update(updates);

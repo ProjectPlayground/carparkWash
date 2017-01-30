@@ -1,13 +1,13 @@
 <md-card>
   <md-card-title>{{carPark?.name}} - {{carPark?.code}}
-    <img class="override-picture-preview" *ngIf="carPark.picture" [src]="carPark.picture">
+    <img class="override-picture-preview" *ngIf="carPark?.picture" [src]="carPark.picture">
   </md-card-title>
 
   <md-card-content>
     <md-list>
-      <md-list-item>Address: {{carPark.address}}</md-list-item>
-      <md-list-item>Cardinal Part: {{carPark.cardinalPart}}</md-list-item>
-      <md-list-item>Area: {{carPark.area}}</md-list-item>
+      <md-list-item>Address: {{carPark?.address}}</md-list-item>
+      <md-list-item>Region: {{carPark?.region}}</md-list-item>
+      <md-list-item>Area: {{carPark?.area}}</md-list-item>
       <!--<md-list-item *ngIf="carPark.unlocked !== 0">Last unlocked date: {{carPark.unlocked | date}}</md-list-item>-->
       <!--<md-list-item *ngIf="carPark.unlocked === 0">Never unlocked</md-list-item>-->
       <!--<md-list-item *ngIf="currentUser.profile === profileTypeEnum.manager && isCarParkUnlocked">-->

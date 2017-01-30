@@ -98,7 +98,7 @@ export class ValidationMessageService {
       'required': this.required('Car park code'),
       'maxlength': this.maxLength('Car park code', this.maxLengthCarParkCode)
     },
-    'carparkLotNumber': {
+    'carParkLotNumber': {
       'required': this.required('Car park Lot Number'),
       'maxlength': this.maxLength('Car park Lot Number', this.maxLengthCarParkLotNumber)
     },

@@ -109,7 +109,7 @@ export class CarParkService extends ServiceUtils {
     }
   }
 
-  getAreasByCardinalPart(cardinalPart: Region) {
+  getAreasByRegion(cardinalPart: Region) {
     return this.refDatabase.child('areas').child(cardinalPart).once('value')
       .then(snapshot => Object.keys(snapshot.val() ? snapshot.val() : []));
   }

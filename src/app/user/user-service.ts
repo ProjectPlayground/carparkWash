@@ -26,6 +26,14 @@ export class UserService extends ServiceUtils {
     this.refStorageUsers = firebase.storage().ref('users');
   }
 
+  getIfSet() {
+    if (this.currentUser) {
+      return this.currentUser;
+    } else {
+      return null;
+    }
+  }
+
   getCurrent(cache: boolean = true, userFb?: UserModel): Promise<UserModel> {
     if (cache && this.currentUser) {
       return Promise.resolve(this.currentUser);

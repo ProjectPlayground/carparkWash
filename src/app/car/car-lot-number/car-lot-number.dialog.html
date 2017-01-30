@@ -2,8 +2,8 @@
 
 <p>Enter the Car Park LOT Number</p>
 
-<form [formGroup]="form">
-  <md-list>
+<md-list>
+  <form [formGroup]="form">
     <md-list-item class="center-input">
       <md-input type="text" required
                 [dividerColor]="formErrors.carParkLotNumber?'accent':'primary'"
@@ -13,10 +13,12 @@
     <md-list-item class="center-input alert alert-danger" *ngIf="formErrors.carParkLotNumber">
       {{ formErrors.carParkLotNumber }}
     </md-list-item>
+  </form>
 
-    <md-list-item no-lines class="btns-dialog">
-      <button md-button color="primary" (click)="cancel()">Cancel</button>
-      <button md-button color="primary" (click)="select()">Select</button>
-    </md-list-item>
-  </md-list>
-</form>
+  <md-list-item no-lines class="btns-dialog">
+    <button md-button color="primary" (click)="cancel()">Cancel</button>
+    <button md-button color="primary"
+            [disabled]="form.invalid"
+            (click)="form.valid && select()">Select</button>
+  </md-list-item>
+</md-list>

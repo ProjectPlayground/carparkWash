@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MdSnackBar, MdSnackBarConfig, MdDialog, MdDialogConfig } from '@angular/material';
 import { CarModel } from '../shared/car.model';
 import { CarService } from '../shared/car.service';
@@ -19,7 +19,8 @@ import { CarLotNumberDialog } from "../car-lot-number/car-lot-number.dialog";
 @Component({
   selector: 'app-car-item',
   templateUrl: './car-item.component.html',
-  styleUrls: ['./car-item.component.css']
+  styleUrls: ['./car-item.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CarItemComponent implements OnInit {
 
@@ -43,13 +44,17 @@ export class CarItemComponent implements OnInit {
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 2000;
     this.snackBarConfig.politeness = 'polite';
-
-    this.userService.getCurrent()
-      .then(user => this.currentUser = user)
-      .catch(err => {
-        console.error(err);
-        this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
-      });
+    this.currentUser = this.userService.getIfSet();
+    if (!this.currentUser) {
+      this.userService.getCurrent()
+        .then(user => {
+          this.currentUser = user;
+        })
+        .catch(err => {
+          console.error(err);
+          this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
+        });
+    }
   }
 
   ngOnInit() {

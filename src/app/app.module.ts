@@ -60,25 +60,24 @@ const appRoutes: Routes = [
     CarParkListComponent,
     CarParkFilterComponent,
     CarListComponent,
+    SettingComponent,
 
     ChangePasswordDialog,
     ConfirmMessageDialog,
     EditCarDialog,
     EditCarParkDialog,
     SelectTypeDialog,
+    CarLotNumberDialog,
 
-    CamelCasePipe,
-
-    SettingComponent,
-
-    CarLotNumberDialog
+    CamelCasePipe
   ],
   entryComponents: [
     ChangePasswordDialog,
     ConfirmMessageDialog,
     EditCarDialog,
     EditCarParkDialog,
-    SelectTypeDialog
+    SelectTypeDialog,
+    CarLotNumberDialog
   ],
   imports: [
     BrowserModule,

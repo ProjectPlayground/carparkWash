@@ -67,7 +67,7 @@ export class ValidationMessageService {
     },
     'phoneNumber': {
       'required': this.required('Phone Number'),
-      'pattern': this.required('Phone Number') + '\nOr\n' + this.incorrectFormat('Phone Number')
+      'pattern': this.incorrectFormat('Phone Number')
     },
     'profile': {
       'required': this.required('Profile'),
@@ -82,9 +82,6 @@ export class ValidationMessageService {
     },
     'colour': {
       'maxlength': this.maxLength('Car Colour', this.maxLengthCarColour)
-    },
-    'carLotNumber': {
-      'required': this.required('Car Lot Number'),
     },
     'nbPlaces': {
       'pattern': this.required('Number of parks') + '\nOr\n' + this.incorrectFormat('Number of parks')

@@ -28,7 +28,7 @@
           </button>
         </md-list-item>
 
-        <div style="display: flex; flex-direction: row">
+        <div class="row-elements">
           <md-list-item>
             <md-input type="text" required
                       [disabled]="!editMode"
@@ -54,7 +54,7 @@
           </md-list-item>
         </div>
 
-        <div style="display: flex; flex-direction: row">
+        <div class="row-elements">
           <md-list-item>
             <md-input type="text" required
                       [disabled]="!editMode"
@@ -68,7 +68,7 @@
           </md-list-item>
 
           <md-list-item>
-            <md-input type="number" required
+            <md-input type="text" required
                       [disabled]="!editMode"
                       [dividerColor]="profileFormErrors.phoneNumber?'accent':'primary'"
                       placeholder="Phone Number"

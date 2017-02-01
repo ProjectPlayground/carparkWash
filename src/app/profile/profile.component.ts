@@ -207,8 +207,8 @@ export class ProfileComponent implements OnInit {
           Validators.minLength(this.messageService.minLengthAddress),
           Validators.maxLength(this.messageService.maxLengthAddress)])],
       phoneNumber: [{value: this.user.phoneNumber, disabled: isDisabled},
-        Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)
-      ],
+        Validators.compose([Validators.required,
+          Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)])],
     });
     this.profileForm.valueChanges
       .subscribe(data => this.messageService.onValueChanged(this.profileForm, this.profileFormErrors));

@@ -66,6 +66,12 @@
 .full-width {
   width: 100%;
 }
+
+.row-elements {
+  display: flex;
+  flex-direction: row
+}
+
 .announcement-animation {
   animation: move-x linear 25s;
   animation-iteration-count: infinite;

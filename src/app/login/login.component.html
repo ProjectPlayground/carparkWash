@@ -95,21 +95,6 @@
     <md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.phoneNumber">
       {{ signUpFormErrors.phoneNumber }}
     </md-list-item>
-
-    <!--Only client can sign up here-->
-    <!--<md-list-item class="center-input">-->
-    <!--&lt;!&ndash;[dividerColor]="signUpFormErrors.profile?'accent':'primary'"&ndash;&gt;-->
-    <!--<md-select placeholder="Profile" required-->
-    <!--formControlName="profile"-->
-    <!--[(ngModel)]="userModel.profile">-->
-    <!--<md-option value={{profileTypeEnum.client}}>Client</md-option>-->
-    <!--<md-option value={{profileTypeEnum.manager}}>Car park Manager</md-option>-->
-    <!--<md-option value={{profileTypeEnum.cleaner}}>Cleaner</md-option>-->
-    <!--</md-select>-->
-    <!--</md-list-item>-->
-    <!--<md-list-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.profile">-->
-    <!--{{ signUpFormErrors.profile }}-->
-    <!--</md-list-item>-->
   </form>
 
   <form [formGroup]="carForm" *ngIf="!isOnLogin">

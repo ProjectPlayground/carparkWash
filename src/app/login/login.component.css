@@ -16,3 +16,12 @@
   flex-direction: column;
   justify-content: center;
 }
+
+.margin-btns {
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+
+.margin-left {
+  margin-left: 50px;
+}

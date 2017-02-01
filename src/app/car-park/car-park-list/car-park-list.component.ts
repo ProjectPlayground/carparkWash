@@ -49,7 +49,12 @@ export class CarParkListComponent implements OnInit {
       this.router.navigate(['']);
     } else {
       this.carParkService.getAll()
-       .then(carParks => this.carParks = carParks)
+       .then(carParks => {
+         this.carParks = carParks;
+         if (this.carParks.length === 0) {
+           this.snackBar.open('No Car Parks added yet', '', this.snackBarConfig);
+         }
+       })
        .catch(err => {
          console.log(err);
          this.snackBar.open('Error getting Car parks, please contact admin', '', this.snackBarConfig);
@@ -62,6 +67,9 @@ export class CarParkListComponent implements OnInit {
     this.carParkService.getFiltered(carParkFilterModel)
       .then(carParks => {
         this.carParks = carParks;
+        if (this.carParks.length === 0) {
+          this.snackBar.open('No Car Parks found', '', this.snackBarConfig);
+        }
         this.loadingService.show(false);
       })
       .catch(err => {

@@ -5,16 +5,16 @@ export class CarModel {
   id: string;
   subscription: SubscriptionModel;
   licencePlateNumber: string;
-  silhouettePicture: SilhouettePictureType;
+  type: CarType;
   brandModel: string;
   colour: string;
   userUid: string;
 
 }
 
-export type SilhouettePictureType = 'SEDAN' | 'SUV';
+export type CarType = 'SEDAN' | 'SUV';
 
-export const SilhouettePictureTypeEnum = {
-  SEDAN: 'SEDAN' as SilhouettePictureType,
-  SUV: 'SUV' as SilhouettePictureType,
+export const CarTypeEnum = {
+  SEDAN: 'SEDAN' as CarType,
+  SUV: 'SUV' as CarType,
 };

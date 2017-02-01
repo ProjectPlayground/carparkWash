@@ -1,7 +1,7 @@
 <md-list>
 
-  <md-list-item no-lines class="announcement-wrapper" margin-bottom
-            *ngIf="user?.profile !== profileTypeEnum.admin && announcement !== ''">
+  <md-list-item no-lines class="announcement-wrapper"
+            *ngIf="user?.profile !== profileTypeEnum.admin && announcement">
     <div class="full-width announcement-animation">{{announcement}}</div>
   </md-list-item>
 
@@ -104,8 +104,14 @@
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>
     <!-- Add Arrows -->
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"
+         *ngIf="(user.profile === profileTypeEnum.client && user.cars?.length > 4)
+             || (user.profile === profileTypeEnum.manager && user.carParks?.length > 4)
+             || (user.profile === profileTypeEnum.cleaner && carParks?.length > 4)"></div>
+    <div class="swiper-button-prev"
+         *ngIf="(user.profile === profileTypeEnum.client && user.cars?.length > 4)
+             || (user.profile === profileTypeEnum.manager && user.carParks?.length > 4)
+             || (user.profile === profileTypeEnum.cleaner && carParks?.length > 4)"></div>
   </swiper>
 
 </md-list>

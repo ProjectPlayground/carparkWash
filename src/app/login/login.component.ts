@@ -9,7 +9,7 @@ import { ToolbarService } from '../shared/toolbar.service';
 import { LoadingService } from '../shared/loading.service';
 import { GlobalValidator } from '../shared/validator/global.validator';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
-import { CarModel, SilhouettePictureTypeEnum } from '../car/shared/car.model';
+import { CarModel, CarTypeEnum } from '../car/shared/car.model';
 import { CarParkModel } from '../car-park/shared/car-park.model';
 import { ProfileEnum } from '../user/profile.enum';
 import { ConfirmMessageDialog } from '../confirm-message/confirm-message.dialog';
@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   password: string;
   confirmPassword: string;
   isOnLogin = true;
-  silhouettePictureTypeEnum = SilhouettePictureTypeEnum;
+  carTypeEnum = CarTypeEnum;
 
   private snackBarConfig: MdSnackBarConfig;
   profileTypeEnum = ProfileEnum;

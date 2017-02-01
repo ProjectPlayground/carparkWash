@@ -36,8 +36,6 @@ export class ProfileComponent implements OnInit {
     announcement: '',
   };
 
-  private snackBarConfig: MdSnackBarConfig;
-  profileTypeEnum = ProfileEnum;
   profileForm: FormGroup;
   profileFormErrors = {
     email: '',
@@ -59,6 +57,9 @@ export class ProfileComponent implements OnInit {
     prevButton: '.swiper-button-prev',
   };
 
+  private snackBarConfig: MdSnackBarConfig;
+  profileTypeEnum = ProfileEnum;
+
   constructor(public dialog: MdDialog, public toolbarService: ToolbarService,
               public loadingService: LoadingService, public userService: UserService,
               public carService: CarService, public carParkService: CarParkService,
@@ -73,12 +74,6 @@ export class ProfileComponent implements OnInit {
     this.snackBarConfig.politeness = 'polite';
 
     this.buildProfileForm(false);
-    this.carParkService.getAll()
-      .then(allCarParks => this.carParks = allCarParks)
-      .catch(err => {
-        console.error(err);
-        this.snackBar.open('Fail to load car parks', '', this.snackBarConfig);
-      });
   }
 
   ngOnInit() {
@@ -92,21 +87,31 @@ export class ProfileComponent implements OnInit {
     }
     this.userService.getCurrent(fromCache).then(user => {
       this.user = user;
-      this.loadingService.show(false);
+      if (this.user.profile == ProfileEnum.cleaner) {
+        this.carParkService.getAll()
+          .then(allCarParks => {
+            this.carParks = allCarParks;
+            this.loadingService.show(false);
+          })
+          .catch(err => {
+            console.error(err);
+            this.loadingService.show(false);
+            this.snackBar.open('Fail to load car parks', '', this.snackBarConfig);
+          });
+      } else {
+        this.loadingService.show(false);
+      }
     }).catch(err => {
       this.loadingService.show(false);
       console.error(err);
       this.snackBar.open('Fail to get your profile data', '', this.snackBarConfig);
     });
 
-    this.loadingService.show(true);
     this.announcementService.get().then(announcement => {
       this.announcement = announcement;
       this.buildAnnouncementForm();
       console.log(announcement);
-      this.loadingService.show(false);
     }).catch(err => {
-      this.loadingService.show(false);
       console.error(err);
       this.snackBar.open('Fail to get announcement, Please contact admin', '', this.snackBarConfig);
     });

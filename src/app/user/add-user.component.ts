@@ -148,6 +148,7 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
   }
 
   private buildForms() {
+    this.carParkModel.picture = '';
     this.buildSignUpForm();
     this.buildUserInfoForm();
     this.buildCarParkForm();

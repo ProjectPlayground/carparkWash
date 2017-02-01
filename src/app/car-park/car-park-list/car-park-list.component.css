@@ -3,7 +3,8 @@
   overflow: auto;
 }
 
-.no-car-park-yet > > > .md-list-item {
+.no-car-park-yet {
+  display: flex;
   justify-content: center;
   margin-top: 50px;
 }

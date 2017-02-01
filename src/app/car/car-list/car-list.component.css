@@ -3,7 +3,8 @@
   overflow: auto;
 }
 
-.no-car-yet >>> .md-list-item {
+.no-car-yet {
+  display: flex;
   justify-content: center;
   margin-top: 50px;
 }

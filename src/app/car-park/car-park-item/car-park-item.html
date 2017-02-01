@@ -18,9 +18,10 @@
     </md-list>
   </md-card-content>
 
-  <md-card-actions *ngIf="!isSelected && (currentUser.profile === profileTypeEnum.cleaner
-        || currentUser.profile === profileTypeEnum.client
-        ||(currentUser.profile === profileTypeEnum.manager && !isCarParkUnlocked))">
+  <md-card-actions *ngIf="!isSelected
+        && (currentUser.profile === profileTypeEnum.cleaner
+            || currentUser.profile === profileTypeEnum.client
+            ||(currentUser.profile === profileTypeEnum.manager && !isCarParkUnlocked))">
     <button md-button color="primary" class="btn-action" (click)="select()"
             *ngIf="currentUser.profile === profileTypeEnum.cleaner">
       Cars in

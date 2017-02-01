@@ -56,7 +56,6 @@ export class CarParkService extends ServiceUtils {
 
     updatedCarPark.region = region;
     updatedCarPark.area = area;
-
     return this.refDatabase.update(updates);
   }
 
@@ -64,22 +63,27 @@ export class CarParkService extends ServiceUtils {
     return this.refDatabase.child('carParks').once('value')
       .then(snapshot => {
         return this.arrayFromObject(snapshot.val())
-          .map(carparcsTreeByCardinal =>
-            this.arrayFromObject(carparcsTreeByCardinal)
+          .map(carParksTreeByRegion =>
+            this.arrayFromObject(carParksTreeByRegion)
               .reduce((result, value) => result.concat(value), []))
           .reduce((result, value) => result.concat(value), [])
-          .map((carparcObject: CarParkModel) => this.arrayFromObject(carparcObject)[0]);
-      });
+          .map((carParkObject: CarParkModel) => this.arrayFromObject(carParkObject)[0]);
+      })
+      .then((carParks: Array<CarParkModel>) => this.subscriptionToArray(carParks));
   }
 
   getBySubscription(subscriptionModel: SubscriptionModel): firebase.Promise<CarParkModel> {
     return this.refDatabase.child('carParks').child(subscriptionModel.carParkRegion)
       .child(subscriptionModel.carParkArea).child(subscriptionModel.carParkId).once('value')
-      .then(snapshot => snapshot.val());
+      .then(snapshot => {
+        let carPark = snapshot.val() as CarParkModel;
+        carPark.subscriptions = this.arrayFromObject(carPark.subscriptions);
+        return carPark;
+      })
   }
 
-  getFiltered(areaOrCardinalPart: CarParkFilterModel): firebase.Promise<Array<CarParkModel>> {
-    if (areaOrCardinalPart.code) {
+  getFiltered(carParkFilterModel: CarParkFilterModel): firebase.Promise<Array<CarParkModel>> {
+    if (carParkFilterModel.code) {
       return this.refDatabase.child('areas').once('value')
         .then(snapshot => {
           let regions = snapshot.val();
@@ -87,8 +91,9 @@ export class CarParkService extends ServiceUtils {
           for (let region of Object.keys(regions)) {
             for (let area of Object.keys(regions[region])) {
               carparksPromise.push(this.refDatabase.child('carParks').child(region).child(area)
-                .orderByChild('code').startAt(areaOrCardinalPart.code).once('value')
-                .then(snapshot => this.arrayFromObject(snapshot.val())));
+                .orderByChild('code').startAt(carParkFilterModel.code).once('value')
+                .then(snapshot => this.arrayFromObject(snapshot.val())
+                  .map((carParks: Array<CarParkModel>) => this.subscriptionToArray(carParks))));
             }
           }
           return Observable.forkJoin(carparksPromise).toPromise()
@@ -96,22 +101,31 @@ export class CarParkService extends ServiceUtils {
               return this.mergeResults(value);
             });
         });
-    } else if (areaOrCardinalPart.area) {
-      return this.refDatabase.child('carParks').child(areaOrCardinalPart.region).child(areaOrCardinalPart.area).once('value')
-        .then(snapshot => this.arrayFromObject(snapshot.val()));
+    } else if (carParkFilterModel.area) {
+      return this.refDatabase.child('carParks').child(carParkFilterModel.region).child(carParkFilterModel.area).once('value')
+        .then(snapshot => this.arrayFromObject(snapshot.val())
+          .map((carParks: Array<CarParkModel>) => this.subscriptionToArray(carParks)));
     } else {
-      return this.refDatabase.child('carParks').child(areaOrCardinalPart.region).once('value')
+      return this.refDatabase.child('carParks').child(carParkFilterModel.region).once('value')
         .then(snapshot => {
           return this.arrayFromObject(snapshot.val())
-            .map(carParkCardinalPart => this.arrayFromObject(carParkCardinalPart))
+            .map(carParkByRegion => this.arrayFromObject(carParkByRegion))
             .reduce((result, value) => result.concat(value), [])
-        });
+        })
+        .then((carParks: Array<CarParkModel>) => this.subscriptionToArray(carParks));
     }
   }
 
-  getAreasByRegion(cardinalPart: Region) {
-    return this.refDatabase.child('areas').child(cardinalPart).once('value')
+  getAreasByRegion(region: Region) {
+    return this.refDatabase.child('areas').child(region).once('value')
       .then(snapshot => Object.keys(snapshot.val() ? snapshot.val() : []));
+  }
+
+  private subscriptionToArray(carParks: Array<CarParkModel>) {
+    return carParks.map((carPark: CarParkModel) => {
+      carPark.subscriptions = this.arrayFromObject(carPark.subscriptions);
+      return carPark;
+    })
   }
 
   get selectedCarPark(): CarParkModel {

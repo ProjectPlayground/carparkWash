@@ -159,7 +159,7 @@ export class UserService extends ServiceUtils {
     if (user.profile === ProfileEnum.client && car) {
       let newCarId = this.refDatabase.child('cars').push().key;
       car.userUid = user.uid;
-      car.name = newCarId;
+      car.id = newCarId;
       updates['cars/' + newCarId] = car;
       updates['users/' + user.uid + '/cars/' + newCarId] = car;
     } else if (user.profile === ProfileEnum.manager && carPark) {
@@ -170,6 +170,10 @@ export class UserService extends ServiceUtils {
       updates['carParks/' + carPark.region + '/' + carPark.area.toLowerCase() + '/' + newCarParkId] = carPark;
       updates['areas/' + carPark.region + '/' + carPark.area.toLowerCase()] = true;
       updates['users/' + user.uid + '/carParks/' + newCarParkId] = carPark;
+    }
+
+    if (user.profile === ProfileEnum.client) {
+      updates['clientNames/' + user.uid] = user.name;
     }
 
     return this.refDatabase.child('users').child(user.uid).set(user).then(() => {

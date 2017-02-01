@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UserModel } from './user.model';
 import { MdSnackBarConfig, MdSnackBar } from '@angular/material';
 import { ProfileEnum } from './profile.enum';
@@ -16,7 +16,8 @@ import { PickImageAbstract } from '../shared/PickImageAbstract';
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.css']
+  styleUrls: ['./add-user.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddUserComponent extends PickImageAbstract implements OnInit, OnDestroy {
 
@@ -163,7 +164,7 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
       address: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthAddress),
         Validators.maxLength(this.messageService.maxLengthAddress)])],
-      cardinalPart: ['', Validators.required],
+      region: ['', Validators.required],
       area: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthName),
         Validators.maxLength(this.messageService.maxLengthName)])],
@@ -200,8 +201,7 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
       address: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthAddress),
         Validators.maxLength(this.messageService.maxLengthAddress)])],
-      phoneNumber: ['', Validators.pattern(
-        /\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)],
+      phoneNumber: ['', Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)],
       profile: ['', Validators.required]
     });
     this.userInfoForm.valueChanges.subscribe(data => {

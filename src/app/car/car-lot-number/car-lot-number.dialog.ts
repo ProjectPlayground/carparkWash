@@ -29,7 +29,6 @@ export class CarLotNumberDialog implements OnInit {
   }
 
   select() {
-    // objet nest pas la
     this.dialogRef.close(this.form.value.carParkLotNumber);
   }
 

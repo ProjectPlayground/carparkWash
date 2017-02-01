@@ -19,8 +19,7 @@ import { CarLotNumberDialog } from "../car-lot-number/car-lot-number.dialog";
 @Component({
   selector: 'app-car-item',
   templateUrl: './car-item.component.html',
-  styleUrls: ['./car-item.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./car-item.component.css']
 })
 export class CarItemComponent implements OnInit {
 
@@ -87,11 +86,11 @@ export class CarItemComponent implements OnInit {
 
   selectToWash() {
     let dialogRef = this.dialog.open(CarLotNumberDialog, <MdDialogConfig>{disableClose: false});
-    dialogRef.afterClosed().subscribe((carLotNumber: string) => {
-      if (carLotNumber) {
+    dialogRef.afterClosed().subscribe((carParkLotNumber: string) => {
+      if (carParkLotNumber) {
         // car lot number is a number
-        if (carLotNumber.length > 0) {
-          this.subscriberService.selectToBeWashed(this.subscription, carLotNumber)
+        if (carParkLotNumber.length > 0) {
+          this.subscriberService.selectToBeWashed(this.subscription, carParkLotNumber)
             .then(() => this.snackBar.open(`The car ${this.car.licencePlateNumber} is to be washed`, '', this.snackBarConfig))
             .catch(err => {
               console.error(err);

@@ -1,0 +1,11 @@
+:host {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.days-list {
+  overflow-y: auto;
+  max-height: 600px;
+}

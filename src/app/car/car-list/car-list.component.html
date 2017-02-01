@@ -3,7 +3,9 @@
     <app-car-park-item [carPark]="selectedCarPark" isSelected="true"></app-car-park-item>
   </div>
 
-  <md-list-item class="no-car-park-yet" *ngIf="!subscriptions || subscriptions.length === 0">
+  <br>
+
+  <md-list-item class="no-car-park-yet" *ngIf="subscriptions?.length === 0">
     <h2>No car has subscribed yet</h2>
   </md-list-item>
 

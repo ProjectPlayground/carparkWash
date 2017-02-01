@@ -1,6 +1,7 @@
 
 :host {
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .center-form-items {
@@ -56,3 +57,30 @@
 .swiper-wrapper {
   min-height: 352px;
 }
+
+.announcement-wrapper {
+  border-bottom: 1px solid gray !important;
+  border-top: 1px solid gray !important;
+}
+
+.full-width {
+  width: 100%;
+}
+.announcement-animation {
+  animation: move-x linear 25s;
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+  -webkit-animation: move-x linear 25s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-transform-origin: 50% 50%;
+  -moz-animation: move-x linear 25s;
+  -moz-animation-iteration-count: infinite;
+  -moz-transform-origin: 50% 50%;
+  -o-animation: move-x linear 25s;
+  -o-animation-iteration-count: infinite;
+  -o-transform-origin: 50% 50%;
+  -ms-animation: move-x linear 25s;
+  -ms-animation-iteration-count: infinite;
+  -ms-transform-origin: 50% 50%;
+}
+

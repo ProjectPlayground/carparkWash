@@ -1,7 +1,7 @@
 <md-card>
-  <md-card-title>Filter car parks</md-card-title>
+  <md-card-title>Filter Car Parks</md-card-title>
   <md-card-content>
-    <md-tab-group #tabGroup (selectChange)="changeFilterTab()">
+    <md-tab-group #tabGroup>
       <md-tab label="By Code">
         <form [formGroup]="codeFielterForm">
           <md-list>
@@ -19,7 +19,7 @@
           <md-list>
             <md-list-item class="center-element margin-top">
               <md-select placeholder="Region"
-                         (onClose)="getAreasByPart()"
+                         (onClose)="getAreasByRegion()"
                          formControlName="carParkRegion"
                          [(ngModel)]="carParkFilter.region">
                 <md-option value="{{regionEnum.central}}">{{regionEnum.central | camelCase}}</md-option>
@@ -31,8 +31,6 @@
             </md-list-item>
 
             <md-list-item class="center-element margin-top" *ngIf="areasOfRegion?.length > 0">
-              <!--<md-input type="text" placeholder="Area" style="z-index: 5;"-->
-              <!--[(ngModel)]="areaFilter" (keyup)="filterAreas()"></md-input>-->
               <md-select placeholder="Area"
                          formControlName="carParkArea"
                          #selectOptionArea [(ngModel)]="carParkFilter.area">
@@ -48,7 +46,8 @@
   <md-card-actions class="center-element">
     <button md-button color="primary"
             [disabled]="tabGroup.selectedIndex === 0 ? codeFielterForm.invalid : areaFielterForm.invalid"
-            (click)="(tabGroup.selectedIndex === 0 ? codeFielterForm.valid : areaFielterForm.valid) && filterCarParks()">
+            (click)="(tabGroup.selectedIndex === 0 ? codeFielterForm.valid : areaFielterForm.valid)
+                      && filterCarParks()">
       Filter Car Parks
     </button>
   </md-card-actions>

@@ -8,8 +8,8 @@
       <md-list-item *ngIf="subscription">
         Current subscription date: {{subscription?.dateSubscription | date}}
       </md-list-item>
-      <md-list-item *ngIf="subscription?.days[dayIndex].carparkLotNumber">
-        Car Park Lot Number: {{subscription?.days[dayIndex].carparkLotNumber}}
+      <md-list-item *ngIf="subscription?.days[dayIndex].carParkLotNumber">
+        Car Park Lot Number: {{subscription?.days[dayIndex].carParkLotNumber}}
       </md-list-item>
       <md-list-item *ngIf="subscription?.days[dayIndex].washStatus === washStateEnum.toWash">
         Waiting for a cleaner to wash
@@ -29,6 +29,7 @@
                   && subscription?.days[dayIndex].washStatus === washStateEnum.washNotRequested)
                 || (currentUser?.profile === profileEnum.cleaner
                   && subscription?.days[dayIndex].washStatus === washStateEnum.toWash))">
+
     <button md-button color="primary" class="btn-action" (click)="selectToSubscribe()"
             *ngIf="currentUser?.profile === profileEnum.client && !car?.subscription">
       Subscribe for 30 days

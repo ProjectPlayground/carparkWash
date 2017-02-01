@@ -1,0 +1,30 @@
+<md-card>
+  <md-card-title>Subscriptions List</md-card-title>
+
+  <md-card-content>
+    <md-list>
+      <md-list-item *ngFor="let history of histories" (click)="selectHistory(history)">
+        <span md-line>{{history.dateSubscription | date}}</span>
+        <span md-line>{{history.car.licencePlateNumber}} - {{history.car.brandModel}}</span>
+      </md-list-item>
+    </md-list>
+  </md-card-content>
+
+</md-card>
+
+<md-card *ngIf="selectedHistory">
+  <md-card-title>Subscription {{selectedHistory.dateSubscription | date}}</md-card-title>
+  <md-card-content>
+    <md-list class="days-list">
+      <md-list-item *ngFor="let day of selectedHistory.days">
+        <span md-line>The day index: {{day.id}}</span>
+        <h3 md-line>Wash Status: {{day.washStatus | camelCase}}</h3>
+        <span md-line *ngIf="day?.washRequestDate">Wash Request Time {{day.washRequestDate | date:'HH:mm:ss'}}</span>
+        <span md-line *ngIf="day?.washDate">Wash time: {{day.washDate | date:'HH:mm:ss'}}</span>
+        <span md-line *ngIf="day?.cleanerName">Cleaner Name: {{day.cleanerName}}</span>
+        <span md-line *ngIf="day?.carParkLotNumber">Car Park Lot Number: {{day.carParkLotNumber}}</span>
+      </md-list-item>
+    </md-list>
+  </md-card-content>
+
+</md-card>

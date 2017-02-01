@@ -20,26 +20,26 @@ export class CarService extends ServiceUtils {
 
   remove(car: CarModel) {
     let updates = {};
-    updates['users/' + car.userUid + '/cars/' + car.name] = null;
-    updates['cars/' + car.name] = null;
+    updates['users/' + car.userUid + '/cars/' + car.id] = null;
+    updates['cars/' + car.id] = null;
     return this.refDatabase.update(updates);
   }
 
   add(user: UserModel, newCar: CarModel) {
     user.cars.push(newCar);
-    newCar.name = this.refDatabase.child('cars').push().key;
+    newCar.id = this.refDatabase.child('cars').push().key;
 
     let updates = {};
-    updates['users/' + newCar.userUid + '/cars/' + newCar.name] = newCar;
-    updates['cars/' + newCar.name] = newCar;
+    updates['users/' + newCar.userUid + '/cars/' + newCar.id] = newCar;
+    updates['cars/' + newCar.id] = newCar;
     return this.refDatabase.update(updates)
       .then(() => this.userService.getCurrent(true));
   }
 
   update(updatingCar: CarModel) {
     let updates = {};
-    updates['users/' + updatingCar.userUid + '/cars/' + updatingCar.name] = updatingCar;
-    updates['cars/' + updatingCar.name] = updatingCar;
+    updates['users/' + updatingCar.userUid + '/cars/' + updatingCar.id] = updatingCar;
+    updates['cars/' + updatingCar.id] = updatingCar;
     return this.refDatabase.update(updates);
   }
 
@@ -51,9 +51,4 @@ export class CarService extends ServiceUtils {
     this._selectedCar = value;
   }
 
-  getByCarPark(carPark: CarParkModel) {
-    return this.refDatabase.child('carParks').child(carPark.region).child(carPark.area)
-      .child(carPark.id).child('subscriptions').once('value')
-      .then(snapshot => this.arrayFromObject(snapshot.val()));
-  }
 }

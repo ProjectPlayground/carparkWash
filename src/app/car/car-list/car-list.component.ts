@@ -48,12 +48,7 @@ export class CarListComponent implements OnInit {
     if (!this.selectedCarPark) {
       this.router.navigate(['']);
     } else {
-      this.carService.getByCarPark(this.carParkService.selectedCarPark)
-        .then((subscriptions: Array<SubscriptionModel>) => this.subscriptions = subscriptions)
-        .catch(err => {
-          console.log(err);
-          this.snackBar.open('Error getting Cars, please contact admin', '', this.snackBarConfig);
-        });
+      this.subscriptions = this.carParkService.selectedCarPark.subscriptions;
     }
   }
 

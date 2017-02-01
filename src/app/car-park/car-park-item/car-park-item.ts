@@ -38,8 +38,7 @@ export class CarParkItemComponent implements OnInit {
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 3000;
     this.snackBarConfig.politeness = 'polite';
-    this.userService.getCurrent()
-      .then(user => this.currentUser = user)
+    this.userService.getCurrent().then(user => this.currentUser = user)
       .catch(err => {
         console.error(err);
         this.snackBar.open('Fatal Error, please contact admin', '', this.snackBarConfig);
@@ -63,8 +62,8 @@ export class CarParkItemComponent implements OnInit {
     if (this.carService.selectedCar) {
       this.subscriberService.subscribe(this.carPark, this.carService.selectedCar)
         .then(() => {
-          this.router.navigate(['profile']);
-          this.snackBar.open(`the selected car is subscribed to the carpark ${this.carPark.name}`
+          this.router.navigate(['profile', 'get']);
+          this.snackBar.open(`the car ${this.carService.selectedCar.licencePlateNumber} is subscribed to the car park ${this.carPark.name}`
             , '', this.snackBarConfig)
         })
         .catch(err => {

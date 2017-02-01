@@ -49,12 +49,12 @@ export class CarParkListComponent implements OnInit {
     if (!this.selectedCar) {
       this.router.navigate(['']);
     } else {
-      //this.carParkService.getAll()
-      //  .then(carParks => this.carParks = carParks)
-      //  .catch(err => {
-      //    console.log(err);
-      //    this.snackBar.open('Error getting Car parks, please contact admin', '', this.snackBarConfig);
-      //  });
+      this.carParkService.getAll()
+       .then(carParks => this.carParks = carParks)
+       .catch(err => {
+         console.log(err);
+         this.snackBar.open('Error getting Car parks, please contact admin', '', this.snackBarConfig);
+       });
     }
   }
 

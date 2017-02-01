@@ -21,10 +21,13 @@
         </md-list-item>
         <md-list-item>
           <button md-button md-line
-                  (click)="openCarparkInfo()">Get Carpark Info</button>
+                  (click)="openCarparkInfo()">Get Car Park Info</button>
         </md-list-item>
         <md-list-item *ngIf="currentUser?.profile === profileTypeEnum.admin">
           <button md-button md-line routerLink="/add/user" (click)="menu.close()">Add Manager/Cleaner</button>
+        </md-list-item>
+        <md-list-item *ngIf="currentUser?.profile === profileTypeEnum.admin">
+          <button md-button md-line routerLink="/user/list" (click)="menu.close()">History Subscriptions</button>
         </md-list-item>
         <md-list-item>
           <button md-button md-line routerLink="/login/disconnect" (click)="menu.close()">Disconnect</button>

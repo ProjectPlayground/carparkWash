@@ -40,7 +40,7 @@ export class CarParkFilterComponent implements OnInit {
   private snackBarConfig: MdSnackBarConfig;
 
   constructor(public carParkService: CarParkService, public loadingService: LoadingService,
-              public snackBar: MdSnackBar, private formBuilder: FormBuilder,
+              public snackBar: MdSnackBar, public formBuilder: FormBuilder,
               public messageService: ValidationMessageService) {
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 2000;
@@ -54,13 +54,14 @@ export class CarParkFilterComponent implements OnInit {
     this.buildForm();
   }
 
-  getAreasByPart() {
+  getAreasByRegion() {
     this.carParkFilter.area = undefined;
+    // if select is opened but none value is selected
     if (this.carParkFilter.region) {
       this.loadingService.show(true);
       this.carParkService.getAreasByRegion(this.carParkFilter.region)
-        .then(areasPart => {
-          this.areasOfRegion = areasPart;
+        .then(areasOfRegion => {
+          this.areasOfRegion = areasOfRegion;
           this.loadingService.show(false);
         })
         .catch(err => {
@@ -72,12 +73,12 @@ export class CarParkFilterComponent implements OnInit {
   }
 
   filterCarParks() {
-      if (this.tabGroup.selectedIndex === 0) {
-        this.carParkFilter.region = undefined;
-        this.carParkFilter.area = '';
-      } else {
-        this.carParkFilter.code = '';
-      }
+    if (this.tabGroup.selectedIndex === 0) {
+      this.carParkFilter.region = undefined;
+      this.carParkFilter.area = '';
+    } else {
+      this.carParkFilter.code = '';
+    }
     this.onFilterCarParks.emit(this.carParkFilter);
   }
 

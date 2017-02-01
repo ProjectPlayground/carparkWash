@@ -1,7 +1,8 @@
 import { SubscriptionModel } from '../../shared/subscription/subscription.model';
 
 export class CarModel {
-  name: string;
+
+  id: string;
   subscription: SubscriptionModel;
   licencePlateNumber: string;
   silhouettePicture: SilhouettePictureType;

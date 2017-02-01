@@ -1,5 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-
 @import 'assets/material-icons.css';
 @import '~@angular/material/core/theming/prebuilt/indigo-pink.css';
 
@@ -42,6 +41,51 @@ md-dialog-container {
   border-radius: 20px !important;
 }
 
-swiper >>> .swiper-wrapper {
+.swiper-wrapper {
   height: 450px;
+}
+
+@keyframes move-x {
+  0% {
+    transform: translate(-50%, 0px);
+  }
+  100% {
+    transform: translate(100%, 0px);
+  }
+}
+
+@-moz-keyframes move-x {
+  0% {
+    -moz-transform: translate(-50%, 0px);
+  }
+  100% {
+    -moz-transform: translate(100%, 0px);
+  }
+}
+
+@-webkit-keyframes move-x {
+  0% {
+    -webkit-transform: translate(-50%, 0px);
+  }
+  100% {
+    -webkit-transform: translate(100%, 0px);
+  }
+}
+
+@-o-keyframes move-x {
+  0% {
+    -o-transform: translate(-50%, 0px);
+  }
+  100% {
+    -o-transform: translate(-50%, 0px);
+  }
+}
+
+@-ms-keyframes move-x {
+  0% {
+    -ms-transform: translate(-50%, 0px);
+  }
+  100% {
+    -ms-transform: translate(100%, 0px);
+  }
 }

@@ -17,6 +17,9 @@ import { CarParkModel } from '../car-park/shared/car-park.model';
 import { SelectTypeDialog } from './select-type/select-type.dialog';
 import { CarParkFilterModel } from '../car-park/car-park-filter/car-park-filter.model';
 import { Region } from "../car-park/car-park-filter/region.enum";
+import { AnnouncementService } from "../shared/announcement.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { BehaviorSubject } from "rxjs";
 
 @Component({
   selector: 'app-profile',
@@ -28,11 +31,17 @@ export class ProfileComponent implements OnInit {
   user: UserModel;
   editMode = false;
   carParks: Array<CarParkModel>;
+  announcement: string;
+
+  announcementForm: FormGroup;
+  announcementFormErrors = {
+    announcement: '',
+  };
 
   private snackBarConfig: MdSnackBarConfig;
   profileTypeEnum = ProfileEnum;
   profileForm: FormGroup;
-  formErrors = {
+  profileFormErrors = {
     email: '',
     name: '',
     address: '',
@@ -56,7 +65,8 @@ export class ProfileComponent implements OnInit {
               public loadingService: LoadingService, public userService: UserService,
               public carService: CarService, public carParkService: CarParkService,
               public messageService: ValidationMessageService,
-              public snackBar: MdSnackBar, public formBuilder: FormBuilder) {
+              public snackBar: MdSnackBar, public formBuilder: FormBuilder,
+              public announcementService: AnnouncementService, public route: Router, public routeA: ActivatedRoute) {
 
     this.user = new UserModel();
     this.editMode = false;
@@ -77,7 +87,12 @@ export class ProfileComponent implements OnInit {
     this.toolbarService.title('Your profile');
 
     this.loadingService.show(true);
-    this.userService.getCurrent(true).then(user => {
+
+    let fromCache = true;
+    if (this.route.url.indexOf('get')) {
+      fromCache = false;
+    }
+    this.userService.getCurrent(fromCache).then(user => {
       this.user = user;
       this.loadingService.show(false);
     }).catch(err => {
@@ -85,6 +100,34 @@ export class ProfileComponent implements OnInit {
       console.error(err);
       this.snackBar.open('Fail to get your profile data', '', this.snackBarConfig);
     });
+
+    this.loadingService.show(true);
+    this.announcementService.get().then(announcement => {
+      this.announcement = announcement;
+      this.buildAnnouncementForm();
+      console.log(announcement);
+      this.loadingService.show(false);
+    }).catch(err => {
+      this.loadingService.show(false);
+      console.error(err);
+      this.snackBar.open('Fail to get announcement, Please contact admin', '', this.snackBarConfig);
+    });
+  }
+
+  resetAnnouncement() {
+    this.buildAnnouncementForm();
+  }
+
+  saveAnnouncement() {
+    this.announcementService.set(this.announcementForm.value.announcement)
+      .then(() => {
+        this.announcement = this.announcementForm.value.announcement;
+        this.snackBar.open('Announcement saved', '', this.snackBarConfig);
+      })
+      .catch(err => {
+        console.log(err);
+        this.snackBar.open(err.message, '', this.snackBarConfig);
+      });
   }
 
   getCarParksFilter(carParkFilterModel: CarParkFilterModel) {
@@ -136,6 +179,16 @@ export class ProfileComponent implements OnInit {
     this.userService.getCurrent(false).then(user => this.user = user);
   }
 
+  private buildAnnouncementForm() {
+    this.announcementForm = this.formBuilder.group({
+      announcement: [this.announcement],
+    });
+    this.announcementForm.valueChanges.subscribe(data => {
+      this.messageService.onValueChanged(this.announcementForm, this.announcementFormErrors);
+    });
+    this.messageService.onValueChanged(this.announcementForm, this.announcementFormErrors);
+  }
+
   private buildProfileForm(isDisabled: boolean) {
     this.profileForm = this.formBuilder.group({
       email: [{value: this.user.email, disabled: isDisabled},
@@ -155,8 +208,8 @@ export class ProfileComponent implements OnInit {
       ],
     });
     this.profileForm.valueChanges
-      .subscribe(data => this.messageService.onValueChanged(this.profileForm, this.formErrors));
-    this.messageService.onValueChanged(this.profileForm, this.formErrors);
+      .subscribe(data => this.messageService.onValueChanged(this.profileForm, this.profileFormErrors));
+    this.messageService.onValueChanged(this.profileForm, this.profileFormErrors);
   }
 
   private addCar() {
@@ -171,7 +224,7 @@ export class ProfileComponent implements OnInit {
         }).catch(err => {
           this.loadingService.show(false);
           console.error(err);
-          this.snackBar.open(`Faild to add ${newCar.licencePlateNumber}`, '', this.snackBarConfig);
+          this.snackBar.open(`Fail to add ${newCar.licencePlateNumber}`, '', this.snackBarConfig);
         });
       }
     });
@@ -191,7 +244,7 @@ export class ProfileComponent implements OnInit {
         }).catch(err => {
           this.loadingService.show(false);
           console.error(err);
-          this.snackBar.open(`Faild to add ${newCarPark.carpark.name}`, '', this.snackBarConfig);
+          this.snackBar.open(`Fail to add ${newCarPark.carpark.name}`, '', this.snackBarConfig);
         });
       }
     });

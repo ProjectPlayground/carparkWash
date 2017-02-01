@@ -1,5 +1,10 @@
 <md-list>
 
+  <md-list-item no-lines class="announcement-wrapper" margin-bottom
+            *ngIf="user?.profile !== profileTypeEnum.admin && announcement !== ''">
+    <div class="full-width announcement-animation">{{announcement}}</div>
+  </md-list-item>
+
   <div class="filter-info-layout">
     <app-car-park-filter *ngIf="user?.profile === profileTypeEnum.cleaner"
                          (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>
@@ -27,25 +32,25 @@
           <md-list-item>
             <md-input type="text" required
                       [disabled]="!editMode"
-                      [dividerColor]="formErrors.name?'accent':'primary'"
+                      [dividerColor]="profileFormErrors.name?'accent':'primary'"
                       placeholder="Name"
                       formControlName="name"
                       value="{{user.name}}"></md-input>
           </md-list-item>
-          <md-list-item class="alert alert-danger" *ngIf="formErrors.name">
-            {{ formErrors.name }}
+          <md-list-item class="alert alert-danger" *ngIf="profileFormErrors.name">
+            {{ profileFormErrors.name }}
           </md-list-item>
 
           <md-list-item>
             <md-input type="email" required
                       [disabled]="!editMode"
-                      [dividerColor]="formErrors.email?'accent':'primary'"
+                      [dividerColor]="profileFormErrors.email?'accent':'primary'"
                       placeholder="Email"
                       formControlName="email"
                       value="{{user.email}}"></md-input>
           </md-list-item>
-          <md-list-item class="alert alert-danger" *ngIf="formErrors.email">
-            {{ formErrors.email }}
+          <md-list-item class="alert alert-danger" *ngIf="profileFormErrors.email">
+            {{ profileFormErrors.email }}
           </md-list-item>
         </div>
 
@@ -53,25 +58,25 @@
           <md-list-item>
             <md-input type="text" required
                       [disabled]="!editMode"
-                      [dividerColor]="formErrors.address?'accent':'primary'"
+                      [dividerColor]="profileFormErrors.address?'accent':'primary'"
                       placeholder="Address"
                       formControlName="address"
                       value="{{user.address}}"></md-input>
           </md-list-item>
-          <md-list-item class="alert alert-danger" *ngIf="formErrors.address">
-            {{ formErrors.address }}
+          <md-list-item class="alert alert-danger" *ngIf="profileFormErrors.address">
+            {{ profileFormErrors.address }}
           </md-list-item>
 
           <md-list-item>
             <md-input type="number" required
                       [disabled]="!editMode"
-                      [dividerColor]="formErrors.phoneNumber?'accent':'primary'"
+                      [dividerColor]="profileFormErrors.phoneNumber?'accent':'primary'"
                       placeholder="Phone Number"
                       formControlName="phoneNumber"
                       value="{{user.phoneNumber}}"></md-input>
           </md-list-item>
-          <md-list-item class="alert alert-danger" *ngIf="formErrors.phoneNumber">
-            {{ formErrors.phoneNumber }}
+          <md-list-item class="alert alert-danger" *ngIf="profileFormErrors.phoneNumber">
+            {{ profileFormErrors.phoneNumber }}
           </md-list-item>
         </div>
       </div>

@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 import { CarParkService } from '../shared/car-park.service';
 import { CarParkModel } from '../shared/car-park.model';
-import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 import { CarService } from '../../car/shared/car.service';
 import { CarModel } from '../../car/shared/car.model';
-import { Router } from '@angular/router';
-import { Region } from '../car-park-filter/region.enum';
 import { CarParkFilterModel } from '../car-park-filter/car-park-filter.model';
 import { LoadingService } from '../../shared/loading.service';
 

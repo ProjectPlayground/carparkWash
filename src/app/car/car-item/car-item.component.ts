@@ -1,11 +1,11 @@
-import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MdSnackBar, MdSnackBarConfig, MdDialog, MdDialogConfig } from '@angular/material';
 import { CarModel } from '../shared/car.model';
 import { CarService } from '../shared/car.service';
 import { LoadingService } from '../../shared/loading.service';
 import { EditCarDialog } from '../edit-car/edit-car.dialog';
 import { ConfirmMessageDialog } from '../../confirm-message/confirm-message.dialog';
-import { Router } from '@angular/router';
 import { UserService } from '../../user/user-service';
 import { UserModel } from '../../user/user.model';
 import { ProfileEnum } from '../../user/profile.enum';
@@ -14,7 +14,7 @@ import { SubscriptionModel } from '../../shared/subscription/subscription.model'
 import { CarParkModel } from '../../car-park/shared/car-park.model';
 import { CarParkService } from '../../car-park/shared/car-park.service';
 import { WashStateEnum } from '../../shared/subscription/wash-state.enum';
-import { CarLotNumberDialog } from "../car-lot-number/car-lot-number.dialog";
+import { CarLotNumberDialog } from '../car-lot-number/car-lot-number.dialog';
 
 @Component({
   selector: 'app-car-item',

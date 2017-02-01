@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import * as firebase from 'firebase';
-import { MdSnackBar, MdSnackBarConfig, MdDialogConfig, MdDialog } from '@angular/material';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { MdSnackBar, MdSnackBarConfig, MdDialogConfig, MdDialog } from '@angular/material';
+import * as firebase from 'firebase';
 import { UserModel } from '../user/user.model';
 import { UserService } from '../user/user-service';
 import { ToolbarService } from '../shared/toolbar.service';

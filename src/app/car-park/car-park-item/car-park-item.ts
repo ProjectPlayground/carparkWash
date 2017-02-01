@@ -1,17 +1,17 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { CarParkModel } from '../shared/car-park.model';
+import { Router } from '@angular/router';
 import { MdSnackBarConfig, MdSnackBar, MdDialog, MdDialogConfig } from '@angular/material';
+import { CarParkModel } from '../shared/car-park.model';
 import { LoadingService } from '../../shared/loading.service';
 import { ConfirmMessageDialog } from '../../confirm-message/confirm-message.dialog';
 import { CarParkService } from '../shared/car-park.service';
 import { EditCarParkDialog } from '../edit-car-park/edit-car-park.dialog';
-import { Router } from '@angular/router';
 import { UserService } from '../../user/user-service';
 import { UserModel } from '../../user/user.model';
 import { SubscriberService } from '../../shared/subscription/subscriber.service';
 import { CarService } from '../../car/shared/car.service';
 import { ProfileEnum } from '../../user/profile.enum';
-import { Region } from "../car-park-filter/region.enum";
+import { Region } from '../car-park-filter/region.enum';
 
 @Component({
   selector : 'app-car-park-item',

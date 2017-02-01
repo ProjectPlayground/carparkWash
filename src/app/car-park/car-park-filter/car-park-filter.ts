@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Output, ViewChild, ChangeDetectionStrategy, OnInit } from "@angular/core";
-import { RegionEnum } from "./region.enum";
-import { CarParkService } from "../shared/car-park.service";
-import { MdSnackBar, MdSnackBarConfig, MdTabGroup } from "@angular/material";
-import { CarParkFilterModel } from "./car-park-filter.model";
-import { LoadingService } from "../../shared/loading.service";
-import { FormGroup, Validators, FormBuilder } from "@angular/forms";
-import { ValidationMessageService } from "../../shared/validator/validation-message.service";
+import { Component, EventEmitter, Output, ViewChild, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { MdSnackBar, MdSnackBarConfig, MdTabGroup } from '@angular/material';
+import { RegionEnum } from './region.enum';
+import { CarParkService } from '../shared/car-park.service';
+import { CarParkFilterModel } from './car-park-filter.model';
+import { LoadingService } from '../../shared/loading.service';
+import { ValidationMessageService } from '../../shared/validator/validation-message.service';
 
 @Component({
   selector: 'app-car-park-filter',

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { GlobalValidator } from '../../shared/validator/global.validator';
 import { MdDialogRef } from '@angular/material';
+import { GlobalValidator } from '../../shared/validator/global.validator';
 import { ValidationMessageService } from '../../shared/validator/validation-message.service';
 
 @Component({

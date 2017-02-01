@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { CarParkModel } from '../../car-park/shared/car-park.model';
 import { ServiceUtils } from '../service.utils';
-import { SubscriptionModel, DayCleanerModel } from './subscription.model';
+import { SubscriptionModel } from './subscription.model';
 import { CarModel } from '../../car/shared/car.model';
 import { WashStateEnum } from './wash-state.enum';
 import { UserModel } from '../../user/user.model';

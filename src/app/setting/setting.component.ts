@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { MdDialogConfig, MdSnackBarConfig, MdDialog, MdSnackBar } from '@angular/material';
 import { UserService } from '../user/user-service';
 import { UserModel, ProviderTypeEnum } from '../user/user.model';
 import { ChangePasswordDialog } from './change-pssword/change-password.dialog';
-import { MdDialogConfig, MdSnackBarConfig, MdDialog, MdSnackBar } from '@angular/material';
 import { ToolbarService } from '../shared/toolbar.service';
 import { LoadingService } from '../shared/loading.service';
 

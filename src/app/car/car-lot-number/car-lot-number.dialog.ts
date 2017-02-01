@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MdDialogRef } from "@angular/material";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { ValidationMessageService } from "../../shared/validator/validation-message.service";
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MdDialogRef } from '@angular/material';
+import { ValidationMessageService } from '../../shared/validator/validation-message.service';
 
 @Component({
   selector: 'app-car-lot-number',

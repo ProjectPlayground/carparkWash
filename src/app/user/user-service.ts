@@ -1,7 +1,6 @@
-import { Injectable, Provider } from '@angular/core';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import * as firebase from 'firebase';
-
 import { UserModel, ProviderTypeEnum } from './user.model';
 import { UserReady } from './user-notifier';
 import { CarModel } from '../car/shared/car.model';

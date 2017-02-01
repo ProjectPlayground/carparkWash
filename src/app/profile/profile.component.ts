@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MdSnackBar, MdSnackBarConfig, MdDialog, MdDialogConfig } from '@angular/material';
 import { LoadingService } from '../shared/loading.service';
 import { ToolbarService } from '../shared/toolbar.service';
 import { UserService } from '../user/user-service';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { GlobalValidator } from '../shared/validator/global.validator';
 import { UserModel } from '../user/user.model';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
@@ -14,12 +15,9 @@ import { ProfileEnum } from '../user/profile.enum';
 import { EditCarParkDialog } from '../car-park/edit-car-park/edit-car-park.dialog';
 import { CarParkService } from '../car-park/shared/car-park.service';
 import { CarParkModel } from '../car-park/shared/car-park.model';
-import { SelectTypeDialog } from './select-type/select-type.dialog';
 import { CarParkFilterModel } from '../car-park/car-park-filter/car-park-filter.model';
-import { Region } from "../car-park/car-park-filter/region.enum";
-import { AnnouncementService } from "../shared/announcement.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { BehaviorSubject } from "rxjs";
+import { Region } from '../car-park/car-park-filter/region.enum';
+import { AnnouncementService } from '../shared/announcement.service';
 
 @Component({
   selector: 'app-profile',

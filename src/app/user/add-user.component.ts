@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { UserModel } from './user.model';
-import { MdSnackBarConfig, MdSnackBar } from '@angular/material';
-import { ProfileEnum } from './profile.enum';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MdSnackBarConfig, MdSnackBar } from '@angular/material';
+import { UserModel } from './user.model';
+import { ProfileEnum } from './profile.enum';
 import { UserService } from './user-service';
 import { ToolbarService } from '../shared/toolbar.service';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
 import { LoadingService } from '../shared/loading.service';
-import { Router } from '@angular/router';
 import { GlobalValidator } from '../shared/validator/global.validator';
 import { CarParkModel } from '../car-park/shared/car-park.model';
 import { RegionEnum } from '../car-park/car-park-filter/region.enum';

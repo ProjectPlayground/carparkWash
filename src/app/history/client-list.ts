@@ -1,10 +1,8 @@
-import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-
-import { HistoryService } from "./history.service";
-import { UserModel } from "../user/user.model";
-import { Subscription } from "rxjs";
-import { ToolbarService } from "../shared/toolbar.service";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { HistoryService } from './history.service';
+import { UserModel } from '../user/user.model';
+import { ToolbarService } from '../shared/toolbar.service';
 
 @Component({
   selector: 'app-client-list',

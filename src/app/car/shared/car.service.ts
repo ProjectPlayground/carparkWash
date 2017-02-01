@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { CarModel } from './car.model';
 import { UserModel } from '../../user/user.model';
-import { CarParkModel } from '../../car-park/shared/car-park.model';
 import { ServiceUtils } from '../../shared/service.utils';
 import { UserService } from '../../user/user-service';
 

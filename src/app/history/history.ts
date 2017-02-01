@@ -1,10 +1,9 @@
-import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-
-import { HistoryService } from "./history.service";
-import { UserModel } from "../user/user.model";
-import { SubscriptionModel } from "../shared/subscription/subscription.model";
-import { ToolbarService } from "../shared/toolbar.service";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { HistoryService } from './history.service';
+import { UserModel } from '../user/user.model';
+import { SubscriptionModel } from '../shared/subscription/subscription.model';
+import { ToolbarService } from '../shared/toolbar.service';
 
 @Component({
   selector: 'page-history',

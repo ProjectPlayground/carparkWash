@@ -33,10 +33,10 @@ import { CamelCasePipe } from './shared/camel-case.pipe';
 import { CarParkItemComponent } from './car-park/car-park-item/car-park-item';
 import { SettingComponent } from './setting/setting.component';
 import { CarLotNumberDialog } from './car/car-lot-number/car-lot-number.dialog';
-import { UserListComponent } from "./history/user-list";
-import { HistoryComponent } from "./history/history";
-import { AnnouncementService } from "./shared/announcement.service";
-import { HistoryService } from "./history/history.service";
+import { HistoryComponent } from './history/history';
+import { AnnouncementService } from './shared/announcement.service';
+import { HistoryService } from './history/history.service';
+import { ClientListComponent } from './history/client-list';
 
 const appRoutes: Routes = [
   {path: 'login/disconnect', component: LoginComponent},
@@ -46,7 +46,7 @@ const appRoutes: Routes = [
   {path: 'carparks/tobook', component: CarParkListComponent, canActivate: [CanActivateViaAuthGuard]},
   {path: 'car/towash', component: CarListComponent, canActivate: [CanActivateViaAuthGuard]},
   {path: 'add/user', component: AddUserComponent, canActivate: [IsAdminViaAuthGuard]},
-  {path: 'user/list', component: UserListComponent, canActivate: [IsAdminViaAuthGuard]},
+  {path: 'user/list', component: ClientListComponent, canActivate: [IsAdminViaAuthGuard]},
   {path: 'user/history', component: HistoryComponent, canActivate: [IsAdminViaAuthGuard]},
   //{path: 'room/:room/chat', component: ChatComponent,canActivate: [CanActivateViaAuthGuard]},
   //{path: 'setting', component: SettingComponent, canActivate: [CanActivateViaAuthGuard]},
@@ -67,7 +67,7 @@ const appRoutes: Routes = [
     CarParkFilterComponent,
     CarListComponent,
     SettingComponent,
-    UserListComponent,
+    ClientListComponent,
     HistoryComponent,
 
     ChangePasswordDialog,

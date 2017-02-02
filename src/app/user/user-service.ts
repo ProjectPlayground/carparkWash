@@ -138,7 +138,7 @@ export class UserService extends ServiceUtils {
           && !authApp.currentUser.emailVerified) {
           return Promise.reject({
             code: 'auth/email-already-in-use-but-not-verified',
-            message: ['email already in use but not yet verified,', 'Re-sent verification email ?']
+            message: ['email already in use but not yet verified,', 'Re-send verification email ?']
           });
         }
         return Promise.reject(err);

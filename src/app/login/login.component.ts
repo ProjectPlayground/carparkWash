@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 2000;
     this.snackBarConfig.politeness = 'polite';
-    // this.toolbarService.show(false);
+    this.toolbarService.show(false);
   }
 
   ngOnInit() {
@@ -97,7 +97,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.toolbarService.show(true);
         this.snackBar.open('Log in Success', '', this.snackBarConfig);
       }).catch(err => {
-        // this.loadingService.show(false);
         this.loading = null;
         this.snackBar.open(err.message, '', this.snackBarConfig);
       });

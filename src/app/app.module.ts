@@ -103,7 +103,7 @@ const appRoutes: Routes = [
               {{message}}
             </div>
           </div>`,
-        minDuration: 1000,
+        minDuration: 500,
       })
     )
   ],

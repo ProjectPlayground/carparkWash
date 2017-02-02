@@ -17,7 +17,6 @@ export class UserService extends ServiceUtils {
   private refStorageUsers: firebase.storage.Reference;
 
   private currentUser: UserModel;
-  private accessToken: string;
 
   constructor(public firebaseService: FirebaseService, public userReady: UserReady) {
     super();
@@ -40,8 +39,6 @@ export class UserService extends ServiceUtils {
       return new Promise((resolve, reject) => {
         return firebase.auth().onAuthStateChanged(resolve, reject)
       }).then((userAuth: firebase.User) => {
-        userAuth.getToken().then(token => this.accessToken = token);
-        //this.accessToken = userAuth.refreshToken;
         return this.refDatabase.child('users').child(userAuth.uid).once('value').then(snapshot => {
           this.currentUser = snapshot.val();
           if (this.currentUser === null) {
@@ -62,7 +59,9 @@ export class UserService extends ServiceUtils {
 
   login(userModel: UserModel, password: string): firebase.Promise<UserModel> {
     return firebase.auth().signInWithEmailAndPassword(userModel.email, password).then(userAuth => {
-      userAuth.getToken().then(token => this.accessToken = token);
+      if (!userAuth.emailVerified) {
+        throw {code: 'auth/unverified-email'};
+      }
       return this.getCurrent();
     }).catch((err: firebase.FirebaseError) => {
       console.error(err);
@@ -96,7 +95,7 @@ export class UserService extends ServiceUtils {
     });
     return firebase.auth().signInWithPopup(provider).then(result => {
       // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-      this.accessToken = result.credential.accessToken;
+      // result.credential.accessToken;
       let userFb = new UserModel();
       userFb.uid = result.user.uid;
       userFb.provider = ProviderTypeEnum.facebook;
@@ -132,17 +131,17 @@ export class UserService extends ServiceUtils {
         user.uid = authApp.currentUser.uid;
         user.provider = ProviderTypeEnum.email;
         return this.createUserModel(user, carPark, car)
-          .then(() => this.sentEmailVerification())
-          .catch((err: any) => {
-            if (err.code === 'auth/email-already-in-use' && authApp.currentUser
-                  && !authApp.currentUser.emailVerified) {
-              return Promise.reject({
-                code: 'auth/email-already-in-use-but-not-verified',
-                message: ['email already in use but not yet verified,', 'Re-sent verification email ?']
-              });
-            }
-            return Promise.reject(err);
+          .then(() => this.sentEmailVerification());
+      })
+      .catch((err: any) => {
+        if (err.code === 'auth/email-already-in-use' && authApp.currentUser
+          && !authApp.currentUser.emailVerified) {
+          return Promise.reject({
+            code: 'auth/email-already-in-use-but-not-verified',
+            message: ['email already in use but not yet verified,', 'Re-sent verification email ?']
           });
+        }
+        return Promise.reject(err);
       });
   }
 

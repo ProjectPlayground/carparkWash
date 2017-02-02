@@ -12,9 +12,10 @@ import { ToolbarService } from '../shared/toolbar.service';
 })
 export class HistoryComponent implements OnInit {
 
-  private client: UserModel;
-  private histories: Array<SubscriptionModel>;
-  private selectedHistory: SubscriptionModel;
+  clients: Array<UserModel>;
+  selectedClient: UserModel;
+  histories: Array<SubscriptionModel>;
+  selectedHistory: SubscriptionModel;
 
   constructor(public historyService: HistoryService, public toolbarService: ToolbarService,
               public router: Router) {
@@ -22,13 +23,14 @@ export class HistoryComponent implements OnInit {
 
   ngOnInit() {
     this.toolbarService.title('Subscriptions History');
-    this.client = this.historyService.selectedClient;
-    if (this.client) {
-      this.historyService.getHistory(this.client)
-        .then(histories => this.histories = histories);
-    } else {
-      this.router.navigate(['user/list']);
-    }
+    this.historyService.getClients().then(clients => this.clients = clients);
+  }
+
+  selectClient(client: UserModel) {
+    this.selectedClient = client;
+    this.selectedHistory = undefined;
+    this.historyService.getHistory(this.selectedClient)
+      .then(histories => this.histories = histories);
   }
 
   selectHistory(history: SubscriptionModel) {

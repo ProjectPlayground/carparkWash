@@ -1,14 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { SwiperModule } from 'angular2-useful-swiper';
+import { BusyModule, BusyConfig } from 'angular2-busy';
+
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ChangePasswordDialog } from './setting/change-pssword/change-password.dialog';
-import { RouterModule, Routes } from '@angular/router';
 import { CanActivateViaAuthGuard } from './shared/can-activate-via-auth.guard';
 import { IsAdminViaAuthGuard } from './shared/is-admin-via-auth.guard';
 import { FirebaseService } from './shared/firebase-service';
@@ -35,8 +37,6 @@ import { CarLotNumberDialog } from './car/car-lot-number/car-lot-number.dialog';
 import { HistoryComponent } from './history/history';
 import { AnnouncementService } from './shared/announcement.service';
 import { HistoryService } from './history/history.service';
-import { ClientListComponent } from './history/client-list';
-import { BusyModule, BusyConfig } from 'angular2-busy';
 
 const appRoutes: Routes = [
   {path: 'login/disconnect', component: LoginComponent},
@@ -46,8 +46,7 @@ const appRoutes: Routes = [
   {path: 'carparks/tobook', component: CarParkListComponent, canActivate: [CanActivateViaAuthGuard]},
   {path: 'car/towash', component: CarListComponent, canActivate: [CanActivateViaAuthGuard]},
   {path: 'add/user', component: AddUserComponent, canActivate: [IsAdminViaAuthGuard]},
-  {path: 'user/list', component: ClientListComponent, canActivate: [IsAdminViaAuthGuard]},
-  {path: 'user/history', component: HistoryComponent, canActivate: [IsAdminViaAuthGuard]},
+  {path: 'history', component: HistoryComponent, canActivate: [IsAdminViaAuthGuard]},
   //{path: 'room/:room/chat', component: ChatComponent,canActivate: [CanActivateViaAuthGuard]},
   //{path: 'setting', component: SettingComponent, canActivate: [CanActivateViaAuthGuard]},
   //{path: 'shop', component: ShopComponent, canActivate: [CanActivateViaAuthGuard]},
@@ -67,7 +66,6 @@ const appRoutes: Routes = [
     CarParkFilterComponent,
     CarListComponent,
     SettingComponent,
-    ClientListComponent,
     HistoryComponent,
 
     ChangePasswordDialog,

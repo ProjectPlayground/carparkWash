@@ -1,9 +1,0 @@
-<md-list>
-  <md-list-item class="no-car-park-yet" *ngIf="clients?.length === 0">
-    <h2>No Client registered yet</h2>
-  </md-list-item>
-
-  <md-list-item *ngFor="let client of clients">
-    <div md-list-item (click)="selectClient(client)">{{client.name}}</div>
-  </md-list-item>
-</md-list>

@@ -9,7 +9,6 @@ export class HistoryService extends ServiceUtils {
 
   private userNamesRef: firebase.database.Reference;
   private historySubscriptionRef: firebase.database.Reference;
-  private _selectedClient: UserModel;
 
   constructor() {
     super();
@@ -34,11 +33,4 @@ export class HistoryService extends ServiceUtils {
       .then(snapshot => this.arrayFromObject(snapshot.val()));
   }
 
-  get selectedClient(): UserModel {
-    return this._selectedClient;
-  }
-
-  set selectedClient(value: UserModel) {
-    this._selectedClient = value;
-  }
 }

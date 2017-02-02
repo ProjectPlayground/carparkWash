@@ -1,5 +1,22 @@
 <md-card>
-  <md-card-title>Subscriptions List</md-card-title>
+  <md-card-title>Client List</md-card-title>
+
+  <md-card-content>
+    <md-list>
+      <md-list-item class="no-car-park-yet" *ngIf="clients?.length === 0">
+        <h2>No Client registered yet</h2>
+      </md-list-item>
+
+      <md-list-item *ngFor="let client of clients">
+        <div md-list-item (click)="selectClient(client)">{{client.name}}</div>
+      </md-list-item>
+    </md-list>
+  </md-card-content>
+
+</md-card>
+
+<md-card *ngIf="selectedClient">
+  <md-card-title>{{selectedClient.name}}'s Subscriptions</md-card-title>
 
   <md-card-content>
     <md-list>
@@ -13,7 +30,7 @@
 </md-card>
 
 <md-card *ngIf="selectedHistory">
-  <md-card-title>Subscription {{selectedHistory.dateSubscription | date}}</md-card-title>
+  <md-card-title>Subscription on {{selectedHistory.dateSubscription | date}}</md-card-title>
   <md-card-content>
     <md-list class="days-list">
       <md-list-item *ngFor="let day of selectedHistory.days">

@@ -1,4 +1,4 @@
-<md-list>
+<md-list [ngBusy]="[loading]">
 
   <md-list-item no-lines class="announcement-wrapper"
             *ngIf="user?.profile !== profileTypeEnum.admin && announcement">

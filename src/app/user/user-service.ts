@@ -60,7 +60,7 @@ export class UserService extends ServiceUtils {
     }
   }
 
-  login(userModel: UserModel, password: string) {
+  login(userModel: UserModel, password: string): firebase.Promise<UserModel> {
     return firebase.auth().signInWithEmailAndPassword(userModel.email, password).then(userAuth => {
       userAuth.getToken().then(token => this.accessToken = token);
       return this.getCurrent();

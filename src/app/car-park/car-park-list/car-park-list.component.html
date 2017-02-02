@@ -1,4 +1,4 @@
-<md-list>
+<md-list [ngBusy]="[loading]">
   <div class="filter-info-layout">
     <app-car-park-filter (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>
   <!--</div>-->

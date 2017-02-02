@@ -7,7 +7,6 @@ import { ProfileEnum } from './profile.enum';
 import { UserService } from './user-service';
 import { ToolbarService } from '../shared/toolbar.service';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
-import { LoadingService } from '../shared/loading.service';
 import { GlobalValidator } from '../shared/validator/global.validator';
 import { CarParkModel } from '../car-park/shared/car-park.model';
 import { RegionEnum } from '../car-park/car-park-filter/region.enum';
@@ -26,6 +25,8 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
   carParkModel = new CarParkModel();
   password: string;
   confirmPassword: string;
+
+  loading = null;
   isPictureLoading = false;
 
   private snackBarConfig: MdSnackBarConfig;
@@ -55,8 +56,8 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
   cleanerFormErrors = {};
 
   constructor(public userService: UserService, public toolbarService: ToolbarService,
-              public loadingService: LoadingService, public messageService: ValidationMessageService,
-              public router: Router, public snackBar: MdSnackBar, public formBuilder: FormBuilder) {
+              public messageService: ValidationMessageService, public router: Router,
+              public snackBar: MdSnackBar, public formBuilder: FormBuilder) {
 
     super();
     this.userModel = new UserModel();
@@ -103,13 +104,13 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
   }
 
   private createWithFacebook() {
-    this.loadingService.show(true);
+    this.loading = true;
     this.userService.facebookLogin(this.userModel, this.carParkModel).then((data) => {
-      this.loadingService.show(false);
+      this.loading = false;
       this.buildForms();
       this.snackBar.open(`Account ${this.userModel.email} created`, '', this.snackBarConfig);
     }).catch((err: firebase.FirebaseError) => {
-      this.loadingService.show(false);
+      this.loading = false;
       console.error(err);
       let errMsg = `Fail to create ${this.userModel.email}  account`;
       switch (err.code) {
@@ -124,15 +125,15 @@ export class AddUserComponent extends PickImageAbstract implements OnInit, OnDes
   }
 
   private createWithEmail() {
-    this.loadingService.show(true);
+    this.loading = true;
     this.userService.create(this.userModel, this.password, false, this.carParkModel)
       .then(() => {
-        this.loadingService.show(false);
+        this.loading = false;
         this.buildForms();
         this.snackBar.open(`Account ${this.userModel.email} created`, '', this.snackBarConfig);
       })
       .catch((err: firebase.FirebaseError) => {
-        this.loadingService.show(false);
+        this.loading = false;
         console.error(err);
         let errMsg = `Fail to create ${this.userModel.email}  account`;
         switch (err.code) {

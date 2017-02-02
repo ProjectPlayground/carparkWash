@@ -1,4 +1,4 @@
-<md-card>
+<md-card [ngBusy]="[loading]">
   <md-card-title>{{carPark?.name}} - {{carPark?.code}}
     <img class="override-picture-preview" *ngIf="carPark?.picture" [src]="carPark.picture">
   </md-card-title>

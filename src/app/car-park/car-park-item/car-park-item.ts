@@ -2,7 +2,6 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdSnackBarConfig, MdSnackBar, MdDialog, MdDialogConfig } from '@angular/material';
 import { CarParkModel } from '../shared/car-park.model';
-import { LoadingService } from '../../shared/loading.service';
 import { ConfirmMessageDialog } from '../../confirm-message/confirm-message.dialog';
 import { CarParkService } from '../shared/car-park.service';
 import { EditCarParkDialog } from '../edit-car-park/edit-car-park.dialog';
@@ -22,7 +21,11 @@ export class CarParkItemComponent implements OnInit {
 
   currentUser: UserModel;
   isCarParkUnlocked: boolean;
+
+  loading = null;
+
   profileTypeEnum = ProfileEnum;
+
   @Input() carPark: CarParkModel;
   @Input() isSelected: boolean;
   @Output() removed = new EventEmitter<boolean>();
@@ -31,7 +34,6 @@ export class CarParkItemComponent implements OnInit {
 
   constructor(public carParkService: CarParkService, public userService: UserService,
               public subscriberService: SubscriberService, public carService: CarService,
-              public loadingService: LoadingService,
               public router: Router, public snackBar: MdSnackBar, public dialog: MdDialog) {
 
     this.currentUser = new UserModel();
@@ -93,15 +95,15 @@ export class CarParkItemComponent implements OnInit {
     dialogRef.componentInstance.carParkToEdit = this.carPark;
     dialogRef.afterClosed().subscribe((carParkToUpdate: {carpark: CarParkModel, region: Region, area: string}) => {
       if (carParkToUpdate && carParkToUpdate.carpark) {
-        this.loadingService.show(true);
+        this.loading = true;
         this.carParkService.update(carParkToUpdate.carpark, carParkToUpdate.region, carParkToUpdate.area)
           .then(() => {
             this.carPark = carParkToUpdate.carpark;
-            this.loadingService.show(false);
+            this.loading = false;
             this.snackBar.open(`The car ${this.carPark.name} was updated successfully`, '', this.snackBarConfig);
           })
           .catch(err => {
-            this.loadingService.show(false);
+            this.loading = false;
             console.error(err);
             this.snackBar.open(`Fail to update ${this.carPark.name}`, '', this.snackBarConfig);
           });

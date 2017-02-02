@@ -4,7 +4,6 @@ import { UserService } from '../user/user-service';
 import { UserModel, ProviderTypeEnum } from '../user/user.model';
 import { ChangePasswordDialog } from './change-pssword/change-password.dialog';
 import { ToolbarService } from '../shared/toolbar.service';
-import { LoadingService } from '../shared/loading.service';
 
 @Component({
   selector: 'app-setting',
@@ -16,10 +15,12 @@ export class SettingComponent {
   user: UserModel;
   providerTypeEnum = ProviderTypeEnum;
 
+  loading = null;
+
   private snackBarConfig: MdSnackBarConfig;
 
   constructor(public userService: UserService, public dialog: MdDialog, public snackBar: MdSnackBar,
-              public toolbarService: ToolbarService, public loadingService: LoadingService) {
+              public toolbarService: ToolbarService) {
 
     toolbarService.title('Setting');
     this.userService.getCurrent().then(user => this.user = user);
@@ -33,15 +34,15 @@ export class SettingComponent {
       disableClose: true
     }).afterClosed().subscribe((updatePassword: {new: string, old: string}) => {
       if (updatePassword) {
-        this.loadingService.show(true);
+        this.loading = true;
         this.userService.updatePassword(updatePassword)
           .then(() => {
-            this.loadingService.show(false);
+            this.loading = false;
             this.snackBar.open('Password has been successfully updated', '', this.snackBarConfig);
           })
           .catch(err => {
             console.error(err);
-            this.loadingService.show(false);
+            this.loading = false;
             this.snackBar.open('Fail to update your password', '', this.snackBarConfig);
           });
       }

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { MdSnackBar, MdSnackBarConfig, MdDialog, MdDialogConfig } from '@angular/material';
 import { CarModel } from '../shared/car.model';
 import { CarService } from '../shared/car.service';
-import { LoadingService } from '../../shared/loading.service';
 import { EditCarDialog } from '../edit-car/edit-car.dialog';
 import { ConfirmMessageDialog } from '../../confirm-message/confirm-message.dialog';
 import { UserService } from '../../user/user-service';
@@ -29,6 +28,9 @@ export class CarItemComponent implements OnInit {
   dayIndex: number;
   profileEnum = ProfileEnum;
   washStateEnum = WashStateEnum;
+
+  loading = null;
+
   @Input() car: CarModel;
   @Input() subscription: SubscriptionModel;
   @Input() isSelected: boolean;
@@ -37,8 +39,8 @@ export class CarItemComponent implements OnInit {
   private snackBarConfig: MdSnackBarConfig;
 
   constructor(public carService: CarService, public userService: UserService, public carParkService: CarParkService,
-              public subscriberService: SubscriberService, public loadingService: LoadingService,
-              public router: Router, public snackBar: MdSnackBar, public dialog: MdDialog) {
+              public subscriberService: SubscriberService,  public router: Router,
+              public snackBar: MdSnackBar, public dialog: MdDialog) {
 
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 2000;
@@ -118,15 +120,15 @@ export class CarItemComponent implements OnInit {
     dialogRef.componentInstance.carToEdit = this.car;
     dialogRef.afterClosed().subscribe((updatedCar: CarModel) => {
       if (updatedCar) {
-        this.loadingService.show(true);
+        this.loading = true;
         this.carService.update(updatedCar)
           .then(() => {
             this.car = updatedCar;
-            this.loadingService.show(false);
+            this.loading = false;
             this.snackBar.open(`The car ${this.car.licencePlateNumber} was updated successfully`, '', this.snackBarConfig);
           })
           .catch(err => {
-            this.loadingService.show(false);
+            this.loading = false;
             console.error(err);
             this.snackBar.open(`Fail to update ${this.car.licencePlateNumber}`, '', this.snackBarConfig);
           });

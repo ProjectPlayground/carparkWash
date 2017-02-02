@@ -15,7 +15,6 @@ import { FirebaseService } from './shared/firebase-service';
 import { UserReady } from './user/user-notifier';
 import { UserService } from './user/user-service';
 import { ToolbarService } from './shared/toolbar.service';
-import { LoadingService } from './shared/loading.service';
 import { ValidationMessageService } from './shared/validator/validation-message.service';
 import { CarItemComponent } from './car/car-item/car-item.component';
 import { CarService } from './car/shared/car.service';
@@ -37,6 +36,7 @@ import { HistoryComponent } from './history/history';
 import { AnnouncementService } from './shared/announcement.service';
 import { HistoryService } from './history/history.service';
 import { ClientListComponent } from './history/client-list';
+import { BusyModule, BusyConfig } from 'angular2-busy';
 
 const appRoutes: Routes = [
   {path: 'login/disconnect', component: LoginComponent},
@@ -94,7 +94,18 @@ const appRoutes: Routes = [
     MaterialModule.forRoot(),
     RouterModule.forRoot(appRoutes),
     ReactiveFormsModule,
-    SwiperModule
+    SwiperModule,
+    BusyModule.forRoot(
+      new BusyConfig({
+        template:
+          `<div style="background: url('../assets/loading.gif') no-repeat center 20px; background-size: 72px;">
+            <div style="margin-top: 110px; text-align: center; font-size: 18px; font-weight: 700;">
+              {{message}}
+            </div>
+          </div>`,
+        minDuration: 1000,
+      })
+    )
   ],
   providers: [
     UserService,
@@ -103,7 +114,6 @@ const appRoutes: Routes = [
     SubscriberService,
     UserReady,
     ToolbarService,
-    LoadingService,
     FirebaseService,
     ValidationMessageService,
     AnnouncementService,

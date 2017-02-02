@@ -6,7 +6,6 @@ import * as firebase from 'firebase';
 import { UserModel } from '../user/user.model';
 import { UserService } from '../user/user-service';
 import { ToolbarService } from '../shared/toolbar.service';
-import { LoadingService } from '../shared/loading.service';
 import { GlobalValidator } from '../shared/validator/global.validator';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
 import { CarModel, CarTypeEnum } from '../car/shared/car.model';
@@ -27,10 +26,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   password: string;
   confirmPassword: string;
   isOnLogin = true;
-  carTypeEnum = CarTypeEnum;
+
+  loading = null;
 
   private snackBarConfig: MdSnackBarConfig;
   profileTypeEnum = ProfileEnum;
+  carTypeEnum = CarTypeEnum;
+
   loginForm: FormGroup;
   loginFormErrors = {
     email: '',
@@ -54,9 +56,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   };
 
   constructor(public userService: UserService, public toolbarService: ToolbarService,
-              public loadingService: LoadingService, public messageService: ValidationMessageService,
-              public router: Router, public snackBar: MdSnackBar, public formBuilder: FormBuilder,
-              public dialog: MdDialog) {
+              public messageService: ValidationMessageService, public router: Router,
+              public snackBar: MdSnackBar, public formBuilder: FormBuilder, public dialog: MdDialog) {
 
     this.userModel = new UserModel();
     this.userModel.profile = ProfileEnum.client;
@@ -64,7 +65,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 2000;
     this.snackBarConfig.politeness = 'polite';
-    this.toolbarService.show(false);
+    // this.toolbarService.show(false);
   }
 
   ngOnInit() {
@@ -74,7 +75,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.userService.isAuth()
         .then(isAuth => {
           if (isAuth) {
-            this.toolbarService.show(true);
+            // this.toolbarService.show(true);
             this.router.navigate(['profile']);
           } else {
             this.buildForms();
@@ -89,14 +90,15 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   login() {
     if (this.isOnLogin) {
-      this.loadingService.show(true);
-      this.userService.login(this.userModel, this.password).then(() => {
-        this.loadingService.show(false);
+      this.loading = true;
+        this.userService.login(this.userModel, this.password).then(() => {
+          this.loading = null;
         this.router.navigate(['profile']);
         this.toolbarService.show(true);
         this.snackBar.open('Log in Success', '', this.snackBarConfig);
       }).catch(err => {
-        this.loadingService.show(false);
+        // this.loadingService.show(false);
+        this.loading = null;
         this.snackBar.open(err.message, '', this.snackBarConfig);
       });
     } else {
@@ -106,13 +108,14 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   loginFacebook() {
     console.log('loginFacebook');
+    this.loading = true;
     this.userService.facebookLogin().then((data) => {
-      this.loadingService.show(false);
+      this.loading = null;
       this.router.navigate(['profile']);
       this.toolbarService.show(true);
       this.snackBar.open('Log in Success', '', this.snackBarConfig);
     }).catch((err: firebase.FirebaseError) => {
-      this.loadingService.show(false);
+      this.loading = null;
       console.error(err);
       let errMsg = 'Log in Fail';
       switch (err.code) {
@@ -130,16 +133,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.isOnLogin) {
       this.isOnLogin = false;
     } else {
-      this.loadingService.show(true);
+      this.loading = true;
       this.userService.create(this.userModel, this.password, true, this.carParkModel, this.carModel)
         .then(() => {
-          this.loadingService.show(false);
+          this.loading = null;
           this.router.navigate(['profile']);
           this.toolbarService.show(true);
           this.snackBar.open('Sign Up Success', '', this.snackBarConfig);
         })
         .catch((err: firebase.FirebaseError) => {
-          this.loadingService.show(false);
+          this.loading = null;
           console.error(err);
           let errMsg = 'Sign Up Fail';
 
@@ -150,13 +153,13 @@ export class LoginComponent implements OnInit, OnDestroy {
               dialogRef.componentInstance.content = err.message[1];
               dialogRef.afterClosed().subscribe((isOk: boolean) => {
                 if (isOk) {
-                  this.loadingService.show(true);
+                  this.loading = true;
                   this.userService.sentEmailVerification().then(() => {
-                    this.loadingService.show(false);
+                    this.loading = null;
                     this.snackBar.open('Verification email sent', '', this.snackBarConfig);
                     this.isOnLogin = true;
                   }).catch(err => {
-                    this.loadingService.show(false);
+                    this.loading = null;
                     console.log(err);
                     this.snackBar.open('Error Sending Verification email, please contact admin', '', this.snackBarConfig);
                   });

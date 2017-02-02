@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "2.2.3",
     "@angular/router": "3.2.3",
     "@types/firebase": "^2.4.30",
+    "angular2-busy": "^1.0.2",
     "angular2-useful-swiper": "^3.0.0",
     "core-js": "^2.4.1",
     "firebase": "^3.6.4",

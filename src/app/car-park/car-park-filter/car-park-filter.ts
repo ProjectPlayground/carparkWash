@@ -4,7 +4,6 @@ import { MdSnackBar, MdSnackBarConfig, MdTabGroup } from '@angular/material';
 import { RegionEnum } from './region.enum';
 import { CarParkService } from '../shared/car-park.service';
 import { CarParkFilterModel } from './car-park-filter.model';
-import { LoadingService } from '../../shared/loading.service';
 import { ValidationMessageService } from '../../shared/validator/validation-message.service';
 
 @Component({
@@ -21,6 +20,8 @@ export class CarParkFilterComponent implements OnInit {
   //filteredAreasPart: Array<AreaModel>
   //@ViewChild('selectOptionArea') selectOptionArea: MdSelect;
 
+  loading = null;
+
   codeFielterForm: FormGroup;
   codeFormErrors = {
     carParkCode: ''
@@ -32,16 +33,14 @@ export class CarParkFilterComponent implements OnInit {
   };
 
   @ViewChild(MdTabGroup) tabGroup: MdTabGroup;
-
   @Output() onFilterCarParks = new EventEmitter<CarParkFilterModel>();
 
   regionEnum = RegionEnum;
-
   private snackBarConfig: MdSnackBarConfig;
 
-  constructor(public carParkService: CarParkService, public loadingService: LoadingService,
-              public snackBar: MdSnackBar, public formBuilder: FormBuilder,
-              public messageService: ValidationMessageService) {
+  constructor(public carParkService: CarParkService, public snackBar: MdSnackBar,
+              public formBuilder: FormBuilder, public messageService: ValidationMessageService) {
+
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 2000;
     this.snackBarConfig.politeness = 'polite';
@@ -58,15 +57,15 @@ export class CarParkFilterComponent implements OnInit {
     this.carParkFilter.area = undefined;
     // if select is opened but none value is selected
     if (this.carParkFilter.region) {
-      this.loadingService.show(true);
+      this.loading = true;
       this.carParkService.getAreasByRegion(this.carParkFilter.region)
         .then(areasOfRegion => {
           this.areasOfRegion = areasOfRegion;
-          this.loadingService.show(false);
+          this.loading = false;
         })
         .catch(err => {
           console.error(err);
-          this.loadingService.show(false);
+          this.loading = false;
           this.snackBar.open('Could not get areas, please contact admin', '', this.snackBarConfig);
         });
     }

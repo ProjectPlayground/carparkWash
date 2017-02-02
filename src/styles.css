@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'assets/material-icons.css';
 @import '~@angular/material/core/theming/prebuilt/indigo-pink.css';
+@import '~angular2-busy/build/style/busy.css';
 
 .center-text {
   text-align: center;
@@ -39,6 +40,13 @@
 
 md-dialog-container {
   border-radius: 20px !important;
+}
+
+.ng-busy {
+  position: absolute;
+  /*left: 50%;*/
+  top: 40%;
+  /*transform: translate(-50%);*/
 }
 
 .swiper-wrapper {

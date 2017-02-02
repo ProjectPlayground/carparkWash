@@ -6,7 +6,6 @@ import { CarParkModel } from '../shared/car-park.model';
 import { CarService } from '../../car/shared/car.service';
 import { CarModel } from '../../car/shared/car.model';
 import { CarParkFilterModel } from '../car-park-filter/car-park-filter.model';
-import { LoadingService } from '../../shared/loading.service';
 
 @Component({
   selector: 'app-car-park-list',
@@ -17,6 +16,9 @@ export class CarParkListComponent implements OnInit {
 
   selectedCar: CarModel;
   carParks: Array<CarParkModel>;
+
+  loading = null;
+
   configCarousel = {
     slidesPerView: 4,
     //slidesPerColumn: 3,
@@ -35,7 +37,7 @@ export class CarParkListComponent implements OnInit {
   private snackBarConfig: MdSnackBarConfig;
 
   constructor(public carParkService: CarParkService, public carService: CarService,
-              public loadingService: LoadingService, public snackBar: MdSnackBar, public router: Router) {
+              public snackBar: MdSnackBar, public router: Router) {
 
     this.snackBarConfig = new MdSnackBarConfig();
     this.snackBarConfig.duration = 2000;
@@ -63,18 +65,18 @@ export class CarParkListComponent implements OnInit {
   }
 
   getCarParksFilter(carParkFilterModel: CarParkFilterModel) {
-    this.loadingService.show(true);
+    this.loading = true;
     this.carParkService.getFiltered(carParkFilterModel)
       .then(carParks => {
         this.carParks = carParks;
         if (this.carParks.length === 0) {
           this.snackBar.open('No Car Parks found', '', this.snackBarConfig);
         }
-        this.loadingService.show(false);
+        this.loading = false;
       })
       .catch(err => {
         console.log(err);
-        this.loadingService.show(false);
+        this.loading = false;
         this.snackBar.open('Error getting Car parks, please contact admin', '', this.snackBarConfig);
       });
   }
